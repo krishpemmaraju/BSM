@@ -1,0 +1,7 @@
+{
+    "employeeID": "{empID}",
+    "employeeName": "{empName}",
+    "employeeSalary": "{empSal}",
+    "employeeAddress": "{empAddr}",
+    "isDelete": "{empDelFlag}"
+}

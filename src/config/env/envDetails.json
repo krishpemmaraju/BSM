@@ -1,0 +1,14 @@
+{
+    "prdReality": [
+       {
+          "url": "http://topui-stg.sys.ad.wolseleyuk.com/hksui/#/?clientip=10.3.110.19",
+          "username": "alkk",
+          "password": "Varahi16$$"
+       }
+   ],
+   "APISTG": [
+      {
+         "REST_API_BASE_URL": "http://svttstif001:8080/emp/"
+      }
+   ]
+   }

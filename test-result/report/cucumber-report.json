@@ -1,0 +1,426 @@
+[
+  {
+    "description": "",
+    "elements": [
+      {
+        "description": "",
+        "id": "validate-employee-api;get-the-employee-information",
+        "keyword": "Scenario",
+        "line": 7,
+        "name": "Get the employee information",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 407118400
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 4,
+            "name": "user has access to the Employee Retrival System",
+            "match": {
+              "location": "tests\\steps\\GetEmpInformationAPI.ts:20"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 10148000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 8,
+            "name": "user query the employee information with id as \"U44506\"",
+            "match": {
+              "location": "tests\\steps\\GetEmpInformationAPI.ts:25"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 49557600
+            },
+            "embeddings": [
+              {
+                "data": "VGhlIEVuZCBQb2ludCBpcyAtIGh0dHA6Ly9zdnR0c3RpZjAwMTo4MDgwL2VtcC9VNDQ1MDY=",
+                "mime_type": "text/plain"
+              }
+            ]
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 9,
+            "name": "user should see the employee list",
+            "match": {
+              "location": "tests\\steps\\GetEmpInformationAPI.ts:33"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 15485700
+            },
+            "embeddings": [
+              {
+                "data": "VGhlIHJlc3BvbnNlIGlzICAKeyJlbXBsb3llZUlEIjoiVTQ0NTA2IiwiZW1wbG95ZWVOYW1lIjoiVktKREgiLCJlbXBsb3llZVNhbGFyeSI6IjIwMDAiLCJlbXBsb3llZUFkZHJlc3MiOiJVSyIsImlzRGVsZXRlIjoiWWVzIn0=",
+                "mime_type": "text/plain"
+              }
+            ]
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 10,
+            "name": "user should get a status code as 200",
+            "match": {
+              "location": "tests\\steps\\GetEmpInformationAPI.ts:38"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 4942900
+            },
+            "embeddings": [
+              {
+                "data": "VGhlIFJlcXVlc3QgaXMgU3VjY2VzcyBhbmQgcmVzcG9uc2UgY29kZSBpcyAyMDA=",
+                "mime_type": "text/plain"
+              }
+            ]
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 4537900
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@api",
+            "line": 6
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "validate-employee-api;create-employee-data",
+        "keyword": "Scenario",
+        "line": 13,
+        "name": "Create employee data",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 302143199
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 4,
+            "name": "user has access to the Employee Retrival System",
+            "match": {
+              "location": "tests\\steps\\GetEmpInformationAPI.ts:20"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 250300
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 14,
+            "name": "user invokes empcreation endpoint with valid data",
+            "match": {
+              "location": "tests\\steps\\CreateEmployeeDataAPI.ts:13"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 21623400
+            },
+            "embeddings": [
+              {
+                "data": "IFRoZSBSZXF1ZXN0IEJvZHkgaXMgCiANCnsNCiAgICAiZW1wbG95ZWVJRCI6ICJVNDQ1MTUiLA0KICAgICJlbXBsb3llZU5hbWUiOiAiREZDVkciLA0KICAgICJlbXBsb3llZVNhbGFyeSI6ICIyMDAwIiwNCiAgICAiZW1wbG95ZWVBZGRyZXNzIjogIlVLIiwNCiAgICAiaXNEZWxldGUiOiAiWWVzIg0KfQ==",
+                "mime_type": "text/plain"
+              }
+            ]
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 15,
+            "name": "user see employee data created",
+            "match": {
+              "location": "tests\\steps\\CreateEmployeeDataAPI.ts:29"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 6028900
+            },
+            "embeddings": [
+              {
+                "data": "IFRoZSBSZXNwb25zZSBCb2R5IGlzIAogRW1wbG95ZWUgRGV0YWlscyBDcmVhdGVkIFN1Y2Nlc3NmdWxseQ==",
+                "mime_type": "text/plain"
+              }
+            ]
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "user should get a status code as 200",
+            "match": {
+              "location": "tests\\steps\\GetEmpInformationAPI.ts:38"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1206400
+            },
+            "embeddings": [
+              {
+                "data": "VGhlIFJlcXVlc3QgaXMgU3VjY2VzcyBhbmQgcmVzcG9uc2UgY29kZSBpcyAyMDA=",
+                "mime_type": "text/plain"
+              }
+            ]
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 3575899
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@api",
+            "line": 12
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "validate-employee-api;update-employee-data",
+        "keyword": "Scenario",
+        "line": 19,
+        "name": "Update employee data",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 351547299
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 4,
+            "name": "user has access to the Employee Retrival System",
+            "match": {
+              "location": "tests\\steps\\GetEmpInformationAPI.ts:20"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 340000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 20,
+            "name": "user invokes empupdate endpoint with valid data",
+            "match": {
+              "location": "tests\\steps\\UpdateEmployeeDetails.ts:13"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 16402100
+            },
+            "embeddings": [
+              {
+                "data": "IFRoZSBFbmQgUG9pbnQgaXMgLSBodHRwOi8vc3Z0dHN0aWYwMDE6ODA4MC9lbXAvVTQ0NTA2",
+                "mime_type": "text/plain"
+              },
+              {
+                "data": "IFRoZSBSZXF1ZXN0IEJvZHkgaXMgLSB7DQogICAgImVtcGxveWVlSUQiOiAiVTQ0NTA2IiwNCiAgICAiZW1wbG95ZWVOYW1lIjogIlZLSkRIIiwNCiAgICAiZW1wbG95ZWVTYWxhcnkiOiAiMjAwMCIsDQogICAgImVtcGxveWVlQWRkcmVzcyI6ICJVSyIsDQogICAgImlzRGVsZXRlIjogIlllcyINCn0=",
+                "mime_type": "text/plain"
+              }
+            ]
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 21,
+            "name": "user see employee data updated successfully",
+            "match": {
+              "location": "tests\\steps\\UpdateEmployeeDetails.ts:30"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 5321899
+            },
+            "embeddings": [
+              {
+                "data": "IFRoZSBSZXNwb25zZSBCb2R5IGlzIC0gW29iamVjdCBQcm9taXNlXQ==",
+                "mime_type": "text/plain"
+              }
+            ]
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 22,
+            "name": "user should get a status code as 200",
+            "match": {
+              "location": "tests\\steps\\GetEmpInformationAPI.ts:38"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1392600
+            },
+            "embeddings": [
+              {
+                "data": "VGhlIFJlcXVlc3QgaXMgU3VjY2VzcyBhbmQgcmVzcG9uc2UgY29kZSBpcyAyMDA=",
+                "mime_type": "text/plain"
+              }
+            ]
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 3550900
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@api",
+            "line": 18
+          }
+        ],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "validate-employee-api;delete-employee-data",
+        "keyword": "Scenario",
+        "line": 25,
+        "name": "Delete employee data",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 262481200
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 4,
+            "name": "user has access to the Employee Retrival System",
+            "match": {
+              "location": "tests\\steps\\GetEmpInformationAPI.ts:20"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 462700
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 26,
+            "name": "user invokes empdelete endpoint with valid data",
+            "match": {
+              "location": "tests\\steps\\DeleteEmployeeDataAPI.ts:14"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 34484499
+            },
+            "embeddings": [
+              {
+                "data": "IFRoZSBFbmQgUG9pbnQgaXMgLSBodHRwOi8vc3Z0dHN0aWYwMDE6ODA4MC9lbXAvVTQ0NTE0",
+                "mime_type": "text/plain"
+              }
+            ]
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 27,
+            "name": "user see employee data deleted successfully",
+            "match": {
+              "location": "tests\\steps\\DeleteEmployeeDataAPI.ts:23"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 12127600
+            },
+            "embeddings": [
+              {
+                "data": "IFRoZSBSZXNwb25zZSBpcyAtIHsidGltZXN0YW1wIjoiMjAyNS0wMy0xNFQxNToxMTo1NS4xNzYrMDA6MDAiLCJzdGF0dXMiOjUwMCwiZXJyb3IiOiJJbnRlcm5hbCBTZXJ2ZXIgRXJyb3IiLCJwYXRoIjoiL2VtcC9VNDQ1MTQifQ==",
+                "mime_type": "text/plain"
+              }
+            ]
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 28,
+            "name": "user should get a status code as 200",
+            "match": {
+              "location": "tests\\steps\\GetEmpInformationAPI.ts:38"
+            },
+            "result": {
+              "status": "failed",
+              "duration": 1718899,
+              "error_message": "Error: Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\nExpected: \u001b[32m500\u001b[39m\nReceived: \u001b[31m200\u001b[39m\n    at Function.assertEqualsInt (C:\\Automation\\AutomationNewSVN\\Non-Prod\\PlaywrightCucumber\\src\\asserts\\Assert.ts:77:35)\n    at World.<anonymous> (C:\\Automation\\AutomationNewSVN\\Non-Prod\\PlaywrightCucumber\\tests\\steps\\GetEmpInformationAPI.ts:43:16)"
+            },
+            "embeddings": [
+              {
+                "data": "VGhlIFJlcXVlc3QgaXMgRmFpbGVkIGFuZCByZXNwb25zZSBjb2RlIGlzIDUwMA==",
+                "mime_type": "text/plain"
+              }
+            ]
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 3989199
+            }
+          }
+        ],
+        "tags": [
+          {
+            "name": "@api",
+            "line": 24
+          }
+        ],
+        "type": "scenario"
+      }
+    ],
+    "id": "validate-employee-api",
+    "line": 1,
+    "keyword": "Feature",
+    "name": "Validate Employee API",
+    "tags": [],
+    "uri": "features\\API\\REST\\EmployeeAPI.feature"
+  }
+]
