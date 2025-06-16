@@ -174,9 +174,50 @@ export default class UIActions {
    * @returns
    */
 
-    public async clickOnElementByRolebyHasText(roleVal: Parameters<Page['getByRole']>[0],isHasText: string): Promise<Locator>{
+    public async getElementByRolebyHasText(roleVal: Parameters<Page['getByRole']>[0],isHasText: string): Promise<Locator>{
           return  this.page.getByRole(roleVal).filter({hasText: isHasText});
     }
+
+       /**
+   * Click on Element by Role by has Text
+   * @param role
+   * @returns
+   */
+
+       public async getElementByLabel(labelText: string): Promise<Locator>{
+        return  this.page.getByLabel(labelText,{exact:true});
+  }
+
+        /**
+   * Click on Element by Role by Placeholder
+   * @param placeholderText
+   * @returns
+   */
+
+        public async getElementByPlaceholder(placeholderText: string): Promise<Locator>{
+            return  this.page.getByPlaceholder(placeholderText,{exact:true});
+      }
+    
+            /**
+   * Click on Element by Role by Text
+   * @param textValue
+   * @returns
+   */
+
+            public async getElementByText(textValue: string): Promise<Locator>{
+                return  this.page.getByText(textValue,{exact:true});
+          }
+
+       /**
+   * Click on Element by Role by Exact Text
+   * @param role
+   * @param isHasText
+   * @returns
+   */
+
+       public async getElementByRolebyExactText(roleVal: Parameters<Page['getByRole']>[0],isHasText: string): Promise<Locator>{
+                return  this.page.getByRole(roleVal,{exact:true}).filter({hasText: isHasText});
+  }
 
        /**
    * Click on Element by Role by name
@@ -185,8 +226,8 @@ export default class UIActions {
    * @returns
    */
 
-    public async clickOnElementByRoleByName(roleVal: Parameters<Page['getByRole']>[0],nameToIdentify: string): Promise<Locator>{
-        return this.page.getByRole(roleVal,{name: nameToIdentify});
+    public async getElementByRoleByName(roleVal: Parameters<Page['getByRole']>[0],nameToIdentify: string): Promise<Locator>{
+        return this.page.getByRole(roleVal,{name: nameToIdentify,exact:true});
        }
     
         /**
@@ -196,8 +237,19 @@ export default class UIActions {
    */
 
     public async getElementRoleByText(roleVal:string,textVal: string):Promise<Locator> {
-        return this.elementActions.setElementByPageByTexts('text',textVal);
+        return this.elementActions.setElementByPageByTexts(roleVal,textVal);
     }
+
+    /**
+     * Return the locator Object
+     * @param locatorText
+     */
+
+    public async getPageLocator(locatorText: string):Promise<Locator> {
+        return this.page.locator(locatorText);
+    }
+
+  
 
    
     

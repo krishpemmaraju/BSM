@@ -1,6 +1,6 @@
 {
     "default": {
-        "paths": ["features/API/REST/EmployeeAPI.feature"],
+        "paths": ["features/SCM/OrderCaptureCashAccount.feature"],
         "formatOptions": {
             "snippetInterface": "async-await"
          },

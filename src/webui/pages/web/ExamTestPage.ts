@@ -16,6 +16,6 @@ export default class ExamTestsPage {
     }
 
     public async isCheckButtonEnabled():Promise<boolean>{
-        return await (await this.web.clickOnElementByRolebyHasText('button','Check')).isEnabled();
+        return await (await this.web.getElementByRolebyHasText('button','Check')).isEnabled();
     }
 }

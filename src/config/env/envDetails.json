@@ -10,5 +10,12 @@
       {
          "REST_API_BASE_URL": "http://svttstif001:8080/emp/"
       }
+   ],
+   "SCMDEV": [
+      {
+         "SCMDEVURL": "https://egvh-dev1.login.em3.oraclecloud.com/",
+         "SCMDEVUSERNAME": "ABB7375",
+         "SCMDEVPASSWORD": "Varahi$$16"
+      }
    ]
    }

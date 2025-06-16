@@ -45,6 +45,14 @@ export default class UIElementActions {
            return this.page.getByRole(roleVal,{exact:true}).filter({hasText: isHasText});
     }
 
+    public setElementByPageRoles(roleVal: Parameters<Page['getByRole']>[0]){
+      return this.page.getByRole(roleVal,{exact:true});
+}
+
+    public setElementByPageRolesExactText(roleVal: Parameters<Page['getByRole']>[0],isHasText: string){
+      return this.page.getByRole(roleVal,{exact:true}).filter({hasText: isHasText});
+}
+
     public setElementByPageRolesHasName(roleVal: Parameters<Page['getByRole']>[0],nameVal: string){
       return this.page.getByRole(roleVal,{name: nameVal,exact:true}); }
 
@@ -79,6 +87,19 @@ export default class UIElementActions {
 
     public async click(){
         await this.getLocator().click();
+        return this;
+    }
+
+
+    
+       /**
+   * Set Text to a element
+   * 
+   * @returns
+   */
+
+       public async setText(valueToSet: string){
+        await this.getLocator().fill(valueToSet)
         return this;
     }
 
@@ -193,7 +214,7 @@ export default class UIElementActions {
    */
 
     public async getAttributeValue(attributeText: string): Promise<string>{
-        await this.waitForElementToVisible(2);
+    //    await this.waitForElementToVisible(2);
         return (await this.getLocator().getAttribute(attributeText)).trim();
     }
 
@@ -283,6 +304,16 @@ export default class UIElementActions {
       await this.waitForElementToVisible(2);
       await this.getLocator().evaluate((node: HTMLElement) => {node.click();})
    }
+
+   
+     /**
+   * Gets the text value by Role
+   * @returns
+   */
+  
+     public async getTextValueByRole(roleVal: Parameters<Page['getByRole']>[0]): Promise<string>{
+         return await this.page.getByRole(roleVal).textContent();
+  }
 
 
 

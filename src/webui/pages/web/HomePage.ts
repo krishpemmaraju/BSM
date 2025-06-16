@@ -12,10 +12,10 @@ export default class HomePage {
     }
 
     public async clickOnTests(){
-        const isTestsVisible = await (await this.web.clickOnElementByRolebyHasText('button','AGREE')).isVisible();
+        const isTestsVisible = await (await this.web.getElementByRolebyHasText('button','AGREE')).isVisible();
        if(isTestsVisible){
-           await (await this.web.clickOnElementByRolebyHasText('button','AGREE')).click();
+           await (await this.web.getElementByRolebyHasText('button','AGREE')).click();
        }
        await reportGeneration.getScreenshot(this.web.getPage(),"Home Page",world);
-       await (await this.web.clickOnElementByRolebyHasText('link','Tests')).click(); }
+       await (await this.web.getElementByRolebyHasText('link','Tests')).click(); }
 }
