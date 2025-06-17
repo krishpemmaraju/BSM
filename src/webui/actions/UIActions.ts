@@ -46,45 +46,45 @@ export default class UIActions {
         this.alertActions = new AlertActions(page);
     }
 
-      /**
-   * Close page 
-   * @returns 
-   */
+    /**
+ * Close page 
+ * @returns 
+ */
 
-   public closePage(){
-       this.page.close();
-   }
+    public closePage() {
+        this.page.close();
+    }
 
     /**
    * Returns the instance of Alert
    * @returns
    */
 
-   public alert(){
-       return this.alertActions;
-   }
+    public alert() {
+        return this.alertActions;
+    }
 
-   /**
-   * Returns the instance of UIElements actions
-   * @param selector
-   * @param description
-   * @returns
-   */
+    /**
+    * Returns the instance of UIElements actions
+    * @param selector
+    * @param description
+    * @returns
+    */
 
-   public element(selector: string,description: string){
-      return this.elementActions.setElement(selector,description);
-   }
+    public element(selector: string, description: string) {
+        return this.elementActions.setElement(selector, description);
+    }
 
-   /**
-   * Returns the instance of Dropdown actions
-   * @param selector
-   * @param description
-   * @returns
-   */
+    /**
+    * Returns the instance of Dropdown actions
+    * @param selector
+    * @param description
+    * @returns
+    */
 
-   public dropdown(selector: string,description?: string){
-       return this.dropdownActions.setLocator(this.elementActions.setElement(selector,description).getLocator(),description);
-   }
+    public dropdown(selector: string, description?: string) {
+        return this.dropdownActions.setLocator(this.elementActions.setElement(selector, description).getLocator(), description);
+    }
 
     /**
    * Navigate to specified URL
@@ -93,151 +93,151 @@ export default class UIActions {
    * @param description
    */
 
-    public async gotToURL(URL: string){
-         await this.page.goto(URL,{timeout:3000,waitUntil:"load"});
+    public async gotToURL(URL: string) {
+        await this.page.goto(URL, { timeout: 3000, waitUntil: "load" });
     }
 
-      /**
-   * Navigate to previous URL
-   * @param description
-   */
+    /**
+ * Navigate to previous URL
+ * @param description
+ */
 
-   public async navigateToPrevURL(){
-        await this.page.goBack({timeout:3000,waitUntil:"load"});
-   }
+    public async navigateToPrevURL() {
+        await this.page.goBack({ timeout: 3000, waitUntil: "load" });
+    }
 
     /**
    * Page Refresh
    */
 
     public async pageRefresh() {
-        await this.page.reload({timeout:3000,waitUntil:"load"});
+        await this.page.reload({ timeout: 3000, waitUntil: "load" });
     }
 
-     /**
-   * Press a key on web page
-   * @param key
-   * @param description
-   */
+    /**
+  * Press a key on web page
+  * @param key
+  * @param description
+  */
 
-    public async keyPress(key: string){
+    public async keyPress(key: string) {
         await this.page.keyboard.press(key);
     }
 
-     /**
-   * Returns when the required load state has been reached.
-   */
+    /**
+  * Returns when the required load state has been reached.
+  */
 
-   public async waitForLoadState(){
-       await this.page.waitForLoadState("load",{timeout:3000});
-   }
+    public async waitForLoadState() {
+        await this.page.waitForLoadState("load", { timeout: 3000 });
+    }
 
-   /**
-   * Returns when the required dom content is in loaded state.
-   */
-   
-   public async waitForDOMContentLoaded(){
-       await this.page.waitForLoadState("domcontentloaded",{timeout:3000})
-   }
+    /**
+    * Returns when the required dom content is in loaded state.
+    */
 
-     /**
-   * Gets the handle of the new window
-   * @param selector
-   * @param description
-   */
+    public async waitForDOMContentLoaded() {
+        await this.page.waitForLoadState("domcontentloaded", { timeout: 3000 })
+    }
 
-   public async switchToNewWindow(selector: string, description: string): Promise<Page> {
-       let [newPage] = [this.page];
-       [newPage] = await Promise.all([
-          this.page.context().waitForEvent("page"),
-          await this.elementActions.setElement(selector,description).click(),
-       ]);
-       await this.waitForDOMContentLoaded();
-       return newPage;
-   }
+    /**
+  * Gets the handle of the new window
+  * @param selector
+  * @param description
+  */
 
-     /**
-   * Gets the page Title
-   * @returns
-   */
+    public async switchToNewWindow(selector: string, description: string): Promise<Page> {
+        let [newPage] = [this.page];
+        [newPage] = await Promise.all([
+            this.page.context().waitForEvent("page"),
+            await this.elementActions.setElement(selector, description).click(),
+        ]);
+        await this.waitForDOMContentLoaded();
+        return newPage;
+    }
 
-    public async getPageTitle(){
+    /**
+  * Gets the page Title
+  * @returns
+  */
+
+    public async getPageTitle() {
         let title: string;
         title = await this.page.title();
         return title;
     }
 
-      /**
-   * Click on Element by Role by has Text
-   * @param role
-   * @param isHasText
-   * @returns
-   */
+    /**
+ * Click on Element by Role by has Text
+ * @param role
+ * @param isHasText
+ * @returns
+ */
 
-    public async getElementByRolebyHasText(roleVal: Parameters<Page['getByRole']>[0],isHasText: string): Promise<Locator>{
-          return  this.page.getByRole(roleVal).filter({hasText: isHasText});
+    public async getElementByRolebyHasText(roleVal: Parameters<Page['getByRole']>[0], isHasText: string): Promise<Locator> {
+        return this.page.getByRole(roleVal).filter({ hasText: isHasText });
     }
 
-       /**
-   * Click on Element by Role by has Text
-   * @param role
-   * @returns
-   */
+    /**
+* Click on Element by Role by has Text
+* @param role
+* @returns
+*/
 
-       public async getElementByLabel(labelText: string): Promise<Locator>{
-        return  this.page.getByLabel(labelText,{exact:true});
-  }
+    public async getElementByLabel(labelText: string): Promise<Locator> {
+        return this.page.getByLabel(labelText, { exact: true });
+    }
 
-        /**
-   * Click on Element by Role by Placeholder
-   * @param placeholderText
-   * @returns
-   */
+    /**
+* Click on Element by Role by Placeholder
+* @param placeholderText
+* @returns
+*/
 
-        public async getElementByPlaceholder(placeholderText: string): Promise<Locator>{
-            return  this.page.getByPlaceholder(placeholderText,{exact:true});
-      }
-    
-            /**
-   * Click on Element by Role by Text
-   * @param textValue
-   * @returns
-   */
+    public async getElementByPlaceholder(placeholderText: string): Promise<Locator> {
+        return this.page.getByPlaceholder(placeholderText, { exact: true });
+    }
 
-            public async getElementByText(textValue: string): Promise<Locator>{
-                return  this.page.getByText(textValue,{exact:true});
-          }
+    /**
+* Click on Element by Role by Text
+* @param textValue
+* @returns
+*/
 
-       /**
-   * Click on Element by Role by Exact Text
-   * @param role
-   * @param isHasText
-   * @returns
-   */
+    public async getElementByText(textValue: string): Promise<Locator> {
+        return this.page.getByText(textValue, { exact: true });
+    }
 
-       public async getElementByRolebyExactText(roleVal: Parameters<Page['getByRole']>[0],isHasText: string): Promise<Locator>{
-                return  this.page.getByRole(roleVal,{exact:true}).filter({hasText: isHasText});
-  }
+    /**
+* Click on Element by Role by Exact Text
+* @param role
+* @param isHasText
+* @returns
+*/
 
-       /**
-   * Click on Element by Role by name
-   * @param role
-   * @param name
-   * @returns
-   */
+    public async getElementByRolebyExactText(roleVal: Parameters<Page['getByRole']>[0], isHasText: string): Promise<Locator> {
+        return this.page.getByRole(roleVal, { exact: true }).filter({ hasText: isHasText });
+    }
 
-    public async getElementByRoleByName(roleVal: Parameters<Page['getByRole']>[0],nameToIdentify: string): Promise<Locator>{
-        return this.page.getByRole(roleVal,{name: nameToIdentify,exact:true});
-       }
-    
-        /**
-   * Identify Element By Text
-   * @param textVal
-   * @returns
-   */
+    /**
+* Click on Element by Role by name
+* @param role
+* @param name
+* @returns
+*/
 
-    public async getElementRoleByText(roleVal:string,textVal: string):Promise<Locator> {
-        return this.elementActions.setElementByPageByTexts(roleVal,textVal);
+    public async getElementByRoleByName(roleVal: Parameters<Page['getByRole']>[0], nameToIdentify: string): Promise<Locator> {
+        return this.page.getByRole(roleVal, { name: nameToIdentify, exact: true });
+    }
+
+    /**
+* Identify Element By Text
+* @param textVal
+* @returns
+*/
+
+    public async getElementRoleByText(roleVal: string, textVal: string): Promise<Locator> {
+        return this.elementActions.setElementByPageByTexts(roleVal, textVal);
     }
 
     /**
@@ -245,7 +245,7 @@ export default class UIActions {
      * @param locatorText
      */
 
-    public async getPageLocator(locatorText: string):Promise<Locator> {
+    public async getPageLocator(locatorText: string): Promise<Locator> {
         return this.page.locator(locatorText);
     }
 
@@ -255,49 +255,48 @@ export default class UIActions {
      * @paran - forOperation - visible , enable
      */
 
-    public async RetryElementFindingsByLocatorTextVisible(locatorText: string,forOperation:string,maxRetries: number,timeout:number){
+    public async RetryElementFindingsByLocatorTextVisible(locatorText: string, forOperation: string, maxRetries: number, timeout: number) {
         for (let i = 0; i < maxRetries; i++) {
             try {
-                if(forOperation === 'visible'){
-                await expect(this.page.locator(locatorText)).toBeVisible({ timeout: timeout });
-                return;}
-                if(forOperation === 'enable'){
+                if (forOperation === 'visible') {
+                    await expect(this.page.locator(locatorText)).toBeVisible({ timeout: timeout });
+                    return;
+                }
+                if (forOperation === 'enable') {
                     await expect(this.page.locator(locatorText)).toBeEnabled({ timeout: timeout });
-                    return;}
+                    return;
+                }
             } catch (error) {
                 console.log(`Attempt ${i + 1} failed, retrying...`);
                 await this.page.waitForLoadState('networkidle');
             }
         }
-        throw new Error(locatorText + 'never became enabled after ' + maxRetries +' retries');
+        throw new Error(locatorText + 'never became enabled after ' + maxRetries + ' retries');
     }
 
-     /**
-     * Perform Retry logic
-     * @param locatorText
-     * @paran - forOperation - visible , enable
-     */
+    /**
+    * Perform Retry logic
+    * @param locatorText
+    * @paran - forOperation - visible , enable
+    */
 
-     public async RetryElementFindingsByRole(roleVal: Parameters<Page['getByRole']>[0],nameToIdentify: string,forOperation:string,maxRetries: number,timeout:number){
+    public async RetryElementFindingsByRole(roleVal: Parameters<Page['getByRole']>[0], nameToIdentify: string, forOperation: string, maxRetries: number, timeout: number) {
         for (let i = 0; i < maxRetries; i++) {
             try {
-                if(forOperation === 'visible'){
-                await expect(this.page.getByRole(roleVal,{name:nameToIdentify})).toBeVisible({ timeout: timeout });
-                return;}
-                if(forOperation === 'enable'){
-                    await expect(this.page.getByRole(roleVal,{name:nameToIdentify})).toBeEnabled({ timeout: timeout });
-                    return;}
+                if (forOperation === 'visible') {
+                    await expect(this.page.getByRole(roleVal, { name: nameToIdentify })).toBeVisible({ timeout: timeout });
+                    return;
+                }
+                if (forOperation === 'enable') {
+                    await expect(this.page.getByRole(roleVal, { name: nameToIdentify })).toBeEnabled({ timeout: timeout });
+                    return;
+                }
             } catch (error) {
                 console.log(`Attempt ${i + 1} failed, retrying...`);
                 await this.page.waitForLoadState('networkidle');
             }
         }
-        throw new Error(' Locator ' + roleVal + ' with name' + nameToIdentify + 'never became enabled after ' + maxRetries +' retries');
+        throw new Error(' Locator ' + roleVal + ' with name' + nameToIdentify + 'never became enabled after ' + maxRetries + ' retries');
     }
 
-
-  
-
-   
-    
 }

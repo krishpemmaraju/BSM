@@ -12,9 +12,9 @@ const timeInMin: number = 60 * 1000;
 setDefaultTimeout(Number.parseInt(process.env.TEST_TIMEOUT, 10) * timeInMin);
 let browser: Browser;
 
-BeforeAll(async function() {
-    browser = await WebBrowserManager.launch("chrome");
-});
+// BeforeAll(async function() {
+//     browser = await WebBrowserManager.launch("chrome");
+// });
 
 // AfterAll(async function() {
 //     await browser.close();
