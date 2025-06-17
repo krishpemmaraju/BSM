@@ -1,4 +1,4 @@
-import { Locator, Page } from "@playwright/test";
+import { expect, Locator, Page } from "@playwright/test";
 import UIElementActions from "./UIElementsActions";
 import DropdownActions from "./DropdownActions";
 import CheckBoxActions from "./CheckBoxActions";
@@ -248,6 +248,53 @@ export default class UIActions {
     public async getPageLocator(locatorText: string):Promise<Locator> {
         return this.page.locator(locatorText);
     }
+
+    /**
+     * Perform Retry logic
+     * @param locatorText
+     * @paran - forOperation - visible , enable
+     */
+
+    public async RetryElementFindingsByLocatorTextVisible(locatorText: string,forOperation:string,maxRetries: number,timeout:number){
+        for (let i = 0; i < maxRetries; i++) {
+            try {
+                if(forOperation === 'visible'){
+                await expect(this.page.locator(locatorText)).toBeVisible({ timeout: timeout });
+                return;}
+                if(forOperation === 'enable'){
+                    await expect(this.page.locator(locatorText)).toBeEnabled({ timeout: timeout });
+                    return;}
+            } catch (error) {
+                console.log(`Attempt ${i + 1} failed, retrying...`);
+                await this.page.waitForLoadState('networkidle');
+            }
+        }
+        throw new Error(locatorText + 'never became enabled after ' + maxRetries +' retries');
+    }
+
+     /**
+     * Perform Retry logic
+     * @param locatorText
+     * @paran - forOperation - visible , enable
+     */
+
+     public async RetryElementFindingsByRole(roleVal: Parameters<Page['getByRole']>[0],nameToIdentify: string,forOperation:string,maxRetries: number,timeout:number){
+        for (let i = 0; i < maxRetries; i++) {
+            try {
+                if(forOperation === 'visible'){
+                await expect(this.page.getByRole(roleVal,{name:nameToIdentify})).toBeVisible({ timeout: timeout });
+                return;}
+                if(forOperation === 'enable'){
+                    await expect(this.page.getByRole(roleVal,{name:nameToIdentify})).toBeEnabled({ timeout: timeout });
+                    return;}
+            } catch (error) {
+                console.log(`Attempt ${i + 1} failed, retrying...`);
+                await this.page.waitForLoadState('networkidle');
+            }
+        }
+        throw new Error(' Locator ' + roleVal + ' with name' + nameToIdentify + 'never became enabled after ' + maxRetries +' retries');
+    }
+
 
   
 

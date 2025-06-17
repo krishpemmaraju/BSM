@@ -16,9 +16,9 @@ BeforeAll(async function() {
     browser = await WebBrowserManager.launch("chrome");
 });
 
-AfterAll(async function() {
-    await browser.close();
-});
+// AfterAll(async function() {
+//     await browser.close();
+// });
 
 Before({tags: "@reality"}, async function({pickle,gherkinDocument}) {
     const line = formatterHelpers.PickleParser.getPickleLocation({gherkinDocument,pickle});
@@ -83,8 +83,8 @@ After({tags:"@web"},async function({result,pickle,gherkinDocument} : ITestCaseHo
     const status = result.status;
     const scenario = pickle.name;
     console.log("************************ "+ scenario + " is completed with " + status + "*******************");
-    this.page.close();
-    this.context?.close();
+    await this.page.close();
+    await this.context?.close();
 })
 
 After({tags:"@SCM"},async function({result,pickle,gherkinDocument} : ITestCaseHookParameter) {
@@ -92,16 +92,20 @@ After({tags:"@SCM"},async function({result,pickle,gherkinDocument} : ITestCaseHo
     const scenario = pickle.name;
     await new SCMLogoutPage(this.web).LogoutApplication();
     console.log("************************ "+ scenario + " is completed with " + status + " *******************");
-    this.page.close();
-    this.context?.close();
+    try{
+        await this.page.close();
+        await this.context?.close();
+        await browser.close();
+    }catch(error){
+        console.log('Clean up is not done ', error.message);
+    }
+   
 })
 
 After({tags:"@api"},async function({result,pickle,gherkinDocument} : ITestCaseHookParameter) {
     const status = result.status;
     const scenario = pickle.name;
     console.log("************************ "+ scenario + " API is completed with " + status + "*******************");
-    this.page.close();
-    this.context?.close();
 })
 
 

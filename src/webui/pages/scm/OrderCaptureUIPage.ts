@@ -45,7 +45,8 @@ export default class OrderCaptureUIPage {
     }
 
     public async WaitForCheckOutPopUp() {
-        await expect(await this.web.getElementByRolebyExactText('button', 'Confirm')).toBeEnabled({ timeout: TEST_CONFIG.TIMEOUTS.element });
+        await this.web.RetryElementFindingsByRole('button','Confirm','enable',5,TEST_CONFIG.TIMEOUTS.element);
+     //   await expect(await this.web.getElementByRolebyExactText('button', 'Confirm')).toBeEnabled({ timeout: TEST_CONFIG.TIMEOUTS.element });
         await reportGeneration.getScreenshot(this.web.getPage(), "After clicking on Submit", world);
         return (await this.web.getElementByRolebyExactText('heading','Checkout')).isVisible({timeout:TEST_CONFIG.TIMEOUTS.element});
     }
