@@ -312,4 +312,41 @@ export default class UIActions {
         throw new Error(' Locator ' + roleVal + ' with name ' + nameToIdentify + ' never became enabled after ' + maxRetries + ' retries');
     }
 
+    /**
+    * Perform Retry logic
+    * @param locatorText
+    * @paran - forOperation - visible , enable
+    */
+
+    public async RetryElementFindingsByRoleText(nameToIdentify: string, forOperation: string, maxRetries: number, timeout: number) {
+        for (let i = 0; i < maxRetries; i++) {
+            try {
+                if (forOperation === 'visible') {
+                    await expect(this.page.getByText(nameToIdentify)).toBeVisible({ timeout: timeout });
+                    return;
+                }
+                if (forOperation === 'enable') {
+                    await expect(this.page.getByText(nameToIdentify)).toBeEnabled({ timeout: timeout });
+                    return;
+                }
+            } catch (error) {
+                console.log(`Attempt ${i + 1} failed, retrying...`);
+                if (forOperation === 'visible') { 
+                if( await (this.page.getByText(nameToIdentify)).isVisible({timeout:TEST_CONFIG.TIMEOUTS.element})) {
+                    console.log('coming here for visible');
+                    return;
+                }
+            }
+            if (forOperation === 'enable') { 
+                if( await (this.page.getByText(nameToIdentify)).isEnabled({timeout:TEST_CONFIG.TIMEOUTS.element})) {
+                    console.log('coming here for enable');
+                    return;
+                }
+            }
+                await this.page.waitForLoadState('networkidle');
+            }
+        }
+        throw new Error(' Locator By Text '  + nameToIdentify + ' never became enabled after ' + maxRetries + ' retries');
+    }
+
 }
