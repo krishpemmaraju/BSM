@@ -24,7 +24,7 @@ export default class OrderCaptureUIPage {
         await this.web.element(SELECT_CUSTOMER, "Click to Select Customer").click();
         await this.web.element(ENTER_CUSTOMER,'Input for Customer Search').setText(customer);
         await this.web.RetryElementFindingsByRoleText( customer,'visible',3,TEST_CONFIG.TIMEOUTS.element);
-        await (await this.web.getElementByText(customer)).click();
+        await (await this.web.getElementByText(customer)).click({timeout:3000});
         await reportGeneration.getScreenshot(this.web.getPage(), "After Selecting Customer " + customer, world);
     }
 

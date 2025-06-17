@@ -318,15 +318,15 @@ export default class UIActions {
     * @paran - forOperation - visible , enable
     */
 
-    public async RetryElementFindingsByRoleText(nameToIdentify: string, forOperation: string, maxRetries: number, timeout: number) {
+    public async RetryElementFindingsByRoleText(nameToIdentify: string, forOperation: string, maxRetries: number, timeouts: number) {
         for (let i = 0; i < maxRetries; i++) {
             try {
                 if (forOperation === 'visible') {
-                    await expect(this.page.getByText(nameToIdentify)).toBeVisible({ timeout: timeout });
+                    await expect(this.page.getByText(nameToIdentify)).toBeVisible({ timeout: timeouts });
                     return;
                 }
                 if (forOperation === 'enable') {
-                    await expect(this.page.getByText(nameToIdentify)).toBeEnabled({ timeout: timeout });
+                    await expect(this.page.getByText(nameToIdentify)).toBeEnabled({ timeout: timeouts });
                     return;
                 }
             } catch (error) {
