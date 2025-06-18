@@ -14,17 +14,16 @@ jobs:
     - uses: actions/setup-node@v4
       with:
         node-version: lts/*
-    - name: Install Xvfb
-      run: sudo apt-get install -y xvfb dbus-x11
-    - name: Start Xvfb
-      run: |
-        Xvfb :99 -ac -screen 0 1920x1080x24 &
-        echo "DISPLAY=:99" >> $GITHUB_ENV
     - name: Install dependencies
       run: npm ci
     - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
-    - name: Run Playwright tests
-      run: npm test
+      run: |
+        npx playwright install chromium firefox webkit
+        sudo npx playwright install-deps
+    - name: Setup virtual display and run tests
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y xvfb
+        xvfb-run -a --server-args="-screen 0 1280x720x24" -ac npm test
       env:
-        PLAYWRIGHT_HEADLESS: 'false'
+        HEADED: 'false'
