@@ -34,17 +34,21 @@ jobs:
     - name: Set up Xvfb
       if: ${{ github.event_name == 'workflow_dispatch' && inputs.headed || false }}
       run: |
-        sudo apt-get install -y xvfb
+        sudo apt-get update
+        sudo apt-get install -y xvfblibgbm-dev
         echo "DISPLAY=:99" >> $GITHUB_ENV
-    
-    - name: Start Xvfb
-      if: ${{ github.event_name == 'workflow_dispatch' && inputs.headed || false }}
-      run: |
-        Xvfb :99 -screen 0 1280x1024x24 &
-        sleep 3
+        echo "HEADED=true" >> $GITHUN_ENV
+        Xvfb :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
+        sleep 3 
     
     - name: Run tests
-      run: npm test
+      run: | 
+        if [ "$HEADED" = "true"]; then 
+          echo "Running in HEaded mode"
+          xvfb-run --auto-servernum -- npm test
+        else
+          echo "Running in headless mode"
+          npm test
+        fi    
       env:
-        HEADED: ${{ github.event_name == 'workflow_dispatch' && inputs.headed || false }}
-        DISPLAY: ${{ env.DISPLAY || ':99' }}
+        HEADLESS: ${{ env.HEADED == 'true' && 'false' || 'true' }}
