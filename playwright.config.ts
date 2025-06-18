@@ -47,18 +47,18 @@ const config: PlaywrightTestConfig = {
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] ,headless: process.env.HEADLESS != 'false'},
+      use: { ...devices['Desktop Chrome'] ,headless: !process.env.HEADED,},
       
     },
 
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'],headless: process.env.HEADLESS != 'false' },
+      use: { ...devices['Desktop Firefox'],headless: !process.env.HEADED, },
     },
 
     {
       name: 'webkit',
-      use: { ...devices['Desktop Safari'],headless: process.env.HEADLESS != 'false' },
+      use: { ...devices['Desktop Safari'],headless: !process.env.HEADED, },
     },
 
     /* Test against mobile viewports. */
