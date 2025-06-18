@@ -21,15 +21,14 @@ jobs:
       run: |
         npx playwright install chromium firefox webkit
         sudo npx playwright install-deps
-
-    - name: Setup virtual display and run tests
-      run: |
-        sudo apt-get install -y xvfb dbus-x11
-        sudo apt-get install -y libgtk-3-0 libgbm-dev
-        Xvfb :99 -ac -screen 0 1920x1080x24 &
-        echo "DISPLAY=:99" >> $GITHUB_ENV
     
     - name: Run Playwright Cucumber tests in non-headless mode
-      run: xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" npx cucumber-js
+      run: |
+        if [ "${{ inputs.non-headless}}" = "true"]; then
+           xvfb-run --auto-servernum -- npm test
+        else
+          npm test
+        fi
       env:
-          PLAYWRIGHT_HEADLESS: 'false'
+        HEADLESS: ${{ inputs.non-headless && 'false' || 'true'}}
+        PWDEBUG: '1'

@@ -28,6 +28,7 @@ const config: PlaywrightTestConfig = {
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: [['html'], ['junit', { outputFile: 'test-results/junit.xml' }]],
+
   
   use: {
     actionTimeout: TIMEOUTS.ACTIONS,
@@ -46,18 +47,18 @@ const config: PlaywrightTestConfig = {
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] ,headless: false},
+      use: { ...devices['Desktop Chrome'] ,headless: process.env.HEADLESS != 'false'},
       
     },
 
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'],headless: false },
+      use: { ...devices['Desktop Firefox'],headless: process.env.HEADLESS != 'false' },
     },
 
     {
       name: 'webkit',
-      use: { ...devices['Desktop Safari'],headless: false },
+      use: { ...devices['Desktop Safari'],headless: process.env.HEADLESS != 'false' },
     },
 
     /* Test against mobile viewports. */
