@@ -3,7 +3,6 @@ import ReportGeneration from "../../../helper/reportGeneration";
 import UIActions from "../../actions/UIActions";
 import { world } from "@cucumber/cucumber";
 import { TEST_CONFIG } from "../../../config/test-config";
-import Assert from "../../../asserts/Assert";
 
 let reportGeneration: ReportGeneration;
 let ENTER_CUSTOMER: string = "input[placeholder='Search by Customer Name, Account Code or Postcode']";
