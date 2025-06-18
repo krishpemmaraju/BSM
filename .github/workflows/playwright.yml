@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       headed:
-        description: 'Run in headed (non-headless) mode'
+        description: 'Run in headed mode'
         type: boolean
         default: false
   push:
@@ -30,25 +30,31 @@ jobs:
     - name: Install Playwright
       run: npx playwright install
     
-    # Set up virtual display for headed mode
-    - name: Set up Xvfb
-      if: ${{ github.event_name == 'workflow_dispatch' && inputs.headed || false }}
+    # Essential Xvfb setup for headed mode
+    - name: Setup Xvfb environment
       run: |
         sudo apt-get update
-        sudo apt-get install -y xvfblibgbm-dev
+        sudo apt-get install -y xvfb libgbm-dev libxshmfence-dev
         echo "DISPLAY=:99" >> $GITHUB_ENV
-        echo "HEADED=true" >> $GITHUN_ENV
-        Xvfb :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
-        sleep 3 
+        echo "HEADLESS=${{ !(github.event_name == 'workflow_dispatch' && inputs.headed) }}" >> $GITHUB_ENV
     
-    - name: Run tests
-      run: | 
-        if [ "$HEADED" = "true"]; then 
-          echo "Running in HEaded mode"
-          xvfb-run --auto-servernum -- npm test
-        else
-          echo "Running in headless mode"
-          npm test
-        fi    
+    # Start Xvfb server (required for both modes for consistency)
+    - name: Start Xvfb
+      run: |
+        Xvfb :99 -screen 0 1280x1024x24 -ac +extension GLX +render -noreset &
+        sleep 3
+        ps aux | grep Xvfb
+    
+    # Run tests with proper environment
+    - name: Run Playwright tests
+      run: npm test
       env:
-        HEADLESS: ${{ env.HEADED == 'true' && 'false' || 'true' }}
+        DISPLAY: ${{ env.DISPLAY }}
+        HEADLESS: ${{ env.HEADLESS }}
+        PWDEBUG: ${{ env.HEADLESS == 'false' && '1' || '0' }}
+    
+    - uses: actions/upload-artifact@v3
+      if: failure()
+      with:
+        name: playwright-report
+        path: playwright-report/
