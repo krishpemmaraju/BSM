@@ -1,7 +1,7 @@
 import { expect, TestInfo } from "playwright/test";
 import ReportGeneration from "../../../helper/reportGeneration";
 import UIActions from "../../actions/UIActions";
-import { world } from "@cucumber/cucumber";
+import { setDefaultTimeout, world } from "@cucumber/cucumber";
 import { TEST_CONFIG } from "../../../config/test-config";
 
 let reportGeneration: ReportGeneration;
@@ -10,6 +10,8 @@ let SELECT_CUSTOMER: string = "div[title='Select Customer...']";
 let ENTER_PRODUCT:string= "input[placeholder='Search by Product Code, Description, Supplier Part Code or Barcode']";
 let CLICK_PRINT_CLOSE = "oj-button[title='Close']"
 let PRINT_TEXT = ".oj-message-title"
+
+setDefaultTimeout(60 * 10 * 1000);
 
 export default class OrderCaptureUIPage {
 

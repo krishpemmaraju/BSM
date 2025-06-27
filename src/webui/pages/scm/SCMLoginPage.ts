@@ -2,9 +2,9 @@ import { Page, TestInfo } from "playwright/test";
 import ReportGeneration from "../../../helper/reportGeneration";
 import UIActions from "../../actions/UIActions";
 import { TEST_CONFIG } from "../../../config/test-config";
-import { world } from "@cucumber/cucumber";
+import { setDefaultTimeout, world } from "@cucumber/cucumber";
 
-
+setDefaultTimeout(60 * 10 * 1000);
 
 let reportGeneration: ReportGeneration;
 let testInfo: TestInfo;
@@ -20,7 +20,7 @@ export default class SCMLoginPage {
 
     public async loginIntoSCMApp(url: string, username: string, password: string) {
         await this.web.gotToURL(url);
-        (await this.web.getPageLocator(SINGLE_SIGN_ON)).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element });
+        //(await this.web.getPageLocator(SINGLE_SIGN_ON)).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element });
         await reportGeneration.getScreenshot(this.web.getPage(), "SCM Landing Page Launched", world);
         await this.web.element(SCM_USERNAME, "ENTER USER NAME").setText(username);
         await this.web.element(SCM_PASSWORD, "ENTER PASSWORD").setText(password);

@@ -35,6 +35,8 @@ When('Search for {string}', async function (product) {
 
     } else {
         await new OrderCaptureUIPage(this.web).SelectProduct(product);
+        await new OrderCaptureUIPage(this.web).AddProductsToBasket(product);
+        await new OrderCaptureUIPage(this.web).IsProductAddedToBasket(product);
     }
 });
 

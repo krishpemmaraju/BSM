@@ -7,7 +7,7 @@ Feature: Create Account Order in Order Capture UI
         Then User should see Order Capture dashboard
         When Select customer as "<customer>"
         And Search for "<products>"
-        And add products "<products>" to the basket
+        # And add products "<products>" to the basket
         Then User should see "<products>" added to the basket list
         When User clicks on submit
         Then User should see Checkout popup
