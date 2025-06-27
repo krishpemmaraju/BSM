@@ -63,6 +63,22 @@ export default class Assert {
         }
      }
 
+
+       /**
+    * To verify that value1 equals value2 
+    * @param expValue - string input [ expected ]
+    * @param actvalue - should be present in value1 [ actual ]
+    * @param softAssert - for soft asserts this has to be set to true, else this can be ignored
+    */
+
+       public static async assertEqualsList(expValue: string[],actValue: string[],softAssert=false){
+        try{
+             expect(expValue,`'${actValue} should be equal to '${expValue}'`).toEqual(actValue);
+        }catch(error){
+            if(!softAssert) throw new Error(error);
+        }
+     }
+
       /**
     * To verify that value1 equals value2 
     * @param expValue - int input [ expected ]

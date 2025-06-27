@@ -37,16 +37,22 @@ export default class SCMHomePage {
         await reportGeneration.getScreenshot(this.web.getPage(), "AFTER CLICKING ON SUPPLYCHAIN EXECUTION", world)
         await (await this.web.getElementByRoleByName('link', 'Inventory Management')).click();
         await (await this.web.getElementByRolebyExactText('heading', 'Inventory Management')).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element });
-        if (!await this.web.element(WAIT_FOR_ACTIONS_MENU, "Waiting for actions menu in Inventory Dashboard").isElementVisible(10)) {
+        if (!await this.web.element(WAIT_FOR_ACTIONS_MENU, "Waiting for actions menu in Inventory Dashboard").isElementVisible(5)) {
             try {
                 console.log("coming to try");
-                if (!await this.web.element(WAIT_FOR_ACTIONS_MENU, "Waiting for actions menu in Inventory Dashboard").isElementVisible(10)) {
+                await this.web.getPage().reload();
+                const isVisble = await this.web.element(WAIT_FOR_ACTIONS_MENU, "Waiting for actions menu in Inventory Dashboard").isElementVisible(5);
+                if (!isVisble) {
                     await this.web.getPage().reload();
                 }
+                await this.web.element(WAIT_FOR_ACTIONS_MENU, "Waiting for actions menu in Inventory Dashboard").isElementVisible(5);
+                await reportGeneration.getScreenshot(this.web.getPage(), "AFTER CLICKING ON INVENTORY MANAGEMENT", world);
             } 
             catch (error) {
                 console.log("coming to catch");
-                if (!await this.web.element(WAIT_FOR_ACTIONS_MENU, "Waiting for actions menu in Inventory Dashboard").isElementVisible(10)) {
+                await this.web.getPage().reload();
+                const isVisble = await this.web.element(WAIT_FOR_ACTIONS_MENU, "Waiting for actions menu in Inventory Dashboard").isElementVisible(5);
+                if (!isVisble) {
                     await this.web.getPage().reload();
                 }
                 await this.web.element(WAIT_FOR_ACTIONS_MENU, "Waiting for actions menu in Inventory Dashboard").waitForElementToVisible(TEST_CONFIG.TIMEOUTS.element);

@@ -2,8 +2,8 @@ import { chromium, firefox, LaunchOptions, webkit } from "playwright";
 
 
 const browserOptions: LaunchOptions = {
-    slowMo: 3000,
-    headless: true,
+    slowMo: 1000,
+    headless: false,
     args: ["--start-maximized", "--disable-extensions", "--disable-plugins"],
     timeout: 60000
 }

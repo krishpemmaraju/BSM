@@ -103,6 +103,18 @@ export default class UIElementActions {
         return this;
     }
 
+      
+       /**
+   * Set Type to a element
+   * 
+   * @returns
+   */
+
+       public async setType(valueToSet: string){
+        await this.getLocator().type(valueToSet)
+        return this;
+    }
+
      /**
    * Double click on element
    * @returns
@@ -238,6 +250,8 @@ export default class UIElementActions {
         return (await this.getLocator().innerText()).trim();
     }
 
+ 
+
      /**
    * checks if element is enabled
    * @param sec
@@ -248,6 +262,17 @@ export default class UIElementActions {
         await this.waitForElementToVisible(2);
         return await this.getLocator().isEnabled();
     }
+
+     /**
+   * checks if element is editable
+   * @param sec
+   * @returns Promise<boolean>
+   */ 
+
+     public async isElementEditable(): Promise<boolean> {
+      await this.waitForElementToVisible(2);
+      return await this.getLocator().isEditable();
+  }
 
      /**
    * checks if element is visible

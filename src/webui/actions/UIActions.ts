@@ -285,15 +285,31 @@ export default class UIActions {
         for (let i = 0; i < maxRetries; i++) {
             try {
                 if (forOperation === 'visible') {
+                    console.log('Coming for try');
+                    await this.getPage().reload();
+                    await this.page.waitForLoadState('networkidle');
+                    await this.page.waitForSelector('.loading', { state: 'hidden', timeout: 5000 }).catch(() => {});
+                    await this.page.waitForSelector('.spinner', { state: 'hidden', timeout: 5000 }).catch(() => {});
                     await expect(this.page.getByRole(roleVal, { name: nameToIdentify })).toBeVisible({ timeout: timeout });
+                    await expect(this.page.getByRole(roleVal, { name: nameToIdentify })).toBeEnabled({ timeout: timeout });
                     return;
                 }
                 if (forOperation === 'enable') {
+                    await this.getPage().reload();
+                    await expect(this.page.getByRole(roleVal, { name: nameToIdentify })).toBeEnabled({ timeout: timeout });
+                    await this.page.waitForLoadState('networkidle');
+                    await this.page.waitForSelector('.loading', { state: 'hidden', timeout: 5000 }).catch(() => {});
+                    await this.page.waitForSelector('.spinner', { state: 'hidden', timeout: 5000 }).catch(() => {});
+                    await expect(this.page.getByRole(roleVal, { name: nameToIdentify })).toBeVisible({ timeout: timeout });
                     await expect(this.page.getByRole(roleVal, { name: nameToIdentify })).toBeEnabled({ timeout: timeout });
                     return;
                 }
             } catch (error) {
                 console.log(`Attempt ${i + 1} failed, retrying...`);
+                await this.getPage().reload();
+                await this.page.waitForLoadState('networkidle');
+                await this.page.waitForSelector('.loading', { state: 'hidden', timeout: 5000 }).catch(() => {});
+                await this.page.waitForSelector('.spinner', { state: 'hidden', timeout: 5000 }).catch(() => {});
                 if (forOperation === 'visible') { 
                 if( await this.page.getByRole(roleVal, { name: nameToIdentify }).isVisible({timeout:TEST_CONFIG.TIMEOUTS.element})) {
                     console.log('coming here for visible');

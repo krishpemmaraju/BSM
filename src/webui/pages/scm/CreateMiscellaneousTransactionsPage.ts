@@ -9,10 +9,12 @@ let reportGeneration: ReportGeneration;
 let testInfo: TestInfo;
 let CLICK_ON_EDIT_ICON = "button[aria-label='Edit']";
 let SELECT_TRANSACTION_TYPE = "#transactionType";
+let WAIT_FOR_ACC_ALIAS_DROPDPWN="#lovDropdown_transactionType"
 let ENTER_QUANTITY = '#Quantity\\|input';
 let ENTER_SUBMINVENTORY = '#subinventory\\|input'
 let ADD_ITEM_BTN: string;
 let GET_CONF_MESSAGE_POP_UP: string = ".oj-message-title";
+let CLICK_MORE_ACTIONS: string= "button[aria-label='More Actions']";
 let ACCOUNT_ALIAS_XPATH = "//span[text()='Account Alias']//ancestor::div[@class='oj-flex-item']//a";
 setDefaultTimeout(60 * 1000 * 2);
 
@@ -25,7 +27,16 @@ export default class CreateMiscellaneousTransactions {
 
 
     public async ClickOnMiscellaneousTransactions() {
-        await (await this.web.getElementByRolebyExactText('button', 'Create Miscellaneous Transactions')).click();
+    //    await this.web.RetryElementFindingsByRole('button','Create Miscellaneous Transactions','visible',2,TEST_CONFIG.TIMEOUTS.element);
+        const IsMiscellaneousTransactionsHeaderVisible = await (await this.web.getElementByRolebyExactText('button', 'Create Miscellaneous Transactions')).isVisible();
+        console.log(IsMiscellaneousTransactionsHeaderVisible);
+        if(!IsMiscellaneousTransactionsHeaderVisible){
+            await reportGeneration.getScreenshot(this.web.getPage(), "SCREENSHOT FOR MORE ACTIONS ", world);
+           await this.web.element(CLICK_MORE_ACTIONS,"CLICK ON MORE ACTIONS").click();
+           await reportGeneration.getScreenshot(this.web.getPage(), "CLICK ON MISCELLENEOUS TRANS ", world);
+           await( await this.web.getElementByText('Create Miscellaneous Transactions')).click();
+        }else{
+        await (await this.web.getElementByRolebyExactText('button', 'Create Miscellaneous Transactions')).click({timeout:TEST_CONFIG.TIMEOUTS.element});}
         await (await this.web.getElementByRolebyExactText('heading', 'Miscellaneous Transactions')).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element });
         await reportGeneration.getScreenshot(this.web.getPage(), "AFTER CLICKING ON MISCELLANEOUS TRANSACTIONS ", world);
     }
@@ -42,8 +53,8 @@ export default class CreateMiscellaneousTransactions {
         await this.web.element(SELECT_TRANSACTION_TYPE, "Click on Transaction Type dropdown").click();
         await (await this.web.getElementRoleByText('text', transactionType)).click();
         await reportGeneration.getScreenshot(this.web.getPage(), "AFTER SELECTING TRANSACTION TYPE AS  " + transactionType, world);
-        await (await this.web.getElementByRoleByName('combobox', 'Account Alias')).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element });
-        await (await this.web.getElementByRoleByName('combobox', 'Account Alias')).click({ timeout: 6000 });
+       // await (await this.web.getElementByRoleByName('combobox', 'Account Alias')).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element });
+        await (await this.web.getElementByRoleByName('combobox', 'Account Alias')).click({ timeout: 12000 });
         await (await this.web.getElementRoleByText('text', accountAlias)).click();
         await reportGeneration.getScreenshot(this.web.getPage(), "AFTER SELECTING ACCOUNT ALIAS AS " + accountAlias, world);
         await (await this.web.getElementByRolebyExactText('button', 'Save')).click();
