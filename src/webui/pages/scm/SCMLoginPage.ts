@@ -19,7 +19,11 @@ export default class SCMLoginPage {
     }
 
     public async loginIntoSCMApp(url: string, username: string, password: string) {
-        await this.web.gotToURL(url);
+        try{
+        await this.web.gotToURL(url); }
+        catch(error){
+            await this.web.gotToURL(url);
+        }
         //(await this.web.getPageLocator(SINGLE_SIGN_ON)).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element });
         await reportGeneration.getScreenshot(this.web.getPage(), "SCM Landing Page Launched", world);
         await this.web.element(SCM_USERNAME, "ENTER USER NAME").setText(username);
