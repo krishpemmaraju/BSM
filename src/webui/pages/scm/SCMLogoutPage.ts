@@ -22,8 +22,8 @@ export default class SCMLogoutPage {
       await expect (await this.web.getPageLocator(CLICK_ON_LOGOUT_ICON)).toBeVisible({timeout: TEST_CONFIG.TIMEOUTS.element});
       await this.web.element(CLICK_ON_LOGOUT_ICON,"Click on Setting and Actions Button").click();
       await this.web.element(CLICK_ON_SIGNOUT,"Click on Sign out Button").click();
-      await expect (await this.web.getElementByRolebyExactText('button','Confirm')).toBeVisible({timeout:TEST_CONFIG.TIMEOUTS.element});
       await (await this.web.getElementByRolebyExactText('button','Confirm')).waitFor({state:'visible',timeout:TEST_CONFIG.TIMEOUTS.element});
+      await expect (await this.web.getElementByRolebyExactText('button','Confirm')).toBeVisible({timeout:TEST_CONFIG.TIMEOUTS.element});
       await (await this.web.getElementByRolebyExactText('button','Confirm')).click();
       await (await this.web.getElementByRolebyExactText('button','Sign In ')).waitFor({state:'visible',timeout:TEST_CONFIG.TIMEOUTS.element});
     }

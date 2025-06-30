@@ -31,12 +31,13 @@ export default class OrderCaptureUIPage {
 
     public async SelectProduct(product: string) {
         await this.web.element(ENTER_PRODUCT,'Input for Product Info').setText(product);
-        (await this.web.getElementByText(product)).click();
+        (await this.web.getElementByText(product)).click({timeout: 5000});
         await reportGeneration.getScreenshot(this.web.getPage(), "After Selecting Product " + product, world);
     }
 
     public async AddProductsToBasket(product: string) {
-        (await this.web.getElementByRolebyExactText('button', 'Add to Basket')).click();
+        await expect(await this.web.getElementByRolebyExactText('button', 'Add to Basket')).toBeVisible({ timeout: TEST_CONFIG.TIMEOUTS.element });
+        (await this.web.getElementByRolebyExactText('button', 'Add to Basket')).click({timeout: 5000});
         await expect(await this.web.getElementByRolebyExactText('button', 'Clear All')).toBeVisible({ timeout: TEST_CONFIG.TIMEOUTS.element });
         (await this.web.getElementByRolebyExactText('button', 'Clear All')).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element });
         await reportGeneration.getScreenshot(this.web.getPage(), "After adding " + product + " to basket", world);

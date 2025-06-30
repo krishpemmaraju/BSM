@@ -39,4 +39,4 @@ Feature: Quick Order Entry
         Examples:
             | customer         | PrintVerification |
             | SMITH AND BYFORD | No                |
-        #    | SMITH AND BYFORD | Yes               |
+            | SMITH AND BYFORD | Yes               |
