@@ -8,9 +8,9 @@ on:
         type: boolean
         default: false
   push:
-    branches: [main]
+    branches: [main, master, develop]
   pull_request:
-    branches: [main]
+    branches: [main, master, develop]
 
 jobs:
   test:
@@ -22,33 +22,17 @@ jobs:
     
     - uses: actions/setup-node@v4
       with:
-        node-version: 20
+        node-version: '20'
+        cache: 'npm'
     
     - name: Install dependencies
       run: npm ci
     
-    - name: Install Playwright
+    - name: Install Playwright browsers
       run: npx playwright install
-    
-    # Essential Xvfb setup for headed mode
-    - name: Setup Xvfb environment
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y xvfb libgbm-dev libxshmfence-dev
-        echo "DISPLAY=:99" >> $GITHUB_ENV
-        echo "HEADLESS=${{ !(github.event_name == 'workflow_dispatch' && inputs.headed) }}" >> $GITHUB_ENV
-    
-    # Start Xvfb server (required for both modes for consistency)
-    - name: Start Xvfb
-      run: |
-        Xvfb :99 -screen 0 1280x1024x24 -ac +extension GLX +render -noreset &
-        sleep 3
-        ps aux | grep Xvfb
     
     # Run tests with proper environment
     - name: Run Playwright tests
-      run: npm test
+      run: npx playwright test
       env:
-        DISPLAY: ${{ env.DISPLAY }}
-        HEADLESS: ${{ env.HEADLESS }}
-        PWDEBUG: ${{ env.HEADLESS == 'false' && '1' || '0' }}
+        CI: true
