@@ -347,9 +347,10 @@ export default class UIActions {
                     await expect(this.page.getByText(nameToIdentify)).toBeEnabled({ timeout: timeouts });
                     return;
                 }
-            } catch (error) {
+            } 
+            catch (error) {
                 console.log(`Attempt ${i + 1} failed, retrying...`);
-                if (forOperation === 'visible') { 
+            if (forOperation === 'visible') { 
                     console.log("Coming for visible");
                 if( await (this.page.getByText(nameToIdentify)).isVisible({timeout:TEST_CONFIG.TIMEOUTS.element})) {
                     console.log('coming here for visible');
