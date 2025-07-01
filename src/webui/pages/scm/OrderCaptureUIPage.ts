@@ -42,6 +42,7 @@ export default class OrderCaptureUIPage {
 
     public async SelectProduct(product: string) {
         await this.web.element(ENTER_PRODUCT,'Input for Product Info').setText(product);
+        await reportGeneration.getScreenshot(this.web.getPage(), "After Entering Product " + product, world);
         (await this.web.getElementByText(product)).click({timeout: 5000});
         await reportGeneration.getScreenshot(this.web.getPage(), "After Selecting Product " + product, world);
     }
