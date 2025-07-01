@@ -338,22 +338,26 @@ export default class UIActions {
         for (let i = 0; i < maxRetries; i++) {
             try {
                 if (forOperation === 'visible') {
+                    console.log("Coming for visible");
                     await expect(this.page.getByText(nameToIdentify)).toBeVisible({ timeout: timeouts });
                     return;
                 }
                 if (forOperation === 'enable') {
+                    console.log("Coming for enable");
                     await expect(this.page.getByText(nameToIdentify)).toBeEnabled({ timeout: timeouts });
                     return;
                 }
             } catch (error) {
                 console.log(`Attempt ${i + 1} failed, retrying...`);
                 if (forOperation === 'visible') { 
+                    console.log("Coming for visible");
                 if( await (this.page.getByText(nameToIdentify)).isVisible({timeout:TEST_CONFIG.TIMEOUTS.element})) {
                     console.log('coming here for visible');
                     return;
                 }
             }
             if (forOperation === 'enable') { 
+                console.log("Coming for enable");
                 if( await (this.page.getByText(nameToIdentify)).isEnabled({timeout:TEST_CONFIG.TIMEOUTS.element})) {
                     console.log('coming here for enable');
                     return;
