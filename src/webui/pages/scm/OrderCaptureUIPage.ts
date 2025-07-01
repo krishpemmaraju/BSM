@@ -27,13 +27,13 @@ export default class OrderCaptureUIPage {
         await this.web.element(ENTER_CUSTOMER,'Input for Customer Search').setText(customer);
         await reportGeneration.getScreenshot(this.web.getPage(), "Enter Customer " + customer, world);
      //   await this.web.RetryElementFindingsByRoleText( customer,'visible',3,TEST_CONFIG.TIMEOUTS.element);
-        await (await this.web.getElementByText(customer)).waitFor({state:'attached',timeout: TEST_CONFIG.TIMEOUTS.element});
         console.log( await (await this.web.getElementByText(customer)).isVisible())
         if(await (await this.web.getElementByText(customer)).isVisible()){
             await reportGeneration.getScreenshot(this.web.getPage(), "Enter Customer is visible " + customer, world);
             await (await this.web.getElementByText(customer)).waitFor({state:'attached',timeout: TEST_CONFIG.TIMEOUTS.element});
         }else{
             await this.web.element(ENTER_CUSTOMER,'Input for Customer Search').setText(customer);
+            await (await this.web.getElementByText(customer)).waitFor({state:'attached',timeout: TEST_CONFIG.TIMEOUTS.element});
         }
         await (await this.web.getElementByText(customer)).click({timeout:TEST_CONFIG.TIMEOUTS.element});
         await reportGeneration.getScreenshot(this.web.getPage(), "After Selecting Customer " + customer, world);
