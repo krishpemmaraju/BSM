@@ -5,8 +5,8 @@ Feature: Create Account Order in Order Capture UI
         Given User login into SCM application
         When User navigate to Wolseley Order Capture
         Then User should see Order Capture dashboard
-        # When Select customer as "<customer>"
-        # And Search for "<products>"
+        When Select customer as "<customer>"
+        And Search for "<products>"
         # # And add products "<products>" to the basket
         # Then User should see "<products>" added to the basket list
         # When User clicks on submit
