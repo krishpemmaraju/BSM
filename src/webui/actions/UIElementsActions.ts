@@ -90,6 +90,16 @@ export default class UIElementActions {
         return this;
     }
 
+        /**
+   * Click on element with timeout
+   * "timout - seconds"
+   * @returns
+   */
+
+        public async clickWithTimeOut(timeOutinSeconds: number){
+          await this.getLocator().click({timeout:timeOutinSeconds*1000});
+          return this;
+      }
 
     
        /**

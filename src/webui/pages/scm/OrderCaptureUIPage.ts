@@ -22,7 +22,7 @@ export default class OrderCaptureUIPage {
     }
 
     public async SelectCustomer(customer: string) {
-        await this.web.element(SELECT_CUSTOMER, "Click to Select Customer").click();
+        await this.web.element(SELECT_CUSTOMER, "Click to Select Customer").clickWithTimeOut(5);
         await this.web.element(ENTER_CUSTOMER,'Input for Customer Search').setText(customer);
         await this.web.RetryElementFindingsByRoleText( customer,'visible',3,TEST_CONFIG.TIMEOUTS.element);
         await (await this.web.getElementByText(customer)).click({timeout:3000});
