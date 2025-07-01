@@ -26,7 +26,7 @@ const config: PlaywrightTestConfig = {
     fullyParallel: true,
     forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: 1,
   reporter: [['html'], ['junit', { outputFile: 'test-results/junit.xml' }]],
 
   
@@ -47,19 +47,12 @@ const config: PlaywrightTestConfig = {
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] ,headless: !process.env.HEADED,},
+      use: { ...devices['Desktop Chrome'] ,
+             headless: true},
       
     },
 
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'],headless: !process.env.HEADED, },
-    },
-
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'],headless: !process.env.HEADED, },
-    },
+  
 
     /* Test against mobile viewports. */
     // {

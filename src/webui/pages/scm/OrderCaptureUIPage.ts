@@ -32,6 +32,7 @@ export default class OrderCaptureUIPage {
             await reportGeneration.getScreenshot(this.web.getPage(), "Enter Customer is visible " + customer, world);
             await (await this.web.getElementByText(customer)).waitFor({state:'attached',timeout: TEST_CONFIG.TIMEOUTS.element});
         }else{
+            await this.web.getPage().reload();
             await this.web.element(ENTER_CUSTOMER,'Input for Customer Search').setText(customer);
             await (await this.web.getElementByText(customer)).waitFor({state:'attached',timeout: TEST_CONFIG.TIMEOUTS.element});
         }
