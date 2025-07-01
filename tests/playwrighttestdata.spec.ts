@@ -1,12 +1,13 @@
 import test from "playwright/test";
+import * as data from "../src/config/env/envDetails.json"
+import SCMLoginPage from "../src/webui/pages/scm/SCMLoginPage";
+import UIActions from "../src/webui/actions/UIActions";
+import SCMHomePage from "../src/webui/pages/scm/SCMHomePage";
 
-
-
-
+let SCM_URL = data.SCMDEV[0].SCMDEVURL;
+let SCM_USERNAME=  data.SCMDEV[0].SCMDEVUSERNAME;
+let SCM_PASSWORD =  data.SCMDEV[0].SCMDEVPASSWORD;
 test('login into SCM homepage', async ({page}) => {
-    await page.goto("https://egvh-dev1.login.em3.oraclecloud.com/")
-    await page.locator('#userid').fill('ABB7375');
-    await page.locator('#password').fill('Varahi$$16');
-    await page.locator('#btnActive').click()
-    await page.locator("a[title='Oracle Logo Home']").waitFor({state:"visible",timeout:90000});
+    await new SCMLoginPage(new UIActions(page)).loginIntoSCMApp(SCM_URL,SCM_USERNAME,SCM_PASSWORD);
+    await new SCMHomePage(new UIActions(page)).isHomePageDisplayed();
 })

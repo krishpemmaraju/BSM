@@ -43,7 +43,7 @@ jobs:
     
     # Run tests with proper environment
     - name: Run Playwright tests
-      run: npx playwright test
+      run: npm run test
       env:
         CI: true
     
