@@ -9,13 +9,13 @@ Feature: Create Account Order in Order Capture UI
         And Search for "<products>"
         And add products "<products>" to the basket
         Then User should see "<products>" added to the basket list
-        # When User clicks on submit
-        # Then User should see Checkout popup
-        # When User Clicks on Confirm depends on "<PrintVerification>"
-        # Then Capture the Order Number
-        # Then User Should see "Order Confirmation" page
+        When User clicks on submit
+        Then User should see Checkout popup
+        When User Clicks on Confirm depends on "<PrintVerification>"
+        Then Capture the Order Number
+        Then User Should see "Order Confirmation" page
 
         Examples:
             | customer         | products      | PrintVerification |
             | SMITH AND BYFORD LTD | 128803        | No                |
-            # | SMITH AND BYFORD LTD | 128803,608955 | Yes               |
+             | SMITH AND BYFORD LTD | 128803,608955 | Yes               |

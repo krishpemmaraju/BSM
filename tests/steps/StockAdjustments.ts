@@ -102,7 +102,6 @@ When('User clicks on Done', async function () {
 
 Then('User should see {string} dashboard with line details', async function (string) {
    getTransactionQty = Number(await new InventoryManagementPage(this.web).GetExistingSOH("Transaction Quantity"))
-   console.log("Transaction Qty is " + getTransactionQty);
 });
 
 
@@ -111,15 +110,12 @@ When('User clicks on submit', async function () {
 });
 
 Then('User should see pop up as {string}', async function (textToBeDisplayed) {
-   console.log(await new CreateMiscellaneousTransactions(this.web).GetItemReceivedTextDisplayed(textToBeDisplayed));
    Assert.assertContains(await new CreateMiscellaneousTransactions(this.web).GetItemReceivedTextDisplayed(textToBeDisplayed), textToBeDisplayed);
    getNewSOH = Number(await new InventoryManagementPage(this.web).GetExistingSOH("On Hand"));
    if (transactionType == "Account Alias Receipt") {
-      console.log("The new SOH is " + getNewSOH + " and existing SOH is " + (getExistingSOH + getTransactionQty));
       Assert.assertEqualsInt((getExistingSOH + getTransactionQty), getNewSOH);
    }
    if (transactionType == "Account Alias Issue") {
-      console.log("The new SOH is " + getNewSOH + " and existing SOH is " + (getExistingSOH - getTransactionQty));
       Assert.assertEqualsInt((getExistingSOH - getTransactionQty), getNewSOH);
    }
 

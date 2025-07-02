@@ -27,10 +27,11 @@ export default class CreateMiscellaneousTransactions {
 
 
     public async ClickOnMiscellaneousTransactions() {
-    //    await this.web.RetryElementFindingsByRole('button','Create Miscellaneous Transactions','visible',2,TEST_CONFIG.TIMEOUTS.element);
+       // await this.web.RetryElementFindingsByRole('button','Create Miscellaneous Transactions','visible',2,TEST_CONFIG.TIMEOUTS.element);
         const IsMiscellaneousTransactionsHeaderVisible = await (await this.web.getElementByRolebyExactText('button', 'Create Miscellaneous Transactions')).isVisible();
         console.log(IsMiscellaneousTransactionsHeaderVisible);
         if(!IsMiscellaneousTransactionsHeaderVisible){
+            console.log("is not coming here");
             await reportGeneration.getScreenshot(this.web.getPage(), "SCREENSHOT FOR MORE ACTIONS ", world);
            await this.web.element(CLICK_MORE_ACTIONS,"CLICK ON MORE ACTIONS").click();
            await reportGeneration.getScreenshot(this.web.getPage(), "CLICK ON MISCELLENEOUS TRANS ", world);
@@ -53,7 +54,8 @@ export default class CreateMiscellaneousTransactions {
         await this.web.element(SELECT_TRANSACTION_TYPE, "Click on Transaction Type dropdown").click();
         await (await this.web.getElementRoleByText('text', transactionType)).click();
         await reportGeneration.getScreenshot(this.web.getPage(), "AFTER SELECTING TRANSACTION TYPE AS  " + transactionType, world);
-       // await (await this.web.getElementByRoleByName('combobox', 'Account Alias')).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element });
+        await expect (await this.web.getElementByRoleByName('combobox', 'Account Alias')).toBeVisible({timeout: TEST_CONFIG.TIMEOUTS.element });
+        await reportGeneration.getScreenshot(this.web.getPage(), "SLECTING ACCOUNT ALIAS AS " + accountAlias, world);
         await (await this.web.getElementByRoleByName('combobox', 'Account Alias')).click({ timeout: 12000 });
         await (await this.web.getElementRoleByText('text', accountAlias)).click();
         await reportGeneration.getScreenshot(this.web.getPage(), "AFTER SELECTING ACCOUNT ALIAS AS " + accountAlias, world);
@@ -80,6 +82,7 @@ export default class CreateMiscellaneousTransactions {
 
     public async SelectAccountAlias(accountAlias: string) {
         await this.web.element(ACCOUNT_ALIAS_XPATH, "XPATH for Account alias").waitForElementToVisible(30);
+        await reportGeneration.getScreenshot(this.web.getPage(), "AFTER OPENING DROP DOWN FOR ACCOUNT ALIAS " + accountAlias, world);
         await this.web.element(ACCOUNT_ALIAS_XPATH, "XPATH for Account alias").click();
         await (await this.web.getElementRoleByText('text', accountAlias)).click();
         await reportGeneration.getScreenshot(this.web.getPage(), "AFTER SELECTING ACCOUNT ALIAS AS " + accountAlias, world);

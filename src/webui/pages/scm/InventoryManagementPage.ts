@@ -24,7 +24,12 @@ export default class InventoryManagementPage {
     }
 
     public async ClickOnItemQuantities() {
-        await expect (await this.web.getElementByRolebyExactText('link', 'Item Quantities')).toBeVisible({timeout:TEST_CONFIG.TIMEOUTS.element})
+        try{
+            await expect (await this.web.getElementByRolebyExactText('link', 'Item Quantities')).toBeVisible({timeout:TEST_CONFIG.TIMEOUTS.element})}
+        catch(err){
+            await this.web.getPage().reload();
+            await expect (await this.web.getElementByRolebyExactText('link', 'Item Quantities')).toBeVisible({timeout:TEST_CONFIG.TIMEOUTS.element})
+        }
         await (await this.web.getElementByRolebyExactText('link', 'Item Quantities')).click();
         await (await this.web.getElementByRolebyHasText('heading', "Item Quantities")).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element });
         await this.web.element(WAIT_FOR_TABLE_DISPLAY, "Wait for table result to display").waitForElementToVisible(TEST_CONFIG.TIMEOUTS.element);
@@ -42,7 +47,6 @@ export default class InventoryManagementPage {
 
     public async GetExistingSOH(colName: string) {
         const num1: number = Number(await this.GetColIndexUsingTHColName(colName));
-        console.log(num1);
         await this.web.element("table tbody tr td:nth-child(" + (num1) + ")", "table th nth row").waitForElementToVisible(90);
         await (expect (this.web.element("table tbody tr td:nth-child(" + (num1) + ")", "table th nth row").getLocator()).toBeVisible({timeout: TEST_CONFIG.TIMEOUTS.element}));
         const getOnHandStock = await this.web.element("table tbody tr td:nth-child(" + (num1) + ")", "table th nth row").getTextValue();
