@@ -1,0 +1,63 @@
+
+stages:
+  - install
+  - test
+  - report
+
+variables:
+   NODE_VERSION: "18"
+   PLAYWRIGHT_BROWSERS_PATH: "/ms-playwright"
+
+cache:
+  paths:
+    - node_modules/
+    - /ms-playwright/
+
+install-dependencies:
+  stage: install
+  image: node: $NODE_VERSION
+  script:
+    - echo "Installing dependencies...."
+    - npm ci
+  artifacts:
+    paths:
+      - node_modules/
+    expire_in 1hour
+  only:
+    - main
+
+# Running Cucumber Playwright tests
+
+cucumber-playwright-tests:
+  stage: test
+  image: mcr.microsoft.com/playwright:v1.40.0-focal
+  script:
+    - echo "Installing dependencies...."
+    - npm ci
+    - echo "Installing playwright browsers....."
+    - npx playwright install --with-deps
+    - echo "Starting aplication server..."
+    - npm run start &
+    - sleep 15
+    - echo "Running Cucumber Playwright tests...."
+    - npm cucumber-js
+artifacts:
+  when: always
+  paths:
+    - test-result/report
+    - test-result/screenshots
+  expire_in: 1 week
+dependencies:
+    - install-dependencies
+
+generate-reports:
+  stage: test-result/report
+  image: node: $NODE-VERSION
+  script:
+    - echo "Generating test reports..."
+    - ls  -la test-result/report/ || echo "No resports directory found"
+  dependencies:
+   - cucumber-playwright-tests
+  when: always
+
+
