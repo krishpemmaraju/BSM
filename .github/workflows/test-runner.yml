@@ -1,5 +1,5 @@
 # .github/workflows/test-runner.yml
-name: Test Self-Hosted Runner
+name: Running BSM Regression Tests
 
 on:
   push:
