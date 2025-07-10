@@ -12,25 +12,14 @@ jobs:
       - name: Check Runner Environment
         shell: powershell
         run: |
-          Write-Host "Runner is working!"
-          Write-Host "Hostname: $(hostname)"
-          Write-Host "User: $(whoami)"
-          Write-Host "PowerShell Version: $($PSVersionTable.PSVersion)"
+          Write-Host "=== Step 1: Test curl.exe availability ==="
+          curl.exe --version
           
-      - name: Test Jenkins Connectivity
-        shell: powershell 
-        run: |
-          Write-Host "Testing Jenkins connectivity..."
-          try {
-              Write-Host "Testing with curl.exe..."
-              $curlResult = curl.exe -I --connect-timeout 10 --max-time 30 http://svttstif001:9092 2>&1
-              if ($LASTEXITCODE -eq 0) {
-                  Write-Host "[OK] curl.exe: Jenkins is reachable"
-                  Write-Host $curlResult
-              } else {
-                  Write-Host "[ERROR] curl.exe: Cannot reach Jenkins"
-                  Write-Host $curlResult
-              }
-          } catch {
-              Write-Host "[ERROR] curl.exe error: $($_.Exception.Message)"
-          }
+          Write-Host "=== Step 2: Test DNS resolution ==="
+          nslookup svttstif001
+          
+          Write-Host "=== Step 3: Test basic connectivity ==="
+          Test-NetConnection -ComputerName svttstif001 -Port 9092
+          
+          Write-Host "=== Step 4: Test HTTP with verbose curl ==="
+          curl.exe -v --connect-timeout 5 http://svttstif001:9092
