@@ -2,7 +2,9 @@
 name: Test Self-Hosted Runner
 
 on:
-  workflow_dispatch  # Manual trigger for testing
+  push:
+    branches: [ main ]  # Triggers on push to main branch
+  workflow_dispatch  
 
 jobs:
   test-connectivity:
