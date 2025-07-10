@@ -26,7 +26,7 @@ jobs:
 
           try {
               Write-Host "Testing with Invoke-WebRequest..."
-              $response = Invoke-WebRequest -Uri "http://svttstif001:9092" -Method Head -TimeoutSec 10 -ErrorAction Stop
+              $response = Invoke-WebRequest -Uri "http://svttstif001:9092/job/BSMPROJECT/build?token=KTOKEN" -Method Head -TimeoutSec 10 -ErrorAction Stop
               Write-Host "[OK] PowerShell: Jenkins is reachable (Status: $($response.StatusCode))"
           } catch {
               Write-Host "[ERROR] PowerShell: Cannot reach Jenkins - $($_.Exception.Message)"
