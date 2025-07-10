@@ -1,0 +1,24 @@
+# .github/workflows/test-runner.yml
+name: Test Self-Hosted Runner
+
+on:
+  workflow_dispatch  # Manual trigger for testing
+
+jobs:
+  test-connectivity:
+    runs-on: self-hosted  # Uses your runner
+    
+    steps:
+      - name: Check Runner Environment
+        run: |
+          echo "Runner is working!"
+          hostname
+          whoami
+          
+      - name: Test Jenkins Connectivity
+        run: |
+          # Test if we can reach your Jenkins server
+          curl -I http://svttstif001:9092 || echo "Cannot reach Jenkins"
+          
+          # Test DNS resolution
+          nslookup svttstif001 || echo "Cannot resolve Jenkins hostname"
