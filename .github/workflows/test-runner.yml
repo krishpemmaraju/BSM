@@ -24,14 +24,14 @@ jobs:
               Write-Host "Testing with curl.exe..."
               $curlResult = curl.exe -I --connect-timeout 10 --max-time 30 http://svttstif001:9092 2>&1
               if ($LASTEXITCODE -eq 0) {
-                  Write-Host "✅ curl.exe: Jenkins is reachable"
+                  Write-Host "[OK] curl.exe: Jenkins is reachable"
                   Write-Host $curlResult
               } else {
-                  Write-Host "❌ curl.exe: Cannot reach Jenkins"
+                  Write-Host "[ERROR]: curl.exe: Cannot reach Jenkins"
                   Write-Host $curlResult
               }
           } catch {
-              Write-Host "❌ curl.exe error: $($_.Exception.Message)"
+              Write-Host "[ERROR]: curl.exe error: $($_.Exception.Message)"
           }   
 
           
