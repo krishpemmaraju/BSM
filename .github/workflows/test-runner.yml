@@ -15,12 +15,4 @@ jobs:
           hostname
           whoami
           
-      - name: Test Jenkins Connectivity
-        run: |
-          # Test if we can reach your Jenkins server
-          curl -I http://svttstif001:9092 
-          Write-Host "Cannot reach Jenkins"
-          
-          # Test DNS resolution
-          nslookup svttstif001 
-          Write-Host "Cannot resolve Jenkins hostname"
+
