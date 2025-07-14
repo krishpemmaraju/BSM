@@ -1,1 +1,0 @@
-features\SCM\StockAdjustments.feature:29:57

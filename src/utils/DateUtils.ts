@@ -63,4 +63,18 @@ export default class DateUtils {
         const date = moment().add(days, 'd').add(months, 'M').add(years, 'y').format(format);
         return date;
     }
+
+     /**
+    * Generates date based on the input
+    
+    * @returns 
+    */
+
+     public static async CovertStringToDate(dateStr: string,format: string): Promise<string> {
+        const customFormat = moment(dateStr).format(format).toString();
+        return customFormat;
+
+    }
+
+
 }

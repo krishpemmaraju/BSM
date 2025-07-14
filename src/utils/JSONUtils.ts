@@ -83,5 +83,16 @@ export default class JSONUtils {
             console.warn("Issue while wrting to the JSON file" , error);
         }
     }
+
+    public static async getJsonValueFromResponse(response: any, propertyValue: string){
+        const quantities: any[] = [];
+        JSON.stringify(response, (key, value) => {
+            if( key == propertyValue){
+                quantities.push(value);
+            }
+            return value;
+        });
+        return quantities;
+    }
 }
 

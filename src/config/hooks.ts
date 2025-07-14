@@ -77,6 +77,7 @@ Before({tags: "@SCM"},async function({pickle,gherkinDocument}: ITestCaseHookPara
     await this.context.clearCookies();
     this.page = await this.context?.newPage();
     this.web = new UIActions(this.page);
+    this.rest = new RestRequest(this.page);
 })
 
 After({tags:"@web"},async function({result,pickle,gherkinDocument} : ITestCaseHookParameter) {

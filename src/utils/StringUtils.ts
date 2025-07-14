@@ -80,4 +80,9 @@ export default class StringUtils {
        return str;
    }
 
+   public static async getStringAfterParticularStr(str : string, strToescapr: string): Promise<string> {
+        const part1 = str.split(strToescapr);
+        return part1.length >  1 ? part1[1].trim() : "";
+   }
+
 }

@@ -1,7 +1,7 @@
 import fs from 'fs';
 import APIConstants from '../APIConstants/APIConstants';
 import StringUtils from '../../utils/StringUtils';
-import { Page, APIResponse } from '@playwright/test';
+import { Page, APIResponse, APIRequestContext } from '@playwright/test';
 
 export default class RestRequest {
 
@@ -42,8 +42,22 @@ export default class RestRequest {
      * @returns 
      */
      public async postReq(endPoint:string,requestHeader: any,jsonBody:string):Promise<APIResponse>{
-        const headerJSON = JSON.parse(JSON.stringify(requestHeader));
+         const headerJSON = JSON.parse(JSON.stringify(requestHeader));
         const getResponseObj:APIResponse = await this.page.request.post(endPoint, {headers: headerJSON,data: JSON.parse(jsonBody)});
+        return getResponseObj;
+    } 
+
+    
+     /**
+     * Make Post request and return response
+     * @param endPoint 
+     * @param requestHeader 
+     * @param jsonBody 
+     * @returns 
+     */
+     public async postReqWithAuth(endPoint:string,requestHeader: any,jsonBody:string):Promise<APIResponse>{
+     //   const headerJSON = JSON.parse(JSON.stringify(requestHeader));
+        const getResponseObj:APIResponse = await this.page.request.post(endPoint, {headers: Object.fromEntries(requestHeader),data: jsonBody});
         return getResponseObj;
     } 
 
@@ -83,6 +97,20 @@ export default class RestRequest {
     public async deleteReq(endPoint:string,requestHeader: any):Promise<APIResponse>{
         const headerJSON = JSON.parse(JSON.stringify(requestHeader));
         const getResponseObj:APIResponse = await this.page.request.delete(endPoint, {headers: headerJSON});
+        return getResponseObj;
+    } 
+
+     apiContext: any;
+    /**
+     * Make PostRequest using ApiContext request and return response
+     * @param endPoint 
+     * @param requestHeader 
+     * @param description 
+     * @returns 
+     */
+    public async postReqAPiContext(endPoint:string,requestHeader: any,jsonBody: string):Promise<APIResponse>{
+        const headerJSON = JSON.parse(JSON.stringify(requestHeader));
+        const getResponseObj:APIResponse = await this.apiContext.post(endPoint, {headers: headerJSON,data: jsonBody});
         return getResponseObj;
     } 
 

@@ -13,9 +13,11 @@
    ],
    "SCMDEV": [
       {
-         "SCMDEVURL": "https://egvh-dev1.login.em3.oraclecloud.com/",
+         "SCMDEVURL": "https://egvh-dev1.fa.em3.oraclecloud.com/",
          "SCMDEVUSERNAME": "ABB7375",
-         "SCMDEVPASSWORD": "Varahi$$16"
+         "SCMDEVPASSWORD": "Varahi$$16",
+         "SCMSTOCKCHKAPI": "fscmRestApi/msp/latest/globalOrderPromises/quickAvailabilityCheck",
+         "SCMCHKAVAILABILITY": "fscmRestApi/msp/latest/globalOrderPromises/checkAvailability"
       }
    ]
    }

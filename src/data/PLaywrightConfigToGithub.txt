@@ -1,0 +1,35 @@
+# .github/workflows/test-runner.yml
+name: Running BSM Regression Tests
+
+on:
+  push:
+    branches: [ main ]  # Triggers on push to main branch
+  workflow_dispatch:  
+
+jobs:
+  test-connectivity:
+    runs-on: self-hosted  # Uses your runner
+    
+    steps:
+      - name: Check Runner Environment
+        shell: powershell
+        run: |
+          Write-Host "=== Step 1: Test curl.exe availability ==="
+          curl.exe --version
+          
+          Write-Host "=== Step 2: Test DNS resolution ==="
+          nslookup svttstif001
+          
+          Write-Host "=== Step 3: Test basic connectivity ==="
+          Test-NetConnection -ComputerName svttstif001 -Port 9092
+          
+          Write-Host "=== Step 4: Test HTTP with verbose curl ==="
+          curl.exe -v --connect-timeout 5 http://svttstif001:9092
+
+          try {
+              Write-Host "Testing with Invoke-WebRequest..."
+              $response = Invoke-WebRequest -Uri "http://svttstif001:9092/job/BSMPROJECT/build?token=KTOKEN" -Method Head -TimeoutSec 10 -ErrorAction Stop
+              Write-Host "[OK] PowerShell: Jenkins is reachable (Status: $($response.StatusCode))"
+          } catch {
+              Write-Host "[ERROR] PowerShell: Cannot reach Jenkins - $($_.Exception.Message)"
+          }
