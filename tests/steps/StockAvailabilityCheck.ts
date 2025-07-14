@@ -47,7 +47,6 @@ Then('get the stock of the {string} added to the basket', async function (produc
         }]
     } as any;
     const credentials = Buffer.from(`${data.SCMDEV[0].SCMDEVUSERNAME}:${data.SCMDEV[0].SCMDEVPASSWORD}`).toString('base64');
-    console.log(credentials)
     let mapHeaders = new Map<string, string>([
          ['Content-Type', APIConstants.CONTENT_TYPE_JSON],
          ['Authorization', `Basic ${credentials}`]
