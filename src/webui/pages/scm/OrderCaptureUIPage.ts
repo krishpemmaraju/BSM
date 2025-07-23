@@ -79,10 +79,12 @@ export default class OrderCaptureUIPage {
     }
 
     public async CaptureOrderNumber() {
+        await reportGeneration.getScreenshot(this.web.getPage(), "After Clicking on Confirm , Capture Order Number", world);
         return this.web.element('#oj_gop1_h_pageSubtitle', 'Capture the Order Number').getTextValue();
     }
 
     public async IsOrderConfirmationPageLoaded(orderConfHeading: string): Promise<boolean> {
+        await reportGeneration.getScreenshot(this.web.getPage(), "Order Confirmation Page for Order Number - " + await this.CaptureOrderNumber(), world);
         return await (await this.web.getElementByRolebyExactText('heading', orderConfHeading)).textContent() == orderConfHeading;
     }
 }      
