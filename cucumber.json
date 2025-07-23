@@ -1,6 +1,6 @@
 {
     "default": {
-        "paths": ["features/SCM/QuickOrderEntry.feature"],
+        "paths": ["features/SCM/OrderCaptureCashAccount.feature"],
         "formatOptions": {
             "snippetInterface": "async-await"
          },
