@@ -16,9 +16,9 @@ let browser: Browser;
 //     browser = await WebBrowserManager.launch("chrome");
 // });
 
-AfterAll(async function() {
-    await browser.close();
-});
+// AfterAll({tags:"@SCM"},async function() {
+//     await browser.close();
+// });
 
 Before({tags: "@reality"}, async function({pickle,gherkinDocument}) {
     const line = formatterHelpers.PickleParser.getPickleLocation({gherkinDocument,pickle});
@@ -68,6 +68,23 @@ Before({tags: "@SCM"},async function({pickle,gherkinDocument}: ITestCaseHookPara
     console.log( " **********************   TEST STARTED **************************************************** \n");
     console.log( " ****************** EXECUTION STARTED FOR SCENARIO - " + pickle.name + " ******************* \n");
     browser = await WebBrowserManager.launch("chrome");
+    this.context = await browser.newContext({
+         viewport: null,
+         ignoreHTTPSErrors: true,
+         acceptDownloads: true,
+         storageState: undefined,
+    });
+    await this.context.clearCookies();
+    this.page = await this.context?.newPage();
+    this.web = new UIActions(this.page);
+    this.rest = new RestRequest(this.page);
+})
+
+Before({tags: "@VBSOC"},async function({pickle,gherkinDocument}: ITestCaseHookParameter) {
+    const line = formatterHelpers.PickleParser.getPickleLocation({gherkinDocument,pickle});
+    console.log( " **********************   TEST STARTED **************************************************** \n");
+    console.log( " ****************** EXECUTION STARTED FOR SCENARIO - " + pickle.name + " ******************* \n");
+    browser = await WebBrowserManager.launch("firefox");
     this.context = await browser.newContext({
          viewport: null,
          ignoreHTTPSErrors: true,

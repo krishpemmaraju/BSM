@@ -1,10 +1,10 @@
 {
-    "prdReality": [
-       {
-          "url": "http://topui-stg.sys.ad.wolseleyuk.com/hksui/#/?clientip=10.3.110.19",
-          "username": "alkk",
-          "password": "Varahi16$$"
-       }
+   "prdReality": [
+      {
+         "url": "http://topui-stg.sys.ad.wolseleyuk.com/hksui/#/?clientip=10.3.110.19",
+         "username": "alkk",
+         "password": "Varahi16$$"
+      }
    ],
    "APISTG": [
       {
@@ -15,9 +15,35 @@
       {
          "SCMDEVURL": "https://egvh-dev1.fa.em3.oraclecloud.com/",
          "SCMDEVUSERNAME": "ABB7375",
-         "SCMDEVPASSWORD": "Varahi$$16",
+         "SCMDEVPASSWORD": "Varahi16$$",
          "SCMSTOCKCHKAPI": "fscmRestApi/msp/latest/globalOrderPromises/quickAvailabilityCheck",
          "SCMCHKAVAILABILITY": "fscmRestApi/msp/latest/globalOrderPromises/checkAvailability"
       }
+   ],
+   "VBCSDEVOC":[
+      {
+          "VBCSDEVOCURL": "https://vb04.wolseleyuk.com/ic/builder/rt/wol-order-capture/live/webApps/wol-order-capture/",
+          "VBCSDEVOCUSERNAME": "a3Jpc2huYS5wZW1tYXJhanVAd29sc2VsZXkuY28udWs=",
+          "VBCSDEVOCPASSWORD": "VmFyYWhpYmFiYTE2JA=="
+      }
+
+   ],
+   "ODSSTG": [
+      {
+         "DBTYPE": "ODS",
+         "ODSSTGUSERNAME": "ODS_CORE",
+         "ODSPASSWORD": "core",
+         "ODSALIAS": "ODSSTG"
+      }
+   ],
+   "HIGHJUMPSTG": [
+      {
+         "DBTYPE": "HJ",
+         "HJSTGUSERNAME": "AUTOMATION",
+         "HJPASSWORD": "Hjads1ato2^",
+         "HJALIAS": "HJSTG"
+      }
    ]
-   }
+
+ 
+}

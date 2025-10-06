@@ -118,8 +118,10 @@ export default class CreateMiscellaneousTransactions {
     }
 
     public async ClickOnSubmit() {
+        const clickOnSubmitBtn = this.web.getPage().locator("button[aria-label='Submit']")
         await reportGeneration.getScreenshot(this.web.getPage(), "AFTER SAVING THE TRANSACTION ", world);
-        await (await this.web.getElementByRolebyExactText('button', 'Submit')).click();
+        await expect (clickOnSubmitBtn).toBeEnabled({timeout: 30000})
+        await clickOnSubmitBtn.click();
     }
 
     public async GetItemReceivedTextDisplayed(textToBeDisplayed: string) {

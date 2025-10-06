@@ -19,15 +19,21 @@ export default class StockAvailabilityCheckPage {
         testInfo = testInfo!;
     }
 
-    public async GetStockAvailabilityForProduct(product : string) {
-        (await this.web.getElementByText(product)).waitFor({state:'visible', timeout:TEST_CONFIG.TIMEOUTS.element});
-        return await this.web.element(GET_STOCK_DATA,'GET STOCK DATA ELEMENT').getTextValue();
+    public async GetStockAvailabilityForProduct(product: string) {
+         const availableStockEle = this.web.getPageLocator('oj-c-button.in-stock-button');
+         return await (await availableStockEle).textContent();
     }
 
-    
+
     public async GetATPAvailableDate() {
-        (await this.web.getElementByText('Product Details')).waitFor({state:'visible', timeout:TEST_CONFIG.TIMEOUTS.element});
-        return await this.web.element(GET_ATP_DATE,'GET ATP DATE ELEMENT').getTextValue();
+        let atpDate;
+         const getListOfSpanElements = await (await this.web.getPageLocator('oj-c-button.atp-button button')).all();
+         for(const atpText of getListOfSpanElements){
+             if(await atpText.textContent() != ""){
+                  atpDate = await atpText.getAttribute('aria-label');
+             }
+         }
+         return atpDate.trim();
     }
 
 }

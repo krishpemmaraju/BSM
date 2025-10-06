@@ -19,5 +19,4 @@ export default class ReportGeneration {
      static async attachReportForAPI(messageToAttach: string,world: IWorld){
           world.attach(messageToAttach,'text/plain');
      }
-
 }
