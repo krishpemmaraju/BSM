@@ -16,3 +16,4 @@ Feature: Create Account Order in Order Capture UI
             | customer             | products      | PrintVerification |
            | SMITH AND BYFORD LTD | 508201        | No                |
             | SMITH AND BYFORD LTD | 508201,608955 | Yes               |
+    
