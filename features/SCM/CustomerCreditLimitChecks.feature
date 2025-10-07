@@ -1,3 +1,3 @@
 Feayure: Test Feature
 
-"API"
+"API" @ TESTS
