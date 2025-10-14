@@ -3,6 +3,7 @@ import ReportGeneration from "../../../helper/reportGeneration";
 import UIActions from "../../actions/UIActions";
 import { setDefaultTimeout, world } from "@cucumber/cucumber";
 import { TEST_CONFIG } from "../../../config/test-config";
+import StringUtils from "../../../utils/StringUtils";
 
 let reportGeneration: ReportGeneration;
 let ENTER_CUSTOMER: string = "input[placeholder='Search by Customer Name, Account Code or Postcode']";
@@ -22,6 +23,40 @@ export default class OrderCaptureUIPage {
         testInfo = testInfo!;
     }
 
+    public async getIndexOfHeaderWithName(colname: string) {
+        const getHeaderElements = this.web.getPage().locator("thead.oj-table-header th");
+        let startIndex;
+        for (let i = 0; i < await getHeaderElements.count(); i++) {
+            const text = await getHeaderElements.nth(i).textContent();
+            if (text.trim() == colname) {
+                startIndex = i;
+                break;
+            }
+        }
+        return startIndex;
+    }
+
+    public async GetCustomerAccountStatusFromUI(statusToValidate: string) {
+        const getAccountStatus = this.web.getPage().locator("div[title='" + statusToValidate + "']");
+        return await getAccountStatus.textContent();
+    }
+
+    public async getColumnValueFromCustomerSelPanel(colname: string) {
+        const getCustomerColValues = "tbody.oj-table-body tr td";
+        return await this.web.getPage().locator(getCustomerColValues).nth(await this.getIndexOfHeaderWithName(colname)).innerText();
+    }
+
+    public async getCustomerSelectionValueFromUI(dataToMatch: string) {
+        const  getAccStatusValueFromUI = "div[title='"+dataToMatch+"']";
+        return  await this.web.getPage().locator(getAccStatusValueFromUI).textContent();
+    }
+
+    public async getCustomerAccountBalance(){
+        const getAvailableBalanceFromUI = "oj-sp-scoreboard-metric-card[card-title='Available Balance'] div.oj-sp-scoreboard-metric-card-metric";
+        return StringUtils.getStringAfterParticularStr ( (await this.web.getPage().locator(getAvailableBalanceFromUI).textContent()),'£');
+    }
+
+
     public async SelectCustomer(customer: string) {
         await this.web.element(SELECT_CUSTOMER, "Click to Select Customer").waitForElementToVisible(10)
         await this.web.element(SELECT_CUSTOMER, "Click to Select Customer").clickWithTimeOut(5);
@@ -30,11 +65,38 @@ export default class OrderCaptureUIPage {
         const clickOnCustomerDrpDwn = this.web.getPage().locator("div[class='fake-dropdown oj-flex oj-sm-justify-content-space-between']").
             filter({ has: this.web.getPage().locator("//span[text()='Customer']") });
         await clickOnCustomerDrpDwn.click();
-        const customerSearchInput = this.web.getPage().locator("input[aria-label='Customer Search']");   
+        const customerSearchInput = this.web.getPage().locator("input[aria-label='Customer Search']");
         await customerSearchInput.fill(customer);
         await reportGeneration.getScreenshot(this.web.getPage(), "Enter Customer " + customer, world);
         const customerSearchResultsAvailable = this.web.getPage().locator('oj-table.customer-table');
-        await expect(customerSearchResultsAvailable).toBeVisible({timeout: 6000})
+        await expect(customerSearchResultsAvailable).toBeVisible({ timeout: 6000 })
+        const selectCustomerListed = this.web.getPage().getByText(customer)
+        await reportGeneration.getScreenshot(this.web.getPage(), "Select the Customer Listed for " + customer, world);
+        await selectCustomerListed.click();
+        const clickOnSaveOnSelectCusomter = this.web.getPage().locator("button[aria-label='Save']");
+        await clickOnSaveOnSelectCusomter.click();
+        await reportGeneration.getScreenshot(this.web.getPage(), "Customer selected as below  ", world);
+    }
+
+    public async getCustomerAccountHeaderDetails(customer: string, colname: string) {
+        await this.web.element(SELECT_CUSTOMER, "Click to Select Customer").waitForElementToVisible(10)
+        await this.web.element(SELECT_CUSTOMER, "Click to Select Customer").clickWithTimeOut(5);
+        await reportGeneration.getScreenshot(this.web.getPage(), "Selecting Customer " + customer, world);
+        // New Changes
+        const clickOnCustomerDrpDwn = this.web.getPage().locator("div[class='fake-dropdown oj-flex oj-sm-justify-content-space-between']").
+            filter({ has: this.web.getPage().locator("//span[text()='Customer']") });
+        await clickOnCustomerDrpDwn.click();
+        const customerSearchInput = this.web.getPage().locator("input[aria-label='Customer Search']");
+        await customerSearchInput.fill(customer);
+        await reportGeneration.getScreenshot(this.web.getPage(), "Enter Customer " + customer, world);
+        const customerSearchResultsAvailable = this.web.getPage().locator('oj-table.customer-table');
+        await expect(customerSearchResultsAvailable).toBeVisible({ timeout: 6000 })
+        return await this.getColumnValueFromCustomerSelPanel(colname);
+    }
+
+    public async SaveCustomerSelection(customer: string) {
+        const customerSearchResultsAvailable = this.web.getPage().locator('oj-table.customer-table');
+        await expect(customerSearchResultsAvailable).toBeVisible({ timeout: 6000 })
         const selectCustomerListed = this.web.getPage().getByText(customer)
         await reportGeneration.getScreenshot(this.web.getPage(), "Select the Customer Listed for " + customer, world);
         await selectCustomerListed.click();

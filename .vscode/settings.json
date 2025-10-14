@@ -2,6 +2,8 @@
     "cucumberautocomplete.steps": [
     "tests/steps/**/*.ts"
   ],
-  "cucumberautocomplete.sync": true
-
+  "cucumberautocomplete.sync": true,
+  "terminal.integrated.scrollback": 50000000,
+  "terminal.integrated.gpuAcceleration": "off",
+  "terminal.integrated.rendererType": "dom"
 }

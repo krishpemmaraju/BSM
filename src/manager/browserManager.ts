@@ -1,21 +1,45 @@
-import { chromium, firefox, LaunchOptions, webkit } from "playwright";
+import { chromium, firefox } from "playwright";
 
-
-const browserOptions: LaunchOptions = {
-    slowMo: 3000,
-    headless: false,
-    args: ["--start-maximized", "--disable-extensions", "--disable-plugins"],
-    timeout: 60000
-}
+let headlessConfig: boolean = false;
 
 export default class WebBrowserManager {
+    public static async launch(browser: string) {
+        switch (browser) {
+            case 'chrome':
+            case 'chromium':
+                return await chromium.launch({
+                    slowMo: 3000,
+                    headless: headlessConfig,
+                    args: ["--start-maximized", "--disable-extensions", "--disable-plugins"],
+                    ignoreDefaultArgs: ['--enable-automation'],
+                    timeout: 60000
+                })
+            case 'firefox':
+                return await firefox.launch({
+                    slowMo: 3000,
+                    headless: headlessConfig,
+                    ignoreDefaultArgs: ['--enable-automation'],
+                    timeout: 60000,
+                    firefoxUserPrefs: {
+                        'browser.startup.homepage': 'about:blank'
+                    }
+                })
+            case 'webkit':
+                return await chromium.launch({
+                    slowMo: 3000,
+                    headless: headlessConfig,
+                    args: ["--start-maximized", "--disable-extensions", "--disable-plugins"],
+                    timeout: 60000
+                })
+            default:
+                return await chromium.launch({
+                    slowMo: 3000,
+                    headless: headlessConfig,
+                    args: ["--start-maximized", "--disable-extensions", "--disable-plugins"],
+                    ignoreDefaultArgs: ['--enable-automation'],
+                    timeout: 60000
+                });
 
-    public static async launch(browser: string){
-        if( browser === "chrome")
-            return chromium.launch(browserOptions);
-        if( browser === "firefox")
-            return firefox.launch(browserOptions);
-        if ( browser === "opera" || browser === "safari")
-            return webkit.launch(browserOptions);
+        }
     }
 }

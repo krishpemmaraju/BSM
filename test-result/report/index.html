@@ -9,19 +9,20 @@
         <meta http-equiv="Cache-control" content="public">
         <title>Wolseley UK API Report</title>
         
-                <!-- Bootstrap -->
-                <link rel="stylesheet" href="assets/css/bootstrap.min.css" >
-                <link rel="stylesheet" href="assets/css/dataTables.bootstrap.min.css" >
-                <link rel="stylesheet" href="assets/css/responsive.bootstrap5.min.css" >
+            <script src="assets/js/darkmode.js"></script>
+            <!-- Bootstrap -->
+            <link rel="stylesheet" href="assets/css/bootstrap.min.css" >
+            <link rel="stylesheet" href="assets/css/dataTables.bootstrap.min.css" >
+            <link rel="stylesheet" href="assets/css/responsive.bootstrap5.min.css" >
 
-                <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-                <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+            <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+            <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 
-                <!--[if lt IE 9]>
-                <script src="assets/js/html5shiv.min.js"></script>
-                <script src="assets/js/respond.min.js"></script>
-                <![endif]-->
-                <link href="assets/css/font-awesome.min.css" rel="stylesheet">
+            <!--[if lt IE 9]>
+            <script src="assets/js/html5shiv.min.js"></script>
+            <script src="assets/js/respond.min.js"></script>
+            <![endif]-->
+            <link href="assets/css/font-awesome.min.css" rel="stylesheet">
         
 
         <!-- Custom Theme Style -->
@@ -717,6 +718,107 @@ input#darkCheck:checked ~ label > svg#moon {
   border-color: #212121;
 }
 
+.chart-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 10px;
+}
+
+body.darkmode .x_content,
+body.darkmode .table,
+body.darkmode .chart,
+body.darkmode .tile_info,
+body.darkmode .table-bordered,
+body.darkmode .table-responsive,
+body.darkmode .dataTables_wrapper {
+  background: #1c1c21 !important;
+  color: #b4bfca !important;
+  border-color: #2e2e2e !important;
+}
+
+body.darkmode .table th,
+body.darkmode .table td {
+  background: #212121 !important;
+  color: #b4bfca !important;
+  border-color: #2e2e2e !important;
+}
+
+body.darkmode .x_panel {
+  background: #1c1c21 !important;
+  color: #b4bfca !important;
+  border: 1px solid #2e2e2e !important;
+}
+
+body.darkmode .chart-header-flex span {
+  color: #b4bfca;
+}
+
+body.darkmode .darkModeIcon {
+  color: #b4bfca;
+}
+
+body.darkmode label > svg#moon {
+  fill: #b4bfca;
+}
+
+body.darkmode label > svg#sun {
+  fill: #ec6d04;
+}
+
+@media (max-width: 640px) {
+  .chart-header-flex {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+}
+
+body.darkmode .dataTables_wrapper .dataTables_paginate .pagination,
+body.darkmode .pagination {
+  background: #1c1c21 !important;
+  color: #b4bfca !important;
+  border-color: #2e2e2e !important;
+}
+body.darkmode .pagination .page-link,
+body.darkmode .pagination .page-item {
+  background: #212121 !important;
+  color: #b4bfca !important;
+  border-color: #2e2e2e !important;
+}
+body.darkmode .pagination .page-link.active,
+body.darkmode .pagination .active > .page-link {
+  background: #3a7ab7 !important;
+  color: #fff !important;
+  border-color: #3a7ab7 !important;
+}
+body.darkmode .pagination .page-link:focus,
+body.darkmode .pagination .page-link:hover {
+  background: #313a45 !important;
+  color: #fff !important;
+  border-color: #3a7ab7 !important;
+}
+body.darkmode .dataTables_length label,
+body.darkmode .dataTables_length select,
+body.darkmode .dataTables_filter label,
+body.darkmode .dataTables_filter input {
+  background: #212121 !important;
+  color: #b4bfca !important;
+  border-color: #2e2e2e !important;
+}
+body.darkmode .dataTables_length select,
+body.darkmode .form-select {
+  background: #212121 !important;
+  color: #b4bfca !important;
+  border-color: #2e2e2e !important;
+}
+body.darkmode .x_title,
+body.darkmode .navbar-text {
+  background: #1c1c21 !important;
+  color: #b4bfca !important;
+}
+
             
         </style>
     </head>
@@ -756,11 +858,9 @@ input#darkCheck:checked ~ label > svg#moon {
                 <p>Chart</p>
             </th>
             <th>
-                <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">
-                    <p class="">Status</p>
-                </div>
-                <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
-                    <p class="" style="float:right;">Progress</p>
+                <div class="chart-header-flex">
+                    <span>Status</span>
+                    <span>Progress</span>
                 </div>
             </th>
         </tr>
@@ -823,18 +923,16 @@ input#darkCheck:checked ~ label > svg#moon {
                 <p>Chart</p>
             </th>
             <th>
-                <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">
-                    <p class="">Status</p>
-                </div>
-                <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
-                    <p class="" style="float:right;">Progress</p>
+                <div class="chart-header-flex">
+                    <span>Status</span>
+                    <span>Progress</span>
                 </div>
             </th>
         </tr>
         <tr>
             <td class="chart">
                 <canvas id="scenario-chart"></canvas>
-                <div class="total">2</div>
+                <div class="total">1</div>
             </td>
             <td>
                 <table class="tile_info">
@@ -968,15 +1066,9 @@ input#darkCheck:checked ~ label > svg#moon {
                     
                     <tr>
                         <td>
-                            <a href="features/ec4fe238-094a-43bd-a904-17bfbb5c8cbd-create-account-order-in-order-capture-ui.html">Create Account Order in Order Capture UI</a>
+                            <a href="features/dfc3fbbb-e7a8-49d2-a132-3296c7e8eb84-create-account-order-in-order-capture-ui.html">Create Account Order in Order Capture UI</a>
                         </td>
                         <td class="text-center">
-                            
-                            
-                            
-                            
-                            
-                            
                             
                             
                             
@@ -1053,8 +1145,8 @@ input#darkCheck:checked ~ label > svg#moon {
                         
                         
                         
-                        <td class="text-right ">2</td>
-                        <td class="text-right ">2</td>
+                        <td class="text-right ">1</td>
+                        <td class="text-right ">1</td>
                         <td class="text-right none">0</td>
                         
                         
@@ -1074,11 +1166,11 @@ input#darkCheck:checked ~ label > svg#moon {
         </div>
          
             <div class="created-by">
-                <p>Created by wswebcreation. Find me on:</p>
-                <a href="http://www.wswebcreation.nl/" target="_blank"><i class="fa fa-rss-square fa-2x"></i></a>
-                <a href="https://github.com/wswebcreation/" target="_blank"><i class="fa fa-github-square fa-2x"></i></a>
-                <a href="http://nl.linkedin.com/in/wimselles" target="_blank"><i class="fa fa-linkedin-square fa-2x"></i></a>
-                <a href="http://stackoverflow.com/users/5911978/wswebcreation" target="_blank"><i class="fa fa-stack-overflow fa-2x"></i></a>
+                <p>Maintained by Wasiq Bhamla. Find me on:</p>
+                <a href="https://www.youtube.com/@WasiqBhamla" target="_blank"><i class="fa fa-youtube-square fa-2x"></i></a>
+                <a href="https://github.com/WasiqB/" target="_blank"><i class="fa fa-github-square fa-2x"></i></a>
+                <a href="https://www.linkedin.com/in/wasiqbhamla/" target="_blank"><i class="fa fa-linkedin-square fa-2x"></i></a>
+                <a href="https://stackoverflow.com/users/5320558/wasiq-bhamla" target="_blank"><i class="fa fa-stack-overflow fa-2x"></i></a>
             </div>
          
 
@@ -1093,42 +1185,6 @@ input#darkCheck:checked ~ label > svg#moon {
             <script src="assets/js/dataTables.responsive.min.js"></script>
             <script src="assets/js/responsive.bootstrap5.js"></script>
         
-
-        <!-- Darkmode -->
-        <script>
-            var darkMode = 'darkmode'
-
-function applyDarkMode() {
-    document.getElementById('features-table').classList.toggle('table-striped');
-    applyFontStyle();
-}
-
-function saveState() {
-    if(isDarkModeOn()) {
-        window.localStorage['darkmode'] = 'on';
-    } else {
-        window.localStorage['darkmode'] = 'off';
-    }
-}
-
-function applyFontStyle() {
-    document.body.classList.toggle(darkMode);
-}
-
-
-function isDarkModeOn() {
-    var toggle = document.getElementById('darkCheck');
-    return toggle.checked;
-}
-
-window.onload = function() {
-    if(window.localStorage['darkmode'] === 'on') {
-        applyDarkMode();
-        document.getElementById('darkCheck').checked = true;
-    }
-}
-
-        </script>
 
         <!-- Custom -->
         <script>
@@ -1204,7 +1260,7 @@ window.onload = function() {
                         ],
                         datasets: [{
                             data: [
-                                2,
+                                1,
                                 0,
                                 0,
                                 0,

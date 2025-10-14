@@ -29,8 +29,11 @@ export default class VBCSOrderCaptureUIPage {
         (await this.web.getPageLocator(CLICK_SSO_SIGNIN)).click();
 
         try {
+            await (await this.web.getPageLocator(CLICK_SSO_YES)).waitFor({state: 'visible', timeout: 15000})
+            await (await this.web.getPageLocator(CLICK_SSO_YES)).waitFor({state: 'attached', timeout: 15000})
+            await (await this.web.getPageLocator(CLICK_SSO_YES)).scrollIntoViewIfNeeded();
             await (await this.web.getPageLocator(CLICK_SSO_YES))
-                .click({ timeout: 12000, force: true });
+                .click({ timeout: 12000});
         } catch (error) {
         }
 

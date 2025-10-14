@@ -6,11 +6,12 @@ import * as data from "../config/env/envDetails.json"
 import RealityLogoutPage from "../webui/pages/reality/RealityLogoutPage";
 import RestRequest from "../api/actions/RESTRequest";
 import SCMLogoutPage from "../webui/pages/scm/SCMLogoutPage";
-
+import fs from 'fs'
+import path from 'path'
 
 const timeInMin: number = 60 * 1000;
 setDefaultTimeout(Number.parseInt(process.env.TEST_TIMEOUT, 10) * timeInMin);
-let browser: Browser;
+let browser: Browser | undefined;
 
 // BeforeAll(async function() {
 //     browser = await WebBrowserManager.launch("chrome");
@@ -67,7 +68,9 @@ Before({tags: "@SCM"},async function({pickle,gherkinDocument}: ITestCaseHookPara
     const line = formatterHelpers.PickleParser.getPickleLocation({gherkinDocument,pickle});
     console.log( " **********************   TEST STARTED **************************************************** \n");
     console.log( " ****************** EXECUTION STARTED FOR SCENARIO - " + pickle.name + " ******************* \n");
-    browser = await WebBrowserManager.launch("chrome");
+     if(!browser){
+    browser = await WebBrowserManager.launch("chrome");}
+    this.browser = browser;
     this.context = await browser.newContext({
          viewport: null,
          ignoreHTTPSErrors: true,
@@ -84,8 +87,10 @@ Before({tags: "@VBSOC"},async function({pickle,gherkinDocument}: ITestCaseHookPa
     const line = formatterHelpers.PickleParser.getPickleLocation({gherkinDocument,pickle});
     console.log( " **********************   TEST STARTED **************************************************** \n");
     console.log( " ****************** EXECUTION STARTED FOR SCENARIO - " + pickle.name + " ******************* \n");
-    browser = await WebBrowserManager.launch("firefox");
-    this.context = await browser.newContext({
+    if(!browser){
+    browser = await WebBrowserManager.launch("firefox");}
+    this.browser = browser;
+    this.context = await this.browser.newContext({
          viewport: null,
          ignoreHTTPSErrors: true,
          acceptDownloads: true,
@@ -100,7 +105,7 @@ Before({tags: "@VBSOC"},async function({pickle,gherkinDocument}: ITestCaseHookPa
 After({tags:"@web"},async function({result,pickle,gherkinDocument} : ITestCaseHookParameter) {
     const status = result.status;
     const scenario = pickle.name;
-    console.log("************************ "+ scenario + " is completed with " + status + "*******************");
+    console.log("************************ "+ pickle.name + " is completed with " + status + "*******************");
     await this.page.close();
     await this.context?.close();
 })
@@ -109,11 +114,9 @@ After({tags:"@SCM"},async function({result,pickle,gherkinDocument} : ITestCaseHo
     const status = result.status;
     const scenario = pickle.name;
     await new SCMLogoutPage(this.web).LogoutApplication();
-    console.log("************************ "+ scenario + " is completed with " + status + " *******************");
-    await this.page.close();
-    await this.context?.close();
-   //  await this.browser.close();
-   
+    console.log("************************ "+ pickle.name + " is completed with " + status + " *******************");
+    this.page ? await this.page.close() : console.warn('No Pages Found')
+    this.context ? await this.context.close() : console.warn('No Context Found')
 })
 
 After({tags:"@api"},async function({result,pickle,gherkinDocument} : ITestCaseHookParameter) {
@@ -130,4 +133,16 @@ After({tags:"@reality"},async function({result,pickle,gherkinDocument} : ITestCa
     await new RealityLogoutPage(this.page).LogoutReality();
     this.page.close();
     this.context?.close();
+})
+
+After({tags: "@VBSOC"}, async function(scenario) {
+     this.page ? await this.page.close() : console.warn('No Pages Found')
+      this.context ? await this.context.close() : console.warn('No Context Found')
+    // const scenarioName = scenario.pickle.name.replace(/\s+/g,'_');
+    // const featureName = scenario.gherkinDocument.feature.name.replace(/\s+/g,'_');
+    // const outputDir = path.join('test-result', 'feature-reports',featureName)
+    // if( !fs.existsSync(outputDir)) fs.mkdirSync(outputDir, {recursive : true})
+
+
+    
 })
