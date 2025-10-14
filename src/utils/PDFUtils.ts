@@ -10,7 +10,7 @@ export default class PDFUtils {
      * @returns PDF as text
      */
 
-    public static async getText(filePath:string): Promise<string> {
+    public static async getTextFromPDF(filePath:string): Promise<string> {
         const getData = fs.readFileSync(filePath);
         try{
             const data = await pdfParse(getData);
