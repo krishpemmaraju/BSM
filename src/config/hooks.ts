@@ -6,8 +6,6 @@ import * as data from "../config/env/envDetails.json"
 import RealityLogoutPage from "../webui/pages/reality/RealityLogoutPage";
 import RestRequest from "../api/actions/RESTRequest";
 import SCMLogoutPage from "../webui/pages/scm/SCMLogoutPage";
-import fs from 'fs'
-import path from 'path'
 
 const timeInMin: number = 60 * 1000;
 setDefaultTimeout(Number.parseInt(process.env.TEST_TIMEOUT, 10) * timeInMin);
@@ -64,6 +62,11 @@ Before({tags: "@web"},async function({pickle,gherkinDocument}: ITestCaseHookPara
     this.web = new UIActions(this.page);
 })
 
+let SCMUSER: string;
+let SCMPASSWORD: string;
+let SCMURL: string;
+let SCMSTOCKCHKAPI:string;
+let SCMCHKAVAILABILITY:string;
 Before({tags: "@SCM"},async function({pickle,gherkinDocument}: ITestCaseHookParameter) {
     const line = formatterHelpers.PickleParser.getPickleLocation({gherkinDocument,pickle});
     console.log( " **********************   TEST STARTED **************************************************** \n");
@@ -79,11 +82,44 @@ Before({tags: "@SCM"},async function({pickle,gherkinDocument}: ITestCaseHookPara
     });
     await this.context.clearCookies();
     this.page = await this.context?.newPage();
+    switch(process.env.ENV)
+    {
+        case 'DEV':
+        case 'dev':
+            this.SCMURL = data.SCM_DEV[0].SCMDEVURL;
+            this.SCMUSER = data.SCM_DEV[0].SCMDEVUSERNAME;
+            this.SCMPASSWORD = data.SCM_DEV[0].SCMDEVPASSWORD;
+            this.SCMSTOCKCHKAPI=data.SCM_DEV[0].SCMDEVSTOCKCHKAPI;
+            this.SCMCHKAVAILABILITY=data.SCM_DEV[0].SCMDEVCHKAVAILABILITY;
+            break;
+        case 'STG':
+        case 'stg':
+        case 'staging':
+        case 'STAGING':
+            this.SCMURL = data.SCM_STG[0].SCMSTGURL;
+            this.SCMUSER = data.SCM_STG[0].SCMSTGUSERNAME;
+            this.SCMPASSWORD = data.SCM_STG[0].SCMSTGPASSWORD;
+            this.SCMSTGSTOCKCHKAPI=data.SCM_STG[0].SCMSTGSTOCKCHKAPI;
+            this.SCMSTGCHKAVAILABILITY=data.SCM_STG[0].SCMSTGCHKAVAILABILITY;
+            break;
+        case 'TST':
+        case 'tst':
+            this.SCMURL = data.SCM_TST[0].SCMTSTURL;
+            this.SCMUSER = data.SCM_TST[0].SCMTSTUSERNAME;
+            this.SCMPASSWORD = data.SCM_TST[0].SCMTSTPASSWORD;
+            this.SCMSTGSTOCKCHKAPI=data.SCM_TST[0].SCMTSTSTOCKCHKAPI;
+            this.SCMSTGCHKAVAILABILITY=data.SCM_TST[0].SCMTSTCHKAVAILABILITY;
+            break;
+    }
     this.web = new UIActions(this.page);
     this.rest = new RestRequest(this.page);
 })
 
+let VBCSURL:string;
+let VBCSUSER:string;
+let VBCSPASSWORD:string;
 Before({tags: "@VBSOC"},async function({pickle,gherkinDocument}: ITestCaseHookParameter) {
+    console.log(process.env.ENV);
     const line = formatterHelpers.PickleParser.getPickleLocation({gherkinDocument,pickle});
     console.log( " **********************   TEST STARTED **************************************************** \n");
     console.log( " ****************** EXECUTION STARTED FOR SCENARIO - " + pickle.name + " ******************* \n");
@@ -98,6 +134,44 @@ Before({tags: "@VBSOC"},async function({pickle,gherkinDocument}: ITestCaseHookPa
     });
     await this.context.clearCookies();
     this.page = await this.context?.newPage();
+    switch(process.env.ENV)
+    {
+        case 'DEV':
+        case 'dev':
+            this.SCMURL = data.SCM_DEV[0].SCMDEVURL;
+            this.SCMUSER = data.SCM_DEV[0].SCMDEVUSERNAME;
+            this.SCMPASSWORD = data.SCM_DEV[0].SCMDEVPASSWORD;
+            this.SCMSTOCKCHKAPI=data.SCM_DEV[0].SCMDEVSTOCKCHKAPI;
+            this.SCMCHKAVAILABILITY=data.SCM_DEV[0].SCMDEVCHKAVAILABILITY;
+            this.VBCSURL=data.VBCSOC_DEV[0].VBCSDEVOCURL;
+            this.VBCSUSER=data.VBCSOC_DEV[0].VBCSDEVOCUSERNAME;
+            this.VBCSPASSWORD=data.VBCSOC_DEV[0].VBCSDEVOCPASSWORD;
+            break;
+        case 'STG':
+        case 'stg':
+        case 'staging':
+        case 'STAGING':
+            this.SCMURL = data.SCM_STG[0].SCMSTGURL;
+            this.SCMUSER = data.SCM_STG[0].SCMSTGUSERNAME;
+            this.SCMPASSWORD = data.SCM_STG[0].SCMSTGPASSWORD;
+            this.SCMSTGSTOCKCHKAPI=data.SCM_STG[0].SCMSTGSTOCKCHKAPI;
+            this.SCMSTGCHKAVAILABILITY=data.SCM_STG[0].SCMSTGCHKAVAILABILITY;
+            this.VBCSURL=data.VBCSOC_STG[0].VBCSSTGOCURL;
+            this.VBCSUSER=data.VBCSOC_STG[0].VBCSSTGOCUSERNAME;
+            this.VBCSPASSWORD=data.VBCSOC_STG[0].VBCSSTGOCPASSWORD;
+            break;
+        case 'TST':
+        case 'tst':
+            this.SCMURL = data.SCM_TST[0].SCMTSTURL;
+            this.SCMUSER = data.SCM_TST[0].SCMTSTUSERNAME;
+            this.SCMPASSWORD = data.SCM_TST[0].SCMTSTPASSWORD;
+            this.SCMSTGSTOCKCHKAPI=data.SCM_TST[0].SCMTSTSTOCKCHKAPI;
+            this.SCMSTGCHKAVAILABILITY=data.SCM_TST[0].SCMTSTCHKAVAILABILITY;
+            this.VBCSURL=data.VBCSOC_TST[0].VBCSTSTOCURL;
+            this.VBCSUSER=data.VBCSOC_TST[0].VBCSTSTOCUSERNAME;
+            this.VBCSPASSWORD=data.VBCSOC_TST[0].VBCSTSTOCPASSWORD;
+            break;
+    }
     this.web = new UIActions(this.page);
     this.rest = new RestRequest(this.page);
 })

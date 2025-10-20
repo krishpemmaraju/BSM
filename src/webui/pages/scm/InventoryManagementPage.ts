@@ -23,6 +23,17 @@ export default class InventoryManagementPage {
         return await (await this.web.getElementByRolebyExactText('heading', 'Inventory Management')).textContent();
     }
 
+    public async selectSubInventoryBranch(branchSel: string){
+         const getSubInventory =  this.web.getPage().locator("h1[data-switcher-header-id='dataSwitcherheader']");
+         console.log(await getSubInventory.textContent());
+         if(! ( (await getSubInventory.textContent()).includes(branchSel))){
+              (await this.web.getPageLocator('.oj-sp-header-general-overview-title h1.oj-sp-data-switcher-title')).click();
+              (await this.web.getElementByPlaceholder('Search')).waitFor({state: 'visible', timeout: 8000});
+              (await this.web.getElementByPlaceholder('Search')).fill(branchSel);
+              (await this.web.getPageLocator(".oj-listview-cell-element span[title*='"+branchSel+"']")).click({timeout: 4000});   
+         }
+    }
+
     public async ClickOnItemQuantities() {
         try{
             await expect (await this.web.getElementByRolebyExactText('link', 'Item Quantities')).toBeVisible({timeout:TEST_CONFIG.TIMEOUTS.element})}

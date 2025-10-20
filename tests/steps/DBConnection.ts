@@ -7,8 +7,8 @@ import * as data from "../../src/config/env/envDetails.json"
          let connection=null;
          let connectionHJ=null;
          Given('User Connect to DB', async function () {
-             connection = await new DBConnection().connectToDB(data.ODSSTG[0].DBTYPE,data.ODSSTG[0].ODSSTGUSERNAME,data.ODSSTG[0].ODSPASSWORD,data.ODSSTG[0].ODSALIAS);
-             connectionHJ = await new DBConnection().connectToDB(data.HIGHJUMPSTG[0].DBTYPE,data.HIGHJUMPSTG[0].HJSTGUSERNAME,data.HIGHJUMPSTG[0].HJPASSWORD,data.HIGHJUMPSTG[0].HJALIAS);
+             connection = await new DBConnection().connectToDB(data.ODS_STG[0].DBTYPE,data.ODS_STG[0].ODSSTGUSERNAME,data.ODS_STG[0].ODSPASSWORD,data.ODS_STG[0].ODSALIAS);
+             connectionHJ = await new DBConnection().connectToDB(data.HIGHJUMP_STG[0].DBTYPE,data.HIGHJUMP_STG[0].HJSTGUSERNAME,data.HIGHJUMP_STG[0].HJPASSWORD,data.HIGHJUMP_STG[0].HJALIAS);
             });
 
 

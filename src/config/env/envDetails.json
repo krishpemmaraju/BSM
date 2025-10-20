@@ -1,49 +1,78 @@
 {
-   "prdReality": [
-      {
-         "url": "http://topui-stg.sys.ad.wolseleyuk.com/hksui/#/?clientip=10.3.110.19",
-         "username": "alkk",
-         "password": "Varahi16$$"
-      }
-   ],
-   "APISTG": [
-      {
-         "REST_API_BASE_URL": "http://svttstif001:8080/emp/"
-      }
-   ],
-   "SCMDEV": [
-      {
-         "SCMDEVURL": "https://egvh-dev1.fa.em3.oraclecloud.com/",
-         "SCMDEVUSERNAME": "ABB7375",
-         "SCMDEVPASSWORD": "Varahi16$$",
-         "SCMSTOCKCHKAPI": "fscmRestApi/msp/latest/globalOrderPromises/quickAvailabilityCheck",
-         "SCMCHKAVAILABILITY": "fscmRestApi/msp/latest/globalOrderPromises/checkAvailability"
-      }
-   ],
-   "VBCSDEVOC":[
-      {
-          "VBCSDEVOCURL": "https://vb04.wolseleyuk.com/ic/builder/rt/wol-order-capture/live/webApps/wol-order-capture/",
-          "VBCSDEVOCUSERNAME": "a3Jpc2huYS5wZW1tYXJhanVAd29sc2VsZXkuY28udWs=",
-          "VBCSDEVOCPASSWORD": "VmFyYWhpYmFiYTE2JA=="
-      }
-
-   ],
-   "ODSSTG": [
-      {
-         "DBTYPE": "ODS",
-         "ODSSTGUSERNAME": "ODS_CORE",
-         "ODSPASSWORD": "core",
-         "ODSALIAS": "ODSSTG"
-      }
-   ],
-   "HIGHJUMPSTG": [
-      {
-         "DBTYPE": "HJ",
-         "HJSTGUSERNAME": "AUTOMATION",
-         "HJPASSWORD": "Hjads1ato2^",
-         "HJALIAS": "HJSTG"
-      }
-   ]
-
- 
+    "prdReality": [
+        {
+            "url": "http://topui-stg.sys.ad.wolseleyuk.com/hksui/#/?clientip=10.3.110.19",
+            "username": "alkk",
+            "password": "Varahi16$$"
+        }
+    ],
+    "API_STG": [
+        {
+            "REST_API_BASE_URL": "http://svttstif001:8080/emp/"
+        }
+    ],
+    "SCM_DEV": [
+        {
+            "SCMDEVURL": "https://egvh-dev1.fa.em3.oraclecloud.com/",
+            "SCMDEVUSERNAME": "ABB7375",
+            "SCMDEVPASSWORD": "Varahi16$",
+            "SCMDEVSTOCKCHKAPI": "fscmRestApi/msp/latest/globalOrderPromises/quickAvailabilityCheck",
+            "SCMDEVCHKAVAILABILITY": "fscmRestApi/msp/latest/globalOrderPromises/checkAvailability"
+        }
+    ],
+    "SCM_STG": [
+        {
+            "SCMSTGURL": "https://egvh-test.fa.em3.oraclecloud.com/",
+            "SCMSTGUSERNAME": "ABB7375",
+            "SCMSTGPASSWORD": "Varahi16$$",
+            "SCMSTGSTOCKCHKAPI": "fscmRestApi/msp/latest/globalOrderPromises/quickAvailabilityCheck",
+            "SCMSTGCHKAVAILABILITY": "fscmRestApi/msp/latest/globalOrderPromises/checkAvailability"
+        }
+    ],
+    "SCM_TST": [
+        {
+            "SCMTSTURL": "https://egvh-dev2.fa.em3.oraclecloud.com/",
+            "SCMTSTUSERNAME": "Automation",
+            "SCMTSTPASSWORD": "Automation12!",
+            "SCMTSTSTOCKCHKAPI": "fscmRestApi/msp/latest/globalOrderPromises/quickAvailabilityCheck",
+            "SCMTSTCHKAVAILABILITY": "fscmRestApi/msp/latest/globalOrderPromises/checkAvailability"
+        }
+    ],
+    "VBCSOC_DEV": [
+        {
+            "VBCSDEVOCURL": "https://vb04.wolseleyuk.com/ic/builder/rt/wol-order-capture/live/webApps/wol-order-capture/",
+            "VBCSDEVOCUSERNAME": "a3Jpc2huYS5wZW1tYXJhanVAd29sc2VsZXkuY28udWs=",
+            "VBCSDEVOCPASSWORD": "VmFyYWhpYmFiYTE2JA=="
+        }
+    ],
+    "VBCSOC_TST": [
+        {
+            "VBCSTSTOCURL": "https://vb03.wolseleyuk.com/ic/builder/rt/wol-order-capture/live/webApps/wol-order-capture/",
+            "VBCSTSTOCUSERNAME": "a3Jpc2huYS5wZW1tYXJhanVAd29sc2VsZXkuY28udWs=",
+            "VBCSTSTOCPASSWORD": "VmFyYWhpYmFiYTE2JA=="
+        }
+    ],
+      "VBCSOC_STG": [
+        {
+            "VBCSSTGOCURL": "https://vb04.wolseleyuk.com/ic/builder/rt/wol-order-capture/live/webApps/wol-order-capture/",
+            "VBCSSTGOCUSERNAME": "a3Jpc2huYS5wZW1tYXJhanVAd29sc2VsZXkuY28udWs=",
+            "VBCSSTGOCPASSWORD": "VmFyYWhpYmFiYTE2JA=="
+        }
+    ],
+    "ODS_STG": [
+        {
+            "DBTYPE": "ODS",
+            "ODSSTGUSERNAME": "ODS_CORE",
+            "ODSPASSWORD": "core",
+            "ODSALIAS": "ODSSTG"
+        }
+    ],
+    "HIGHJUMP_STG": [
+        {
+            "DBTYPE": "HJ",
+            "HJSTGUSERNAME": "AUTOMATION",
+            "HJPASSWORD": "Hjads1ato2^",
+            "HJALIAS": "HJSTG"
+        }
+    ]
 }

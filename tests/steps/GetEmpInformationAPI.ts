@@ -18,7 +18,7 @@ let getResponseObj: any;
 let reportGeneration: ReportGeneration;
 let getRESTAPIBaseURL: string;
 Given('user has access to the Employee Retrival System', async function () {
-  getRESTAPIBaseURL = data.APISTG[0].REST_API_BASE_URL;
+  getRESTAPIBaseURL = data.API_STG[0].REST_API_BASE_URL;
   this.getBaseURL = getRESTAPIBaseURL;
 });
 

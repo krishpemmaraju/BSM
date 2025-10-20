@@ -12,11 +12,12 @@ setDefaultTimeout(60 * 1000 * 2);
 let getExistingSOH: number;
 let getTransactionQty: number;
 let getNewSOH: number;
-let transactionType: string="";
+let transactionType: string = "";
 
 
 Given('User login into SCM application', async function () {
-   await new SCMLoginPage(this.web).loginIntoSCMApp(data.SCMDEV[0].SCMDEVURL, data.SCMDEV[0].SCMDEVUSERNAME, data.SCMDEV[0].SCMDEVPASSWORD);
+   console.log(this.SCMURL)
+   await new SCMLoginPage(this.web).loginIntoSCMApp(this.SCMURL, this.SCMUSER, this.SCMPASSWORD);
    Assert.AssertTrue(await new SCMHomePage(this.web).isHomePageDisplayed());
 });
 
@@ -24,6 +25,10 @@ When('User navigate to Inventory Management', async function () {
    await new SCMHomePage(this.web).navigateToInventoryManagement();
    const getInvMgmtHeaderText = await new InventoryManagementPage(this.web).getInventoryManagmentDashboardHeader();
    await Assert.assertEquals("Inventory Management", getInvMgmtHeaderText);
+});
+
+When('Select the {string} on InventoryManagement Screen', async function (branchSel) {
+   await new InventoryManagementPage(this.web).selectSubInventoryBranch(branchSel);
 });
 
 When('User clicks on Item Quantities- under Actions', async function () {
@@ -57,8 +62,8 @@ When('User clicks on Edit icon', async function () {
 
 When('User select Transaction Type as {string} and Account Alias as {string} and click on Save', async function (transactionType, accountAlias) {
    this.transactionType = transactionType;
-   await new CreateMiscellaneousTransactions(this.web).SelectTransactionType(transactionType,accountAlias);
- });
+   await new CreateMiscellaneousTransactions(this.web).SelectTransactionType(transactionType, accountAlias);
+});
 
 
 Then('User should see option to {string}', async function (addItemBtn) {
@@ -75,8 +80,8 @@ When('User enter product as {string}', async function (product) {
 });
 
 
-When('User select subinventory as {string}', async function (subInventory) {
-   await new CreateMiscellaneousTransactions(this.web).SelectSubInventory(subInventory);
+When('User select subinventory as {string} and Locator as {string}', async function (subInventory, locator) {
+   await new CreateMiscellaneousTransactions(this.web).SelectSubInventoryAndLocator(subInventory, locator);
 });
 
 
@@ -118,5 +123,4 @@ Then('User should see pop up as {string}', async function (textToBeDisplayed) {
    if (transactionType == "Account Alias Issue") {
       Assert.assertEqualsInt((getExistingSOH - getTransactionQty), getNewSOH);
    }
-
 });

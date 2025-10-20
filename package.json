@@ -15,6 +15,7 @@
     "@playwright/test": "^1.50.1",
     "@types/node": "^22.13.9",
     "@types/oracledb": "^6.9.1",
+    "cross-env": "^10.1.0",
     "exceljs": "^4.4.0",
     "multiple-cucumber-html-reporter": "^3.9.3",
     "ts-node": "^10.9.2",
@@ -23,8 +24,12 @@
   "scripts": {
     "clean:reports": "rimraf test-result && mkdir test-result",
     "generate:report": "ts-node ./src/helper/reportConfiguration.ts",
-    "execute:script": "cucumber-js",
-    "test": "npm run clean:reports && npm run execute:script && npm run generate:report",
+    "execute:script:staging": "cross-env ENV=staging cucumber-js -p STG",
+    "execute:script:dev": "cross-env ENV=dev cucumber-js -p DEV",
+    "execute:script:tst": "cross-env ENV=tst cucumber-js -p TST",
+    "test:staging": "npm run clean:reports && npm run execute:script:staging && npm run generate:report",
+    "test:dev": "npm run clean:reports && npm run execute:script:dev && npm run generate:report",
+    "test:tst": "npm run clean:reports && npm run execute:script:tst && npm run generate:report",
     "execute:script:failed": "cucumber-js @rerun.txt",
     "test:failed": "npm run execute:script:failed && npm run generate:report"
   }

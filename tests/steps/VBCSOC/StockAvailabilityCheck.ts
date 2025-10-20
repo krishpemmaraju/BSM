@@ -27,7 +27,7 @@ let stockCheckFromUI: any;
 let atpDateFromUI: any;
 
 Given('User login into VBCS Order Capture', async function () {
-    await new VBCSOrderCaptureUIPage(this.web).loginIntoVBCSOrderCaptureUI(data.VBCSDEVOC[0].VBCSDEVOCURL, Buffer.from(data.VBCSDEVOC[0].VBCSDEVOCUSERNAME, 'base64').toString('utf-8'), Buffer.from(data.VBCSDEVOC[0].VBCSDEVOCPASSWORD, 'base64').toString('utf-8'));
+    await new VBCSOrderCaptureUIPage(this.web).loginIntoVBCSOrderCaptureUI(this.VBCSURL, Buffer.from(this.VBCSUSER, 'base64').toString('utf-8'), Buffer.from(this.VBCSPASSWORD, 'base64').toString('utf-8'));
 });
 
 
@@ -39,7 +39,7 @@ Then('get the stock of the {string} added to the basket', async function (produc
 let stkChkResp: any;
 let StkChkAPI: any;
 When('user invokes Stock Availability Check API for the {string} and {string}', async function (product, branch) {
-    const stkChkReqBody = {
+  const stkChkReqBody = {
   CallingModule: 'GOP',
   CallingInstance: 'GOP',
   RequestCreationDateTime: new Date().toISOString(),
@@ -55,7 +55,7 @@ When('user invokes Stock Availability Check API for the {string} and {string}', 
     }
   ]
 };
-    const credentials = Buffer.from(`${data.SCMDEV[0].SCMDEVUSERNAME}:${data.SCMDEV[0].SCMDEVPASSWORD}`).toString('base64');
+    const credentials = Buffer.from(`${this.SCMUSER}:${this.SCMPASSWORD}`).toString('base64');
     let mapHeaders = new Map<string, string>([
         ['Content-Type', APIConstants.CONTENT_TYPE_JSON],
         ['Authorization', `Basic ${credentials}`]
@@ -63,7 +63,7 @@ When('user invokes Stock Availability Check API for the {string} and {string}', 
     web: UIActions;
     const request: RestRequest = await this.rest;
     await ReportGeneration.attachReportForAPI(" The Request Body is \n " + JSON.stringify(stkChkReqBody, null, 2), this);
-    stkChkResp = await request.postReqWithAuth(data.SCMDEV[0].SCMDEVURL + data.SCMDEV[0].SCMSTOCKCHKAPI, mapHeaders, JSON.stringify(stkChkReqBody, null, 2));
+    stkChkResp = await request.postReqWithAuth(this.SCMURL + this.SCMSTOCKCHKAPI, mapHeaders, JSON.stringify(stkChkReqBody, null, 2));
    const responseText = await stkChkResp.text();
     StkChkAPI = await JSONUtils.getJsonValueFromResponse(await stkChkResp.json(), "AvailableQuantity");
 
@@ -113,7 +113,7 @@ When('user invokes Quick Availability Check API for the {string} and {string}', 
                 }
             }
         } as any;
-    const credentials = Buffer.from(`${data.SCMDEV[0].SCMDEVUSERNAME}:${data.SCMDEV[0].SCMDEVPASSWORD}`).toString('base64');
+    const credentials = Buffer.from(`${this.SCMUSER}:${this.SCMPASSWORD}`).toString('base64');
     let mapHeaders = new Map<string, string>([
         ['Content-Type', APIConstants.CONTENT_TYPE_JSON],
         ['Authorization', `Basic ${credentials}`]
@@ -121,7 +121,7 @@ When('user invokes Quick Availability Check API for the {string} and {string}', 
     web: UIActions;
     const request: RestRequest = await this.rest;
     await ReportGeneration.attachReportForAPI(" The Request Body is \n " + JSON.stringify(CheckAvailReqBody), this);
-    stkChkAvailResp = await request.postReqWithAuth(data.SCMDEV[0].SCMDEVURL + data.SCMDEV[0].SCMCHKAVAILABILITY, mapHeaders, CheckAvailReqBody);
+    stkChkAvailResp = await request.postReqWithAuth(this.SCMURL + this.SCMCHKAVAILABILITY, mapHeaders, CheckAvailReqBody);
     StkChkAvailAPI = await JSONUtils.getJsonValueFromResponse(await stkChkAvailResp.json(), "ExpectedShipDateTime");
 });
 

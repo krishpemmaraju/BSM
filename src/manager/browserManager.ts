@@ -1,6 +1,6 @@
 import { chromium, firefox } from "playwright";
 
-let headlessConfig: boolean = true;
+let headlessConfig: boolean = false;
 
 export default class WebBrowserManager {
     public static async launch(browser: string) {
