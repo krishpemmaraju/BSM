@@ -1,12 +1,12 @@
 import { Given, Then, When } from "@cucumber/cucumber";
-import RequestHeaders from "../../src/api/actions/RequestHeaders";
-import APIConstants from "../../src/api/APIConstants/APIConstants";
-import * as data from "../../src/config/env/envDetails.json"
-import RestRequest from "../../src/api/actions/RESTRequest";
+import RequestHeaders from "../../../src/api/actions/RequestHeaders";
+import APIConstants from "../../../src/api/APIConstants/APIConstants";
+import * as data from "../../../src/config/env/envDetails.json"
+import RestRequest from "../../../src/api/actions/RESTRequest";
 import { APIResponse } from "@playwright/test";
-import Assert from "../../src/asserts/Assert";
-import RestResponse from "../../src/api/actions/RESTResponse";
-import ReportGeneration from "../../src/helper/reportGeneration";
+import Assert from "../../../src/asserts/Assert";
+import RestResponse from "../../../src/api/actions/RESTResponse";
+import ReportGeneration from "../../../src/helper/reportGeneration";
 import { isTruthyString } from "@cucumber/cucumber/lib/configuration";
 
 
@@ -40,5 +40,5 @@ Then('user should get a status code as {int}', async function (int) {
     await ReportGeneration.attachReportForAPI("The Request is Success and response code is " + await this.respObjSha.status(), this);
   else await ReportGeneration.attachReportForAPI("The Request is Failed and response code is " + await this.respObjSha.status(), this);
   console.log("The response code is " + await this.respObjSha.status());
-  await Assert.assertEqualsInt(200, await this.respObjSha.status(),false);
+  await Assert.assertEqualsInt(200, await this.respObjSha.status(), false);
 });

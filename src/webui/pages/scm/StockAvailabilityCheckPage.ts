@@ -20,20 +20,20 @@ export default class StockAvailabilityCheckPage {
     }
 
     public async GetStockAvailabilityForProduct(product: string) {
-         const availableStockEle = this.web.getPageLocator('oj-c-button.in-stock-button');
-         return await (await availableStockEle).textContent();
+        const availableStockEle = this.web.getPageLocator('oj-c-button.in-stock-button');
+        return await (await availableStockEle).textContent();
     }
 
 
     public async GetATPAvailableDate() {
-        let atpDate;
-         const getListOfSpanElements = await (await this.web.getPageLocator('oj-c-button.atp-button button')).all();
-         for(const atpText of getListOfSpanElements){
-             if(await atpText.textContent() != ""){
-                  atpDate = await atpText.getAttribute('aria-label');
-             }
-         }
-         return atpDate.trim();
+        let atpDate: string;
+        const getListOfSpanElements = await (await this.web.getPageLocator('oj-c-button.atp-button button')).all();
+        for (const atpText of getListOfSpanElements) {
+            if (await atpText.textContent() != "") {
+                atpDate = await atpText.getAttribute('aria-label');
+            }
+        }
+        return atpDate.trim();
     }
 
 }

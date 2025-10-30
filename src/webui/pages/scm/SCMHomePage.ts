@@ -10,8 +10,10 @@ let testInfo: TestInfo;
 let CLICK_ON_HOME_LINE: string = "a[title='Home']";
 let WAIT_FOR_SEARCH_ICON: string = "a[title='Search']";
 let CLICK_ON_SUPPLYCHAINEXECUTION: string = "#groupNode_supply_chain_execution";
-let CLICK_ON_ORDERMANAGEMENT:string = "#groupNode_order_management"
+let CLICK_ON_ORDERMANAGEMENT: string = "#groupNode_order_management"
 let WAIT_FOR_ACTIONS_MENU: string = "span[title='Actions']";
+let GET_NAV_LINKS: string = "#navmenu-wrapper a"
+let CLICK_RIGHT_HAND_NAV: string = "#clusters-right-nav"
 setDefaultTimeout(60 * 1000 * 2);
 
 export default class SCMHomePage {
@@ -47,7 +49,7 @@ export default class SCMHomePage {
                 }
                 await this.web.element(WAIT_FOR_ACTIONS_MENU, "Waiting for actions menu in Inventory Dashboard").isElementVisible(5);
                 await reportGeneration.getScreenshot(this.web.getPage(), "AFTER CLICKING ON INVENTORY MANAGEMENT", world);
-            } 
+            }
             catch (error) {
                 console.log("coming to catch");
                 await this.web.getPage().reload();
@@ -61,7 +63,7 @@ export default class SCMHomePage {
         }
     }
 
-    public async NavigateToOrderCaptureUI(){
+    public async NavigateToOrderCaptureUI() {
         await this.ClickOnHomeIcon();
         await this.web.element(WAIT_FOR_SEARCH_ICON, "Wait for search icon on Home Page").waitForElementToVisible(TEST_CONFIG.TIMEOUTS.element);
         await this.web.element(CLICK_ON_ORDERMANAGEMENT, "Click on Order Management").click();
@@ -69,8 +71,30 @@ export default class SCMHomePage {
         await (await this.web.getElementByRoleByName('link', 'Wolseley Order Capture')).click();
     }
 
-    public async IsOrderCaptureUILoaded(){
-        await (await this.web.getElementByRolebyExactText('heading',"Order Capture")).waitFor({state:'visible',timeout:TEST_CONFIG.TIMEOUTS.element});
-        return await (await this.web.getElementByRolebyExactText('heading',"Order Capture")).isVisible({timeout: TEST_CONFIG.TIMEOUTS.element});
+    public async IsOrderCaptureUILoaded() {
+        await (await this.web.getElementByRolebyExactText('heading', "Order Capture")).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element });
+        return await (await this.web.getElementByRolebyExactText('heading', "Order Capture")).isVisible({ timeout: TEST_CONFIG.TIMEOUTS.element });
+    }
+
+    public async navigateToOrdermanagement() {
+        await this.ClickOnHomeIcon();
+        await this.web.element(WAIT_FOR_SEARCH_ICON, "Wait for search icon on Home Page").waitForElementToVisible(TEST_CONFIG.TIMEOUTS.element);
+        await reportGeneration.getScreenshot(this.web.getPage(), "SCM HOME PAGE LAUNCHED", world);
+        const getNavMenuLinks = await this.web.getPageLocator(GET_NAV_LINKS);
+        const rightHandNav = await this.web.getPageLocator(CLICK_RIGHT_HAND_NAV);
+        for (let i = 0; i < await getNavMenuLinks.count(); i++) {
+            if (await getNavMenuLinks.nth(i).textContent({ timeout: 6000 }) == "Order Management") {
+                console.log(await getNavMenuLinks.nth(i).textContent());
+                await getNavMenuLinks.nth(i).click();
+                break;
+            }
+            else {
+                if (i == 7) {
+                    await rightHandNav.click();
+                }
+            }
+        }
+        (await this.web.getPageLocator('#itemNode_order_management_order_management_0')).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element });
+        await reportGeneration.getScreenshot(this.web.getPage(), "ORDER MANAGEMENT PAGE SECTION LAUNCHED", world);
     }
 }

@@ -42,17 +42,17 @@
         {
             "VBCSDEVOCURL": "https://vb04.wolseleyuk.com/ic/builder/rt/wol-order-capture/live/webApps/wol-order-capture/",
             "VBCSDEVOCUSERNAME": "a3Jpc2huYS5wZW1tYXJhanVAd29sc2VsZXkuY28udWs=",
-            "VBCSDEVOCPASSWORD": "VmFyYWhpYmFiYTE2JA=="
+            "VBCSDEVOCPASSWORD": "SmF5YXZhcmFoaTE2JA=="
         }
     ],
     "VBCSOC_TST": [
         {
             "VBCSTSTOCURL": "https://vb03.wolseleyuk.com/ic/builder/rt/wol-order-capture/live/webApps/wol-order-capture/",
             "VBCSTSTOCUSERNAME": "a3Jpc2huYS5wZW1tYXJhanVAd29sc2VsZXkuY28udWs=",
-            "VBCSTSTOCPASSWORD": "VmFyYWhpYmFiYTE2JA=="
+            "VBCSTSTOCPASSWORD": "SmF5YXZhcmFoaTE2JA=="
         }
     ],
-      "VBCSOC_STG": [
+    "VBCSOC_STG": [
         {
             "VBCSSTGOCURL": "https://vb04.wolseleyuk.com/ic/builder/rt/wol-order-capture/live/webApps/wol-order-capture/",
             "VBCSSTGOCUSERNAME": "a3Jpc2huYS5wZW1tYXJhanVAd29sc2VsZXkuY28udWs=",

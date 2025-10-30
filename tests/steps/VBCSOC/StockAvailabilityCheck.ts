@@ -33,28 +33,28 @@ Given('User login into VBCS Order Capture', async function () {
 
 Then('get the stock of the {string} added to the basket', async function (product) {
     stockCheckFromUI = await new StockAvailabilityCheckPage(this.web).GetStockAvailabilityForProduct(product);
-    atpDateFromUI = await new StockAvailabilityCheckPage(this.web).GetATPAvailableDate();
+    //atpDateFromUI = await new StockAvailabilityCheckPage(this.web).GetATPAvailableDate();
 });
 
 let stkChkResp: any;
 let StkChkAPI: any;
 When('user invokes Stock Availability Check API for the {string} and {string}', async function (product, branch) {
-  const stkChkReqBody = {
-  CallingModule: 'GOP',
-  CallingInstance: 'GOP',
-  RequestCreationDateTime: new Date().toISOString(),
-  ItemDetailList: [
-    {
-      ItemIdentifier: product.replace(/\s+/g, '').trim(),
-      OrgInfoList: [
-        {
-          OrgIdentifier: branch.replace(/[\n\r]/g, '').trim()
-        }
-      ],
-      RequestedDateTime: new Date().toISOString()
-    }
-  ]
-};
+    const stkChkReqBody = {
+        CallingModule: 'GOP',
+        CallingInstance: 'GOP',
+        RequestCreationDateTime: new Date().toISOString(),
+        ItemDetailList: [
+            {
+                ItemIdentifier: product.replace(/\s+/g, '').trim(),
+                OrgInfoList: [
+                    {
+                        OrgIdentifier: branch.replace(/[\n\r]/g, '').trim()
+                    }
+                ],
+                RequestedDateTime: new Date().toISOString()
+            }
+        ]
+    };
     const credentials = Buffer.from(`${this.SCMUSER}:${this.SCMPASSWORD}`).toString('base64');
     let mapHeaders = new Map<string, string>([
         ['Content-Type', APIConstants.CONTENT_TYPE_JSON],
@@ -62,9 +62,9 @@ When('user invokes Stock Availability Check API for the {string} and {string}', 
     ]);
     web: UIActions;
     const request: RestRequest = await this.rest;
-    await ReportGeneration.attachReportForAPI(" The Request Body is \n " + JSON.stringify(stkChkReqBody, null, 2), this);
+    await ReportGeneration.attachReportForAPI(" The Request Body is for EndPoint  " + this.SCMURL + this.SCMSTOCKCHKAPI + "\n " + JSON.stringify(stkChkReqBody, null, 2), this);
     stkChkResp = await request.postReqWithAuth(this.SCMURL + this.SCMSTOCKCHKAPI, mapHeaders, JSON.stringify(stkChkReqBody, null, 2));
-   const responseText = await stkChkResp.text();
+    const responseText = await stkChkResp.text();
     StkChkAPI = await JSONUtils.getJsonValueFromResponse(await stkChkResp.json(), "AvailableQuantity");
 
 });
@@ -126,6 +126,7 @@ When('user invokes Quick Availability Check API for the {string} and {string}', 
 });
 
 Then('extract the ExpectedShipDateTime from the response', async function () {
+    console.log("from UI" + atpDateFromUI + " from response " + await DateUtils.getSuffixOfDay(StkChkAvailAPI[0], false));
     await ReportGeneration.attachReportForAPI(" The Reponse for Check Availability is \n " + JSON.stringify(await stkChkAvailResp.json(), null, 2), this);
     await Assert.AssertTrue(atpDateFromUI === await DateUtils.getSuffixOfDay(StkChkAvailAPI[0], false))
 });

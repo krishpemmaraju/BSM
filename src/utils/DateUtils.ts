@@ -64,13 +64,13 @@ export default class DateUtils {
         return date;
     }
 
-     /**
-    * Generates date based on the input
-    
-    * @returns 
-    */
+    /**
+   * Generates date based on the input
+   
+   * @returns 
+   */
 
-     public static async CovertStringToDate(dateStr: string,format: string): Promise<string> {
+    public static async CovertStringToDate(dateStr: string, format: string): Promise<string> {
         const customFormat = moment(dateStr).format(format).toString();
         return customFormat;
 
@@ -80,16 +80,16 @@ export default class DateUtils {
      *    Generate Suffix based on the Date 
      */
 
-    public static async getSuffixOfDay(dateStr: string, isSuffixReq: boolean): Promise<string>{
-        const dayInStr = moment(dateStr).format("DD")
-        const  day = parseInt(dayInStr)
-        const  mon = moment(dateStr).format("MMM");
-        const suffix = (day === 1  || day === 21  || day === 31) ? 'st' : 
-                              (day === 2  || day === 22) ? 'nd' :
-                              (day === 3  || day === 23 ) ? 'rd'  : 'th';
-        const leadingZero = (day === 1  || day === 2  || day === 3 || day === 4  || day === 5  || day === 6 || day === 7  || day === 8  || day === 9)  ? '0'+day : day;
-       
-        return leadingZero+( isSuffixReq ? suffix + " "+mon : " "+mon);
+    public static async getSuffixOfDay(dateStr: string, isSuffixReq: boolean): Promise<string> {
+        const dayInStr = moment.utc(dateStr).format("DD")
+        const day = parseInt(dayInStr)
+        const mon = moment(dateStr).format("MMM");
+        const suffix = (day === 1 || day === 21 || day === 31) ? 'st' :
+            (day === 2 || day === 22) ? 'nd' :
+                (day === 3 || day === 23) ? 'rd' : 'th';
+        const leadingZero = (day === 1 || day === 2 || day === 3 || day === 4 || day === 5 || day === 6 || day === 7 || day === 8 || day === 9) ? '0' + day : day;
+
+        return leadingZero + (isSuffixReq ? suffix + " " + mon : " " + mon);
     }
 
 }
