@@ -14,6 +14,6 @@ Feature: Create Account Order in Order Capture UI
 
         Examples:
             | customer             | products      | PrintVerification |
-           | SMITH AND BYFORD LTD | 508201        | No                |
-           | SMITH AND BYFORD LTD | 508201,608955 | Yes               |
-    
+            | SMITH AND BYFORD LTD | R40003        | No                |
+            | SMITH AND BYFORD LTD | R40003,608955 | Yes               |
+

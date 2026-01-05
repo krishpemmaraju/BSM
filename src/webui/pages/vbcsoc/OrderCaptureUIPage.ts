@@ -6,6 +6,7 @@ import { TEST_CONFIG } from "../../../config/test-config";
 import StringUtils from "../../../utils/StringUtils";
 
 let reportGeneration: ReportGeneration;
+let FRAME_LOCATOR_TEXT = 'iframe[src*="wol-order-capture/live"]';
 let ENTER_CUSTOMER: string = "input[placeholder='Search by Customer Name, Account Code or Postcode']";
 let SELECT_CUSTOMER: string = "div[title='Select Customer...']";
 // Customer UI New Changes
@@ -47,13 +48,13 @@ export default class OrderCaptureUIPage {
     }
 
     public async getCustomerSelectionValueFromUI(dataToMatch: string) {
-        const  getAccStatusValueFromUI = "div[title='"+dataToMatch+"']";
-        return  await this.web.getPage().locator(getAccStatusValueFromUI).textContent();
+        const getAccStatusValueFromUI = "div[title='" + dataToMatch + "']";
+        return await this.web.getPage().locator(getAccStatusValueFromUI).textContent();
     }
 
-    public async getCustomerAccountBalance(){
+    public async getCustomerAccountBalance() {
         const getAvailableBalanceFromUI = "oj-sp-scoreboard-metric-card[card-title='Available Balance'] div.oj-sp-scoreboard-metric-card-metric";
-        return StringUtils.getStringAfterParticularStr ( (await this.web.getPage().locator(getAvailableBalanceFromUI).textContent()),'£');
+        return StringUtils.getStringAfterParticularStr((await this.web.getPage().locator(getAvailableBalanceFromUI).textContent()), '£');
     }
 
 
@@ -161,5 +162,30 @@ export default class OrderCaptureUIPage {
         } catch (error) {
             console.log(error)
         }
+    }
+
+    //** Below are the duplication methods of Order Capture UI , this will be used when the fix for navigating OC UI page 
+    //    without login in to SSO  */
+
+    public async SelectCustomerSCM(customer: string) {
+        (await this.web.getFrameLocatorObject(FRAME_LOCATOR_TEXT)).getByText('Click to select a customer').waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element });
+        (await this.web.getFrameLocatorObject(FRAME_LOCATOR_TEXT)).getByText('Click to select a customer').click({ timeout: TEST_CONFIG.TIMEOUTS.element });
+        await reportGeneration.getScreenshot(this.web.getPage(), "Selecting Customer " + customer, world);
+        const clickOnCustomerDrpDwn = (await this.web.getFrameLocatorObject(FRAME_LOCATOR_TEXT)).locator("div[class='fake-dropdown oj-flex oj-sm-justify-content-space-between']").
+            filter({ has: this.web.getPage().locator("//span[text()='Customer']") });
+        await clickOnCustomerDrpDwn.click();
+        const customerSearchInput = (await this.web.getFrameLocatorObject(FRAME_LOCATOR_TEXT)).locator("input[aria-label='Customer Search']");
+        await customerSearchInput.fill(customer);
+        await reportGeneration.getScreenshot(this.web.getPage(), "Enter Customer " + customer, world);
+        const customerSearchResultsAvailable = (await this.web.getFrameLocatorObject(FRAME_LOCATOR_TEXT)).locator('oj-table.customer-table');
+        await expect(customerSearchResultsAvailable).toBeVisible({ timeout: 6000 })
+        const selectCustomerListed = (await this.web.getFrameLocatorObject(FRAME_LOCATOR_TEXT)).getByText(customer)
+        await reportGeneration.getScreenshot(this.web.getPage(), "Select the Customer Listed for " + customer, world);
+        await selectCustomerListed.click();
+        const clickOnSaveOnSelectCusomter = (await this.web.getFrameLocatorObject(FRAME_LOCATOR_TEXT)).locator("button[aria-label='Save']");
+        await clickOnSaveOnSelectCusomter.click();
+        (await this.web.getFrameLocatorObject(FRAME_LOCATOR_TEXT)).locator("span[title*='" + customer + "']").waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element });
+        (await this.web.getFrameLocatorObject(FRAME_LOCATOR_TEXT)).locator(".oj-badge-sm").waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element });
+        await reportGeneration.getScreenshot(this.web.getPage(), "Customer selected as below  ", world);
     }
 }      

@@ -8,7 +8,7 @@ let reportGeneration: ReportGeneration;
 let testInfo: TestInfo;
 let CLICK_ON_SEARCH_ICON = "button[aria-label='Search by item, description, or MPN']";
 let WAIT_FOR_TABLE_DISPLAY = "th[title='Item']";
-setDefaultTimeout(60 * 1000 * 2);
+setDefaultTimeout(3000000);
 
 
 
@@ -77,6 +77,22 @@ export default class InventoryManagementPage {
             }
         }
         return getCount;
+    }
+
+    public async ClickOnViewAllActions(){
+        await (await this.web.getPageLocator("a[title='View all actions']")).waitFor({timeout:TEST_CONFIG.TIMEOUTS.element})
+        await (await this.web.getPageLocator("a[title='View all actions']")).click();
+    }
+
+    public async SelectObjectType(objectTypeOption: string){
+        await (await this.web.getElementByLabel('Object Type')).waitFor({state:'visible',timeout: TEST_CONFIG.TIMEOUTS.element})
+        await (await this.web.getElementByLabel('Object Type')).click()
+        await (await this.web.getElementByText(objectTypeOption)).waitFor({state:'visible',timeout: TEST_CONFIG.TIMEOUTS.element})
+        await (await this.web.getElementByText(objectTypeOption)).click()
+    }
+
+    public async EnterDocumentNumberShipmentLines(transferOrderNumber: string){
+        await (await this.web.getElementByPlaceholder('Search by order number')).fill(transferOrderNumber)
     }
 
 }

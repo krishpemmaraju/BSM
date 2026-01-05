@@ -1,0 +1,35 @@
+{
+  "InterfaceSourceCode": "EXT",
+  "InterfaceBatchNumber": "KK171626",
+  "SupplyRequestStatus": "NEW",
+  "SupplyRequestDate": "2025-12-17T16:47:43.271+00:00",
+  "SupplyOrderSource": "EXT",
+  "SupplyOrderReferenceNumber": "KK171626",
+  "SupplyOrderReferenceId": 1,
+  "ProcessRequestFlag": "Y",
+  "supplyRequestLines": [
+    {
+      "InterfaceBatchNumber": "KK171626",
+      "SupplyOrderReferenceLineNumber": "1",
+      "SupplyOrderReferenceLineId": 1,
+      "DestinationOrganizationCode": "1BL",
+      "DestinationSubinventoryCode": "1BL",
+      "SourceOrganizationCode": "F6",
+      "SourceSubinventoryCode": "F6",
+      "ItemNumber": "511040",
+      "BackToBackFlag": "N",
+      "InterfaceSourceCode": "EXT",
+      "SupplyOrderSource": "EXT",
+      "NeedByDate": "2025-12-17T16:47:43.271+00:00",
+      "DestinationTypeCode": "INVENTORY",
+      "SupplyType": "TRANSFER",
+      "Quantity": 3,
+      "UOMCode": "EA",
+      "CarrierCode": "INT",
+      "ShipModeOfTransport": "TRUCK",
+      "ShipClassOfService": "LTL",
+      "PreparerEmail": "matthew.bowman@wolseley.co.uk",
+      "DeliverToRequesterEmail": "matthew.bowman@wolseley.co.uk"
+    }
+  ]
+}

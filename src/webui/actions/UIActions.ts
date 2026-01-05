@@ -241,6 +241,16 @@ export default class UIActions {
         return this.elementActions.setElementByPageByTexts(roleVal, textVal);
     }
 
+
+    /**
+     * Return the Frame Locator
+     * @param fameLocatorText
+     */
+
+    public async getFrameLocatorObject(frameLocatorText: string){
+        return this.getPage().frameLocator(frameLocatorText);
+    }
+
     /**
      * Return the locator Object
      * @param locatorText

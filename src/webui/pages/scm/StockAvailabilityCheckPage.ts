@@ -19,21 +19,35 @@ export default class StockAvailabilityCheckPage {
         testInfo = testInfo!;
     }
 
-    public async GetStockAvailabilityForProduct(product: string) {
-        const availableStockEle = this.web.getPageLocator('oj-c-button.in-stock-button');
-        return await (await availableStockEle).textContent();
+    public async GetStockAvailabilityForProduct(product: string, isStkExists: string) {
+        setDefaultTimeout(60 * 10 * 1000);
+        const isStkExistsNormalized = isStkExists.toLowerCase();
+        if (isStkExistsNormalized == "yes") {
+            await expect(await this.web.getPageLocator("div[slot='inventory'] span.oj-badge-info")).toBeVisible({ timeout: 5000 })
+            const availableStockEle = this.web.getPageLocator("div[slot='inventory'] span.oj-badge-info");
+            return await (await availableStockEle).innerText()
+        }
+        if (isStkExistsNormalized == "no") {
+            await this.web.getPage().waitForTimeout(3000);
+            try {
+                (await this.web.getPageLocator("div.clickable span.oj-badge-danger")).waitFor({ state: 'visible', timeout: 10000 })
+                const availableStockEle = (await this.web.getPageLocator("div.clickable span.oj-badge-danger")).innerText();
+                return (await availableStockEle).split(' ')[0];
+            }
+            catch (error) {
+                console.error(error)
+            }
+
+
+        }
+        return null;
     }
 
 
-    public async GetATPAvailableDate() {
-        let atpDate: string;
-        const getListOfSpanElements = await (await this.web.getPageLocator('oj-c-button.atp-button button')).all();
-        for (const atpText of getListOfSpanElements) {
-            if (await atpText.textContent() != "") {
-                atpDate = await atpText.getAttribute('aria-label');
-            }
-        }
-        return atpDate.trim();
+    public async GetATPAvailableDate(isStkExists: string): Promise<string> {
+        let isStkExistsNormalized = isStkExists.toLowerCase();
+        const getListOfSpanElements = isStkExistsNormalized == 'no' ? (await this.web.getPageLocator("div[slot='inventory'] span.custom-badge-atp.oj-badge-sm")) : null
+        return (await getListOfSpanElements.textContent()).trim();
     }
 
 }

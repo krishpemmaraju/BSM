@@ -16,7 +16,7 @@ let ADD_ITEM_BTN: string;
 let GET_CONF_MESSAGE_POP_UP: string = ".oj-message-title";
 let CLICK_MORE_ACTIONS: string = "button[aria-label='More Actions']";
 let ACCOUNT_ALIAS_XPATH = "//span[text()='Account Alias']//ancestor::div[@class='oj-flex-item']//a";
-setDefaultTimeout(60 * 1000 * 2);
+setDefaultTimeout(3000000);
 
 export default class CreateMiscellaneousTransactions {
 

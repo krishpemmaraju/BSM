@@ -3,16 +3,23 @@
         "typeRoots": [
             "./node_modules/@types",
             "src/helper/types"
-       ],
+        ],
         "experimentalDecorators": true,
         "target": "ESNext",
         "module": "CommonJS",
-        "moduleResolution": "Node",
+        "moduleResolution": "node",
         "sourceMap": true,
         "outDir": "../tests-out",
         "resolveJsonModule": true,
         "esModuleInterop": true,
-        "allowSyntheticDefaultImports": true
+        "allowSyntheticDefaultImports": true,
     },
-    "include": ["**/*.ts", "playwright.config.ts1"]
+    "include": [
+        "**/*.ts",
+        "playwright.config.ts",
+        "src/support/world.ts",
+        "**/webui/pages/**/*.ts",
+        "src/**/**/**/*.ts"
+    ],
+    "exclude": ["node_modules", "dist", "reports"]
 }

@@ -14,7 +14,7 @@ let CLICK_ON_ORDERMANAGEMENT: string = "#groupNode_order_management"
 let WAIT_FOR_ACTIONS_MENU: string = "span[title='Actions']";
 let GET_NAV_LINKS: string = "#navmenu-wrapper a"
 let CLICK_RIGHT_HAND_NAV: string = "#clusters-right-nav"
-setDefaultTimeout(60 * 1000 * 2);
+//setDefaultTimeout(600 * 1000 * 2);
 
 export default class SCMHomePage {
     constructor(private web: UIActions, testInfo?: TestInfo) {
@@ -63,6 +63,15 @@ export default class SCMHomePage {
         }
     }
 
+    public async navigateToInventoryExecution(){
+        await this.ClickOnHomeIcon();
+        await this.web.element(WAIT_FOR_SEARCH_ICON, "Wait for search icon on Home Page").waitForElementToVisible(TEST_CONFIG.TIMEOUTS.element);
+        await this.web.element(CLICK_ON_SUPPLYCHAINEXECUTION, "Click on Supply Chain Execution").click();
+        await reportGeneration.getScreenshot(this.web.getPage(), "AFTER CLICKING ON SUPPLYCHAIN EXECUTION", world)
+        await (await this.web.getElementByRoleByName('link', 'Inventory Execution')).click();
+        await (await this.web.getElementByRolebyExactText('heading', 'Inventory Management')).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element });
+    }
+
     public async NavigateToOrderCaptureUI() {
         await this.ClickOnHomeIcon();
         await this.web.element(WAIT_FOR_SEARCH_ICON, "Wait for search icon on Home Page").waitForElementToVisible(TEST_CONFIG.TIMEOUTS.element);
@@ -94,7 +103,35 @@ export default class SCMHomePage {
                 }
             }
         }
-        (await this.web.getPageLocator('#itemNode_order_management_order_management_0')).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element });
+        (await this.web.getPageLocator('#itemNode_order_management_order_management_0')).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.probElements });
         await reportGeneration.getScreenshot(this.web.getPage(), "ORDER MANAGEMENT PAGE SECTION LAUNCHED", world);
     }
+
+    public async navigateToSupplyChainExecution() {
+        await this.ClickOnHomeIcon();
+        await this.web.element(WAIT_FOR_SEARCH_ICON, "Wait for search icon on Home Page").waitForElementToVisible(TEST_CONFIG.TIMEOUTS.element);
+        await reportGeneration.getScreenshot(this.web.getPage(), "SCM HOME PAGE LAUNCHED", world);
+        const getNavMenuLinks = await this.web.getPageLocator(GET_NAV_LINKS);
+        const rightHandNav = await this.web.getPageLocator(CLICK_RIGHT_HAND_NAV);
+        for (let i = 0; i < await getNavMenuLinks.count(); i++) {
+            if (await getNavMenuLinks.nth(i).textContent({ timeout: 6000 }) == "Supply Chain Execution") {
+                console.log(await getNavMenuLinks.nth(i).textContent());
+                await getNavMenuLinks.nth(i).click();
+                break;
+            }
+            else {
+                if (i == 7) {
+                    await rightHandNav.click();
+                }
+            }
+        }
+        (await this.web.getPageLocator('#itemNode_supply_chain_execution_SupplyChainOrchestration_0')).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.probElements });
+        await reportGeneration.getScreenshot(this.web.getPage(), "ORDER MANAGEMENT PAGE SECTION LAUNCHED", world);
+    }
+
+
+    public async ClickOnSupplyChainOrchestration(){
+        await (await this.web.getPageLocator('#itemNode_supply_orchestration_supply_orchestration_0')).click();
+    }
+
 }

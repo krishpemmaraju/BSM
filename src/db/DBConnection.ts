@@ -17,6 +17,7 @@ export default class DBConnection {
                         password: dbPassword,
                         connectString: dbAlias
                     });
+                    console.log("Connected")
                     return connection;
                 } catch (error) {
                     console.log("Not connected" + error.message)
@@ -29,6 +30,7 @@ export default class DBConnection {
                         password: dbPassword,
                         connectString: dbAlias
                     });
+                    console.log("Connected")
                     return connection;
                 } catch (error) {
                     console.log("Not connected" + error.message)
@@ -36,12 +38,12 @@ export default class DBConnection {
         }
 
     }
-    public async executeQuery(queryToExecute: string) {
+    public async executeQuery(connection: oracledb.Connection,queryToExecute: string) {
         const results = await connection.execute(queryToExecute);
         return results;
     }
 
-    public async getColumnHeaders(queryToExecute: string) {
+    public async getColumnHeaders(connection: oracledb.Connection,queryToExecute: string) {
         const result = await connection.execute(queryToExecute, [], {
             outFormat: oracledb.OUT_FORMAT_OBJECT
         })
@@ -49,7 +51,7 @@ export default class DBConnection {
         return headers;
     }
 
-    public async getQueryResultWithHeaders(queryToExecute: string) {
+    public async getQueryResultWithHeaders(connection: oracledb.Connection,queryToExecute: string) {
         let rowValues;
         const allRows: string[] = [];
         const result = await connection.execute(queryToExecute, [], {
@@ -66,7 +68,7 @@ export default class DBConnection {
         }
     }
 
-    public async getQueryResultWithColumnName(queryToExecute: string, colName: string): Promise<any> {
+    public async getQueryResultWithColumnName(connection: oracledb.Connection,queryToExecute: string, colName: string): Promise<any> {
         const result = await connection.execute(queryToExecute, [], {
             outFormat: oracledb.OUT_FORMAT_OBJECT
         })
@@ -75,7 +77,7 @@ export default class DBConnection {
         return (result.rows ?? []).map(row => row[colName]);
     }
 
-    public async writeTableResultsToCSVFile(queryToExecute: string, filePaths: string, fileType: string) {
+    public async writeTableResultsToCSVFile(connection: oracledb.Connection,queryToExecute: string, filePaths: string, fileType: string) {
         let header: { id: string, title: string }[];
         let result: any;
         result = await connection.execute(queryToExecute, [], {
@@ -107,8 +109,7 @@ export default class DBConnection {
                 if (rows.length == 0) {
                     worksheet.addRow['No data Available']
                 }
-                else 
-                {
+                else {
                     const headers = Object.keys(rows[0]);
                     worksheet.columns = headers.map(header => ({
                         header,
@@ -124,55 +125,70 @@ export default class DBConnection {
         }
     }
 
-    public async writeMulQueryResultsToFile(queries: string[],filePath: string,fileType: string){
-        let results: any;
-        let i=0;
-        let workbook:any;
-        let pathFile:any;
-        let rows: any;
-        if(fileType === 'xlsx' || fileType === 'xls'){
-            workbook = new ExcelJS.Workbook();}
-        let headerValues: {id: string, title:string}[];
-        for( let s of queries){
-           i++; 
-           results = await connection.execute(s, [], {
-             outFormat: oracledb.OUT_FORMAT_OBJECT
-           })
+    public async attemptQueryForResults(connection: oracledb.Connection,retries:number,queryToExecute:string,delayInMS:number){
+        let attempt =0;
+        while( attempt < retries){
+            attempt++;
+            const results = await new DBConnection().getQueryResultWithHeaders(connection, queryToExecute);
+            if( results.rows && results.rows.length > 0){
+                return results;
+            }
+            console.log(` No results found yet - polling ${queryToExecute} for attempt ${attempt} - trying in ${delayInMS} milli seconds`)
+            await new Promise(resolve => setTimeout(resolve, delayInMS));
+        }
+      throw new Error(`No results found after ${retries} attempts`)
+    }
 
-           switch(fileType) {
-              case 'csv':{
-                rows = results.rows ?? [];
-                if( rows.length != 0){
-                    headerValues = Object.keys(rows[0]).map(key => ({id: key , title: key}));
-                    const csvWriter = createObjectCsvWriter({
-                       path: path.resolve(filePath+'resultQuery_'+i+'.csv'),
-                       header: headerValues
-                   })
-                   await csvWriter.writeRecords(rows);
-                   } 
-                   break;
+    public async writeMulQueryResultsToFile(connection: oracledb.Connection,queries: string[], filePath: string, fileType: string) {
+        let results: any;
+        let i = 0;
+        let workbook: any;
+        let pathFile: any;
+        let rows: any;
+        if (fileType === 'xlsx' || fileType === 'xls') {
+            workbook = new ExcelJS.Workbook();
+        }
+        let headerValues: { id: string, title: string }[];
+        for (let s of queries) {
+            i++;
+            results = await connection.execute(s, [], {
+                outFormat: oracledb.OUT_FORMAT_OBJECT
+            })
+
+            switch (fileType) {
+                case 'csv': {
+                    rows = results.rows ?? [];
+                    if (rows.length != 0) {
+                        headerValues = Object.keys(rows[0]).map(key => ({ id: key, title: key }));
+                        const csvWriter = createObjectCsvWriter({
+                            path: path.resolve(filePath + 'resultQuery_' + i + '.csv'),
+                            header: headerValues
+                        })
+                        await csvWriter.writeRecords(rows);
+                    }
+                    break;
                 }
 
-               case 'xlsx': {
-                if (!workbook) break;
-                rows = results.rows ?? [];
-                const worksheet = workbook.addWorksheet('ResultsQuery_'+i);
-                const headers = Object.keys(rows[0])
-                worksheet.columns = headers.map(header => ({
-                    header,
-                    key: headers,
-                    width: 20
+                case 'xlsx': {
+                    if (!workbook) break;
+                    rows = results.rows ?? [];
+                    const worksheet = workbook.addWorksheet('ResultsQuery_' + i);
+                    const headers = Object.keys(rows[0])
+                    worksheet.columns = headers.map(header => ({
+                        header,
+                        key: headers,
+                        width: 20
 
-                }))
-                rows.forEach(row => {
-                    worksheet.addRow(row)
-                })
-                await workbook.xlsx.writeFile(path.resolve(filePath)+'/MultipleResultsQuery.xlsx')
-                break;
+                    }))
+                    rows.forEach(row => {
+                        worksheet.addRow(row)
+                    })
+                    await workbook.xlsx.writeFile(path.resolve(filePath) + '/MultipleResultsQuery.xlsx')
+                    break;
+                }
+                default:
+                    console.warn(`Unsupported file type: ${fileType}`);
             }
-            default:
-                console.warn(`Unsupported file type: ${fileType}`);
-           }
         }
         // if (fileType === 'xlsx' || fileType === 'xls') {
         // await workbook.xlsx.writeFile(path.resolve(filePath)+'/MultipleResultsQuery.xlsx') }

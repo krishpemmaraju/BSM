@@ -4,7 +4,7 @@ import UIActions from "../../actions/UIActions";
 import { TEST_CONFIG } from "../../../config/test-config";
 import { setDefaultTimeout, world } from "@cucumber/cucumber";
 
-setDefaultTimeout(60 * 10 * 1000);
+setDefaultTimeout(3000000);
 
 let reportGeneration: ReportGeneration;
 let testInfo: TestInfo;

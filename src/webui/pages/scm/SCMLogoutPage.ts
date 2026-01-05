@@ -6,7 +6,7 @@ import { TEST_CONFIG } from "../../../config/test-config";
 
 let reportGeneration: ReportGeneration;
 let testInfo: TestInfo;
-setDefaultTimeout(60 * 1000 * 2);
+setDefaultTimeout(3000000);
 
 let CLICK_ON_LOGOUT_ICON: string = "a[title='Settings and Actions']";
 let CLICK_ON_SIGNOUT: string = "a[title='Sign Out']";

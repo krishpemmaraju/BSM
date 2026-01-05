@@ -1,19 +1,12 @@
 import { Given, setDefaultTimeout, Then, When } from "@cucumber/cucumber";
-import QuickOrderEntryPage from "../../../src/webui/pages/scm/OuickOrderEntryPage";
 import Assert from "../../../src/asserts/Assert";
-import FileUtils from "../../../src/utils/FileUtils";
-import StockAvailabilityCheckPage from "../../../src/webui/pages/scm/StockAvailabilityCheckPage";
 import RequestHeaders from "../../../src/api/actions/RequestHeaders";
 import APIConstants from "../../../src/api/APIConstants/APIConstants";
-import * as data from "../../../src/config/env/envDetails.json"
 import RestRequest from "../../../src/api/actions/RESTRequest";
 import ReportGeneration from "../../../src/helper/reportGeneration";
 import UIActions from "../../../src/webui/actions/UIActions";
-import RestResponse from "../../../src/api/actions/RESTResponse";
 import JSONUtils from "../../../src/utils/JSONUtils";
-import StringUtils from "../../../src/utils/StringUtils";
 import DateUtils from "../../../src/utils/DateUtils";
-import VBCSOrderCaptureUIPage from "../../../src/webui/pages/vbcsoc/VBSOrderCaptureUI";
 
 
 setDefaultTimeout(60 * 10 * 1000);
@@ -27,13 +20,16 @@ let stockCheckFromUI: any;
 let atpDateFromUI: any;
 
 Given('User login into VBCS Order Capture', async function () {
-    await new VBCSOrderCaptureUIPage(this.web).loginIntoVBCSOrderCaptureUI(this.VBCSURL, Buffer.from(this.VBCSUSER, 'base64').toString('utf-8'), Buffer.from(this.VBCSPASSWORD, 'base64').toString('utf-8'));
+    await this.vbcsOrderCaptureUIPage.loginIntoVBCSOrderCaptureUI(this.VBCSURL, Buffer.from(this.VBCSUSER, 'base64').toString('utf-8'), Buffer.from(this.VBCSPASSWORD, 'base64').toString('utf-8'));
 });
 
-
-Then('get the stock of the {string} added to the basket', async function (product) {
-    stockCheckFromUI = await new StockAvailabilityCheckPage(this.web).GetStockAvailabilityForProduct(product);
-    //atpDateFromUI = await new StockAvailabilityCheckPage(this.web).GetATPAvailableDate();
+let isStkExistsNormalized: string;
+Then('get the stock of the {string} having {string} added to the basket', async function (product, isStockExists) {
+    isStkExistsNormalized = isStockExists.toLowerCase();
+    stockCheckFromUI = await this.stockAvailabilityPage.GetStockAvailabilityForProduct(product, isStockExists);
+    if (isStkExistsNormalized == 'no') {
+        atpDateFromUI = await this.stockAvailabilityPage.GetATPAvailableDate(isStockExists)
+    }
 });
 
 let stkChkResp: any;
@@ -126,9 +122,11 @@ When('user invokes Quick Availability Check API for the {string} and {string}', 
 });
 
 Then('extract the ExpectedShipDateTime from the response', async function () {
-    console.log("from UI" + atpDateFromUI + " from response " + await DateUtils.getSuffixOfDay(StkChkAvailAPI[0], false));
-    await ReportGeneration.attachReportForAPI(" The Reponse for Check Availability is \n " + JSON.stringify(await stkChkAvailResp.json(), null, 2), this);
-    await Assert.AssertTrue(atpDateFromUI === await DateUtils.getSuffixOfDay(StkChkAvailAPI[0], false))
+    if (isStkExistsNormalized == 'no') {
+        console.log("from UI" + atpDateFromUI + " from response " + await DateUtils.getSuffixOfDay(StkChkAvailAPI[0], false));
+        await ReportGeneration.attachReportForAPI(" The Reponse for Check Availability is \n " + JSON.stringify(await stkChkAvailResp.json(), null, 2), this);
+        await Assert.AssertTrue(atpDateFromUI === await DateUtils.getSuffixOfDay(StkChkAvailAPI[0], false))
+    }
 });
 
 

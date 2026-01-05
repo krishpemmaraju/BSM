@@ -85,4 +85,11 @@ export default class StringUtils {
         return part1.length >  1 ? part1[1].trim() : "";
    }
 
+public static async getStringBetweenTwoStrings(actualString: string, startString: string,endString: string): Promise<string>{
+    const startStringIndex = actualString.indexOf(startString);
+    const endStringIndex = actualString.indexOf(endString, startStringIndex+startString.length)
+    if( startStringIndex == -1 || endStringIndex == -1) return null;
+    return actualString.substring(startStringIndex+startString.length, endStringIndex);
+}
+
 }

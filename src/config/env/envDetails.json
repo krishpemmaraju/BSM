@@ -15,7 +15,7 @@
         {
             "SCMDEVURL": "https://egvh-dev1.fa.em3.oraclecloud.com/",
             "SCMDEVUSERNAME": "ABB7375",
-            "SCMDEVPASSWORD": "Varahi16$",
+            "SCMDEVPASSWORD": "Jayavarahi16$",
             "SCMDEVSTOCKCHKAPI": "fscmRestApi/msp/latest/globalOrderPromises/quickAvailabilityCheck",
             "SCMDEVCHKAVAILABILITY": "fscmRestApi/msp/latest/globalOrderPromises/checkAvailability"
         }
@@ -56,7 +56,7 @@
         {
             "VBCSSTGOCURL": "https://vb04.wolseleyuk.com/ic/builder/rt/wol-order-capture/live/webApps/wol-order-capture/",
             "VBCSSTGOCUSERNAME": "a3Jpc2huYS5wZW1tYXJhanVAd29sc2VsZXkuY28udWs=",
-            "VBCSSTGOCPASSWORD": "VmFyYWhpYmFiYTE2JA=="
+            "VBCSSTGOCPASSWORD": "SmF5YXZhcmFoaTE2JA=="
         }
     ],
     "ODS_STG": [
@@ -71,8 +71,40 @@
         {
             "DBTYPE": "HJ",
             "HJSTGUSERNAME": "AUTOMATION",
-            "HJPASSWORD": "Hjads1ato2^",
-            "HJALIAS": "HJSTG"
+            "HJSTGPASSWORD": "Hjads1ato2^",
+            "HJSTGALIAS": "HJSTG"
+        }
+    ],
+    "HIGHJUMP_DEV": [
+        {
+            "DBTYPE": "HJ",
+            "HJDEVUSERNAME": "AUTOMATION",
+            "HJDEVPASSWORD": "ftY5#_5OI#s#",
+            "HJDEVALIAS": "svdwmsdb105:1521/HJUAADD_RW"
+        }
+    ],
+    "ONPREM_DEV": [
+        {
+            "ONPREMDEVOSBURL": "http://toposb-dev.sys.ad.wolseleyuk.com",
+            "ONPREMDEVSOAURL": "http://topsoa-dev.sys.ad.wolseleyuk.com",
+            "ONPREMDEVUSERNAME": "ABB7375",
+            "ONPREMDEVPASSWORD": "krishonpremdev@2021"
+        }
+    ],
+    "ONPREM_STG": [
+        {
+            "ONPREMSTGOSB": "http://toposb-dev.sys.ad.wolseleyuk.com",
+            "ONPREMSTGSOA": "http://topsoa-dev.sys.ad.wolseleyuk.com",
+            "ONPREMSTGUSERNAME": "ABB7375",
+            "ONPREMSTGPASSWORD": "krishonpremuat@2021"
+        }
+    ],
+    "ONPREM_TST": [
+        {
+            "ONPREMTSTOSB": "http://toposb-tst.sys.ad.wolseleyuk.com",
+            "ONPREMTSTSOA": "http://topsoa-tst.sys.ad.wolseleyuk.com",
+            "ONPREMTSTUSERNAME": "ABB7375",
+            "ONPREMTSTPASSWORD": "krishonpremtest@2021"
         }
     ]
 }

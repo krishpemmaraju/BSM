@@ -1,0 +1,53 @@
+{
+  "seqId": "091065",
+  "company": "WUK",
+  "groupingId": 8541963,
+  "messageCount": "2",
+  "transactions": [
+    {
+      "entityType": "Main",
+      "transNumber": "12170910",
+      "tranType": "340",
+      "stagedDate": "2025-12-17T09:57:10.233+00:00",
+      "description": "Shipping",
+      "startTranDateTime": "2025-12-17T09:57:10.233+00:00",
+      "endTranDateTime": "2025-12-17T09:57:10.233+00:00",
+      "employeeId": "FAHEYK",
+      "controlNumber": "1BL/00072",
+      "lineNumber": "1",
+      "outsideId": "N",
+      "whId": "F6",
+      "locationId": "CD1DR01",
+      "huId": "12170910",
+      "numItems": 1,
+      "itemNumber": "511040",
+      "tranQty": 3,
+      "originalOrderQty": 3,
+      "locationId2": 3870802,
+      "elapsedTime": 0,
+      "carrierCode": "INT",
+      "freightCharge": 0,
+      "storeOrderNumber": "1BL/99656273",
+      "bOLLine1": "1",
+      "shipmentLineId": 51803181,
+      "typeId": "23"
+    },
+    {
+      "entityType": "Main",
+      "transNumber": "12170911",
+      "tranType": "341",
+      "stagedDate": "2025-12-17T09:57:10.233+00:00",
+      "description": "Shipping",
+      "startTranDateTime": "2025-12-17T09:57:10.233+00:00",
+      "endTranDateTime": "2025-12-17T09:57:10.233+00:00",
+      "employeeId": "FAHEYK",
+      "whId": "F6",
+      "numItems": 0,
+      "tranQty": 0,
+      "locationId2": 3870802,
+      "elapsedTime": 0,
+      "carrierCode": "INT",
+      "freightCharge": 0
+    }
+  ]
+}

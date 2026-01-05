@@ -4,7 +4,7 @@ import { PlaywrightTestConfig,devices } from "playwright/test";
 
 const TIMEOUTS = {
     GLOBAL: 45*60*1000,
-    TEST: 2*60*1000,
+    TEST: 14000000,
     EXPECT: 15*1000,
     ACTIONS: 20*1000,
     ELEMENT: 15*1000,

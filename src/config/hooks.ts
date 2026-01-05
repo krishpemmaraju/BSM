@@ -1,5 +1,5 @@
 import { After, AfterAll, Before, BeforeAll, context, formatterHelpers, ITestCaseHookParameter, setDefaultTimeout } from "@cucumber/cucumber";
-import { Browser } from "@playwright/test";
+import { Browser, BrowserContext, firefox } from "@playwright/test";
 import WebBrowserManager from "../manager/browserManager";
 import UIActions from "../webui/actions/UIActions";
 import * as data from "../config/env/envDetails.json"
@@ -8,11 +8,11 @@ import RestRequest from "../api/actions/RESTRequest";
 import SCMLogoutPage from "../webui/pages/scm/SCMLogoutPage";
 
 const timeInMin: number = 60 * 1000;
-setDefaultTimeout(Number.parseInt(process.env.TEST_TIMEOUT, 10) * timeInMin);
+//setDefaultTimeout(Number.parseInt(process.env.TEST_TIMEOUT, 10) * timeInMin);
 let browser: Browser | undefined;
 
-// BeforeAll(async function() {
-//     browser = await WebBrowserManager.launch("chrome");
+// BeforeAll(async function () {
+
 // });
 
 // AfterAll({tags:"@SCM"},async function() {
@@ -36,15 +36,57 @@ Before({ tags: "@reality" }, async function ({ pickle }) {
 Before({ tags: "@api" }, async function ({ pickle }) {
     console.log(" **********************   TEST STARTED **************************************************** \n");
     console.log(" ****************** EXECUTION STARTED FOR SCENARIO - " + pickle.name + "******************* \n");
-    this.context = await browser.newContext({
-        viewport: null,
-        ignoreHTTPSErrors: true,
-        acceptDownloads: true,
-    });
-    this.page = await this.context?.newPage();
-    this.rest = new RestRequest(this.page);
-})
 
+    const env = process.env.ENV?.toLowerCase() || 'dev';
+    const envMap = { 'dev': 'DEV', 'stg': 'STG', 'staging': 'STG', 'tst': 'TST' };
+    const envKey = envMap[env] || 'DEV'
+
+    const scmConfig = data[`SCM_${envKey}`][0];
+    const onpremConfig = data[`ONPREM_${envKey}`][0];
+
+    Object.assign(this, {
+        SCMURL: scmConfig[`SCM${envKey}URL`],
+        SCMUSER: scmConfig[`SCM${envKey}USERNAME`],
+        SCMPASSWORD: scmConfig[`SCM${envKey}PASSWORD`],
+        SCMSTOCKCHKAPI: scmConfig[`SCM${envKey}STOCKCHKAPI`],
+        SCMCHKAVAILABILITY: scmConfig[`SCM${envKey}CHKAVAILABILITY`],
+        ONPREMOSBURL: onpremConfig[`ONPREM${envKey}OSBURL`],
+        ONPREMSOAURL: onpremConfig[`ONPREM${envKey}SOAURL`],
+        ONPREMUSER: onpremConfig[`ONPREM${envKey}USERNAME`],
+        ONPREMPASSWORD: onpremConfig[`ONPREM${envKey}PASSWORD`]
+    })
+    await this.init();
+});
+
+Before({ tags: "@DB" }, async function ({ pickle }) {
+    console.log(" **********************   TEST STARTED **************************************************** \n");
+    console.log(" ****************** EXECUTION STARTED FOR SCENARIO - " + pickle.name + "******************* \n");
+
+    const env = process.env.ENV?.toLowerCase() || 'dev';
+    const envMap = { 'dev': 'DEV', 'stg': 'STG', 'staging': 'STG', 'tst': 'TST' };
+    const envKey = envMap[env] || 'DEV'
+
+    const hjConfig = data[`HIGHJUMP_${envKey}`][0];
+
+    Object.assign(this, {
+        HJURL: hjConfig[`HJ${envKey}ALIAS`],
+        HJUSER: hjConfig[`HJ${envKey}USERNAME`],
+        HJPASSWORD: hjConfig[`HJ${envKey}PASSWORD`],
+    })
+    await this.init();
+});
+
+// Before({ tags: "@api" }, async function ({ pickle }) {
+//     console.log(" **********************   TEST STARTED **************************************************** \n");
+//     console.log(" ****************** EXECUTION STARTED FOR SCENARIO - " + pickle.name + "******************* \n");
+//     this.context = await browser.newContext({
+//         viewport: null,
+//         ignoreHTTPSErrors: true,
+//         acceptDownloads: true,
+//     });
+//     this.page = await this.context?.newPage();
+//     this.rest = new RestRequest(this.page);
+// })
 
 Before({ tags: "@web" }, async function ({ pickle }: ITestCaseHookParameter) {
     console.log(" **********************   TEST STARTED **************************************************** \n");
@@ -59,61 +101,6 @@ Before({ tags: "@web" }, async function ({ pickle }: ITestCaseHookParameter) {
     this.web = new UIActions(this.page);
 })
 
-let SCMUSER: string;
-let SCMPASSWORD: string;
-let SCMURL: string;
-let SCMSTOCKCHKAPI: string;
-let SCMCHKAVAILABILITY: string;
-Before({ tags: "@SCM" }, async function ({ pickle }: ITestCaseHookParameter) {
-    console.log(" **********************   TEST STARTED **************************************************** \n");
-    console.log(" ****************** EXECUTION STARTED FOR SCENARIO - " + pickle.name + " ******************* \n");
-    if (!browser) {
-        browser = await WebBrowserManager.launch("chrome");
-    }
-    this.browser = browser;
-    this.context = await browser.newContext({
-        viewport: null,
-        ignoreHTTPSErrors: true,
-        acceptDownloads: true,
-        storageState: undefined,
-    });
-    await this.context.clearCookies();
-    this.page = await this.context?.newPage();
-    switch (process.env.ENV) {
-        case 'DEV':
-        case 'dev':
-            this.SCMURL = data.SCM_DEV[0].SCMDEVURL;
-            this.SCMUSER = data.SCM_DEV[0].SCMDEVUSERNAME;
-            this.SCMPASSWORD = data.SCM_DEV[0].SCMDEVPASSWORD;
-            this.SCMSTOCKCHKAPI = data.SCM_DEV[0].SCMDEVSTOCKCHKAPI;
-            this.SCMCHKAVAILABILITY = data.SCM_DEV[0].SCMDEVCHKAVAILABILITY;
-            break;
-        case 'STG':
-        case 'stg':
-        case 'staging':
-        case 'STAGING':
-            this.SCMURL = data.SCM_STG[0].SCMSTGURL;
-            this.SCMUSER = data.SCM_STG[0].SCMSTGUSERNAME;
-            this.SCMPASSWORD = data.SCM_STG[0].SCMSTGPASSWORD;
-            this.SCMSTGSTOCKCHKAPI = data.SCM_STG[0].SCMSTGSTOCKCHKAPI;
-            this.SCMSTGCHKAVAILABILITY = data.SCM_STG[0].SCMSTGCHKAVAILABILITY;
-            break;
-        case 'TST':
-        case 'tst':
-            this.SCMURL = data.SCM_TST[0].SCMTSTURL;
-            this.SCMUSER = data.SCM_TST[0].SCMTSTUSERNAME;
-            this.SCMPASSWORD = data.SCM_TST[0].SCMTSTPASSWORD;
-            this.SCMSTGSTOCKCHKAPI = data.SCM_TST[0].SCMTSTSTOCKCHKAPI;
-            this.SCMSTGCHKAVAILABILITY = data.SCM_TST[0].SCMTSTCHKAVAILABILITY;
-            break;
-    }
-    this.web = new UIActions(this.page);
-    this.rest = new RestRequest(this.page);
-})
-
-let VBCSURL: string;
-let VBCSUSER: string;
-let VBCSPASSWORD: string;
 Before({ tags: "@VBSOC" }, async function ({ pickle }: ITestCaseHookParameter) {
     console.log(process.env.ENV);
     console.log(" *************************   TEST STARTED *************************  \n");
@@ -130,43 +117,62 @@ Before({ tags: "@VBSOC" }, async function ({ pickle }: ITestCaseHookParameter) {
     });
     await this.context.clearCookies();
     this.page = await this.context?.newPage();
-    switch (process.env.ENV) {
-        case 'DEV':
-        case 'dev':
-            this.SCMURL = data.SCM_DEV[0].SCMDEVURL;
-            this.SCMUSER = data.SCM_DEV[0].SCMDEVUSERNAME;
-            this.SCMPASSWORD = data.SCM_DEV[0].SCMDEVPASSWORD;
-            this.SCMSTOCKCHKAPI = data.SCM_DEV[0].SCMDEVSTOCKCHKAPI;
-            this.SCMCHKAVAILABILITY = data.SCM_DEV[0].SCMDEVCHKAVAILABILITY;
-            this.VBCSURL = data.VBCSOC_DEV[0].VBCSDEVOCURL;
-            this.VBCSUSER = data.VBCSOC_DEV[0].VBCSDEVOCUSERNAME;
-            this.VBCSPASSWORD = data.VBCSOC_DEV[0].VBCSDEVOCPASSWORD;
-            break;
-        case 'STG':
-        case 'stg':
-        case 'staging':
-        case 'STAGING':
-            this.SCMURL = data.SCM_STG[0].SCMSTGURL;
-            this.SCMUSER = data.SCM_STG[0].SCMSTGUSERNAME;
-            this.SCMPASSWORD = data.SCM_STG[0].SCMSTGPASSWORD;
-            this.SCMSTOCKCHKAPI = data.SCM_STG[0].SCMSTGSTOCKCHKAPI;
-            this.SCMCHKAVAILABILITY = data.SCM_STG[0].SCMSTGCHKAVAILABILITY;
-            this.VBCSURL = data.VBCSOC_STG[0].VBCSSTGOCURL;
-            this.VBCSUSER = data.VBCSOC_STG[0].VBCSSTGOCUSERNAME;
-            this.VBCSPASSWORD = data.VBCSOC_STG[0].VBCSSTGOCPASSWORD;
-            break;
-        case 'TST':
-        case 'tst':
-            this.SCMURL = data.SCM_TST[0].SCMTSTURL;
-            this.SCMUSER = data.SCM_TST[0].SCMTSTUSERNAME;
-            this.SCMPASSWORD = data.SCM_TST[0].SCMTSTPASSWORD;
-            this.SCMSTOCKCHKAPI = data.SCM_TST[0].SCMTSTSTOCKCHKAPI;
-            this.SCMCHKAVAILABILITY = data.SCM_TST[0].SCMTSTCHKAVAILABILITY;
-            this.VBCSURL = data.VBCSOC_TST[0].VBCSTSTOCURL;
-            this.VBCSUSER = data.VBCSOC_TST[0].VBCSTSTOCUSERNAME;
-            this.VBCSPASSWORD = data.VBCSOC_TST[0].VBCSTSTOCPASSWORD;
-            break;
+
+    const env = process.env.ENV?.toLowerCase() || 'dev';
+    const envMap = { 'dev': 'DEV', 'stg': 'STG', 'staging': 'STG', 'tst': 'TST' };
+    const envKey = envMap[env] || 'DEV'
+
+    const scmConfig = data[`SCM_${envKey}`][0];
+    const vbcsConfig = data[`VBCSOC_${envKey}`][0];
+
+    Object.assign(this, {
+        SCMURL: scmConfig[`SCM${envKey}URL`],
+        SCMUSER: scmConfig[`SCM${envKey}USERNAME`],
+        SCMPASSWORD: scmConfig[`SCM${envKey}PASSWORD`],
+        SCMSTOCKCHKAPI: scmConfig[`SCM${envKey}STOCKCHKAPI`],
+        SCMCHKAVAILABILITY: scmConfig[`SCM${envKey}CHKAVAILABILITY`],
+        VBCSURL: vbcsConfig[`VBCS${envKey}OCURL`],
+        VBCSUSER: vbcsConfig[`VBCS${envKey}OCUSERNAME`],
+        VBCSPASSWORD: vbcsConfig[`VBCS${envKey}OCPASSWORD`]
+    })
+    await this.init();
+    this.web = new UIActions(this.page);
+    this.rest = new RestRequest(this.page);
+})
+
+Before({ tags: "@SCM" }, async function ({ result, pickle }: ITestCaseHookParameter) {
+    console.log(" **********************   TEST STARTED **************************************************** \n");
+    console.log(" ****************** EXECUTION STARTED FOR SCENARIO - " + pickle.name + " ******************* \n");
+    if (!browser) {
+        browser = await WebBrowserManager.launch("chromium");
     }
+    this.browser = browser;
+    this.context = await browser.newContext({
+        viewport: null,
+        ignoreHTTPSErrors: true,
+        acceptDownloads: true,
+        storageState: undefined,
+    });
+    await this.context.clearCookies();
+    this.page = await this.context?.newPage();
+    const env = process.env.ENV?.toLowerCase() || 'dev';
+    const envMap = { 'dev': 'DEV', 'stg': 'STG', 'staging': 'STG', 'tst': 'TST' };
+    const envKey = envMap[env] || 'DEV'
+
+    const scmConfig = data[`SCM_${envKey}`][0];
+    const vbcsConfig = data[`VBCSOC_${envKey}`][0];
+
+    Object.assign(this, {
+        SCMURL: scmConfig[`SCM${envKey}URL`],
+        SCMUSER: scmConfig[`SCM${envKey}USERNAME`],
+        SCMPASSWORD: scmConfig[`SCM${envKey}PASSWORD`],
+        SCMSTOCKCHKAPI: scmConfig[`SCM${envKey}STOCKCHKAPI`],
+        SCMCHKAVAILABILITY: scmConfig[`SCM${envKey}CHKAVAILABILITY`],
+        VBCSURL: vbcsConfig[`VBCS${envKey}OCURL`],
+        VBCSUSER: vbcsConfig[`VBCS${envKey}OCUSERNAME`],
+        VBCSPASSWORD: vbcsConfig[`VBCS${envKey}OCPASSWORD`]
+    })
+    await this.init();
     this.web = new UIActions(this.page);
     this.rest = new RestRequest(this.page);
 })
@@ -193,7 +199,6 @@ After({ tags: "@api" }, async function ({ result, pickle }: ITestCaseHookParamet
     const scenario = pickle.name;
     console.log("************************ " + scenario + " API is completed with " + status + "*******************");
 })
-
 
 After({ tags: "@reality" }, async function ({ result, pickle }: ITestCaseHookParameter) {
     const status = result.status;
