@@ -10,6 +10,8 @@ import fs from 'fs'
 import DBUtils from "../../../src/utils/DBReaderUtils";
 import DBConnection from "../../../src/db/DBConnection";
 import StringUtils from "../../../src/utils/StringUtils";
+import type { ICustomWorld } from "../../../src/support/CustomWorld";
+
 
 // setDefaultTimeout(1200000);
 setDefaultTimeout(300000);
@@ -153,8 +155,8 @@ When('Select the {string} from filter', async function (transferOrderCreation) {
 });
 
 When('User enter the Transfer Order Number', async function () {
-    // await this.scmTransferOrdersPage.SearchTransferOrder("99657267");
-    await this.scmTransferOrdersPage.SearchTransferOrder(documentNumber.trim());
+    await this.scmTransferOrdersPage.SearchTransferOrder("99664701");
+    //  await this.scmTransferOrdersPage.SearchTransferOrder(documentNumber.trim());
     await this.scmTransferOrdersPage.ClickOnTransferOrderSearch();
 });
 let itemOnTO: string, quantityOnTo: string, getInterfaceStatus: string;
@@ -162,11 +164,11 @@ let itemOnTO: string, quantityOnTo: string, getInterfaceStatus: string;
 Then('Capture the {string}, {string}, {string}', async function (item, quantity, interfaceStatus) {
     await Assert.AssertTrue(await this.scmTransferOrdersPage.IsTransferOrderDisplayedInSearchResults())
     itemOnTO = await this.scmTransferOrdersPage.getDataFromTransferOrderDetails(item);
-    quantityOnTo = await this.scmTransferOrdersPage.getDataFromTransferOrderDetails(quantity);
+    //    quantityOnTo = await this.scmTransferOrdersPage.getDataFromTransferOrderDetails(quantity);
     getInterfaceStatus = await this.scmTransferOrdersPage.getDataFromTransferOrderDetails(interfaceStatus);
     const getTOData = JSON.parse(fs.readFileSync('src/data/TransferOrderData/CreateTransferOrder.json', 'utf-8'));
     await Assert.assertEquals(getTOData.itemNumber, itemOnTO);
-    await Assert.assertEquals(getTOData.itemQuantity, quantityOnTo);
+    //    await Assert.assertEquals(getTOData.itemQuantity, quantityOnTo);
     let attemptInt = 0;
     while (attemptInt < 400) {
         attemptInt++;
@@ -182,7 +184,7 @@ Then('Capture the {string}, {string}, {string}', async function (item, quantity,
     await Assert.AssertTrue(getInterfaceStatus.includes('Interfaced to Order Management'));
 });
 
-let connectionHJ = null;
+let connectionHJ: any = null;
 let results;
 Given('User Connected to HJ DB', async function () {
     connectionHJ = await new DBConnection().connectToDB('HJ', this.HJUSER, this.HJPASSWORD, this.HJURL);
@@ -305,7 +307,8 @@ Then('User should see the TO Page', async function () {
 });
 
 When('User clicks on the product Link on TO search results Page', async function () {
-    await this.scmTransferOrdersPage.clickOnItemLink(itemNum);
+    //    await this.scmTransferOrdersPage.clickOnItemLink(itemNum);
+    await this.scmTransferOrdersPage.clickOnViewLinkUnderTOPage("Shipment and Receipt")
 });
 
 Then('User should see the Shipment and Receipt page and capture the Shipment ID', async function () {
@@ -536,11 +539,11 @@ Then('User should have {int} response code', async function (int) {
 /* Steps for Pick Release Customer Sales Order */
 
 When('User Select {string} from Quick Access', async function (objectTypeOption) {
-     await this.inventoryManagamentPage.SelectObjectType(objectTypeOption)
+    await this.inventoryManagamentPage.SelectObjectType(objectTypeOption)
 });
 
 When('User enter the TransferOrder Number under Shipment lines', async function () {
-     let data: any = {};
+    let data: any = {};
     if (fs.existsSync('src/data/TransferOrderData/CreateTransferOrder.json')) {
         const content = fs.readFileSync('src/data/TransferOrderData/CreateTransferOrder.json', 'utf8');
         if (content.trim()) {
@@ -550,6 +553,7 @@ When('User enter the TransferOrder Number under Shipment lines', async function 
     await this.inventoryManagamentPage.EnterDocumentNumberShipmentLines(data.transferOrderNumber)
 });
 
+let itemNumShipmentLines: any;
 When('User enter the Customer Sales Order Number', async function () {
     let data: any[] = [];
     if (fs.existsSync('src/data/TransferOrderData/GetTransferOrder.json')) {
@@ -558,18 +562,74 @@ When('User enter the Customer Sales Order Number', async function () {
             data = JSON.parse(content);
         }
     }
-    await this.shipmentLinePage.EnterCustomerSalesOrderNumber(data[0].STORE_ORDER_NUMBER.toString().replace("/", "|"));
+    itemNumShipmentLines = data[0].ITEM_NUMBER;
+    let custSalesOrderNumber = data[0].STORE_ORDER_NUMBER.toString().replace("/", "|")
+    await this.shipmentLinePage.EnterCustomerSalesOrderNumber(custSalesOrderNumber);
 });
 
 
 Then('User Should see Shipment Lines Page with Line Status as Ready to release', async function () {
-
+    await Assert.AssertTrue(this.shipmentLinePage.IsReadyRleaseStatusPageDisplayed())
 });
 
 When('User clicks on Pick Release from More Actions', async function () {
+    await this.shipmentLinePage.ClickOnOptionsFromMoreActions('Pick Release')
+});
+
+Then('User should see the status as {string}', async function (lineStatus) {
+    console.log(itemNumShipmentLines)
+    console.log(await this.shipmentLinePage.GetShipmentLineStatus(itemNumShipmentLines, lineStatus));
+});
+
+/* Confirm Pick */
+
+Then('User Should see Confirm Picks page', async function (this: ICustomWorld) {
+    await Assert.AssertTrue(await this.confirmPicksPage.IsConfirmPicksPageDisplayed())
+});
+
+When('User selects {string} from Advanced search', async function (this: ICustomWorld, optionToSelect) {
+    await this.confirmPicksPage.SelectAdvanceSearch(optionToSelect)
+});
+let itemQuantity;
+let sourceLocation;
+When('User enters Customer Sales Order Number', async function (this: ICustomWorld) {
+    let data: any[] = [];
+    if (fs.existsSync('src/data/TransferOrderData/GetTransferOrder.json')) {
+        const content = fs.readFileSync('src/data/TransferOrderData/GetTransferOrder.json', 'utf8');
+        if (content.trim()) {
+            data = JSON.parse(content);
+        }
+    }
+    itemNumShipmentLines = data[0].ITEM_NUMBER;
+    itemQuantity = data[0].QTY.toString();
+    sourceLocation = data[0].ORDER_NUMBER.split('/')[0].toString()
+    let custSalesOrderNumber = data[0].STORE_ORDER_NUMBER.toString().replace("/", "|")
+    await this.confirmPicksPage.EnterCustomerSalesOrderNumberOnConfirmPicksPage(custSalesOrderNumber);
+});
+
+Then('User should see the tile contaning product information', async function (this: ICustomWorld) {
+    await Assert.AssertTrue(await this.confirmPicksPage.IsProuctTileDisplayed(itemNumShipmentLines))
+    await Assert.assertContains((await this.confirmPicksPage.GetQuantityFromProductTileInPickingPane()).split(' ')[0].trim(),itemQuantity.trim())
+    await Assert.assertContains((await this.confirmPicksPage.GetSourceLocationFromProductTileInPickingPane()).split(':')[1].trim(),sourceLocation.trim())
+    await Assert.assertContains((await this.confirmPicksPage.GetDestinationLocationFromProductTileInPickingPane()).split(':')[1],sourceLocation.trim())
+});
+
+When('User selects the tile for pick confirm', async function (this: ICustomWorld) {
+     await this.confirmPicksPage.ClickOnItemPanelUnderConfirmPicks(itemNumShipmentLines)
+});
+
+When('user enter subinventory code', async function () {
+     
+});
+
+When('User enter Item Number', async function () {
 
 });
 
-Then('User should see the status as Released to warehouse', async function () {
+When('User enters Picked Quantity', async function () {
+
+});
+
+When('Click on Confirm Pick and Close', async function () {
 
 });

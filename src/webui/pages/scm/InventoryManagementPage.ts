@@ -28,8 +28,8 @@ export default class InventoryManagementPage {
          console.log(await getSubInventory.textContent());
          if(! ( (await getSubInventory.textContent()).includes(branchSel))){
               (await this.web.getPageLocator('.oj-sp-header-general-overview-title h1.oj-sp-data-switcher-title')).click();
-              (await this.web.getElementByPlaceholder('Search')).waitFor({state: 'visible', timeout: 8000});
-              (await this.web.getElementByPlaceholder('Search')).fill(branchSel);
+              (await this.web.getPageLocator("input[placeholder='Search'][aria-label='Search']")).waitFor({state: 'visible', timeout: 8000});
+              (await this.web.getPageLocator("input[placeholder='Search'][aria-label='Search']")).fill(branchSel);
               (await this.web.getPageLocator(".oj-listview-cell-element span[title*='"+branchSel+"']")).click({timeout: 4000});   
          }
     }

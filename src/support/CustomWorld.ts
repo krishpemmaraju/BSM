@@ -3,7 +3,7 @@ import axios from "axios";
 import SCMLoginPage from "../webui/pages/scm/SCMLoginPage";
 import SCMHomePage from "../webui/pages/scm/SCMHomePage";
 import UIActions from "../webui/actions/UIActions";
-import { Page } from "@playwright/test";
+import { Browser, BrowserContext, Page } from "@playwright/test";
 import InventoryManagementPage from "../webui/pages/scm/InventoryManagementPage";
 import CreateMiscellaneousTransactions from "../webui/pages/scm/CreateMiscellaneousTransactionsPage";
 import VBCSOrderCaptureUIPage from "../webui/pages/vbcsoc/VBSOrderCaptureUI";
@@ -20,9 +20,14 @@ import InventoryExecutionPage from "../webui/pages/scm/InventoryExecutionPage";
 import ReceiveGoodsPage from "../webui/pages/scm/ReceiveGoodsPage";
 import PutAwayGoodsPage from "../webui/pages/scm/PutAwayGoodsPage";
 import ShipmentLinesPage from "../webui/pages/scm/ShipmentLinesPage";
+import ConfirmPicksPage from "../webui/pages/scm/ConfirmPicksPage";
+import { WorldImplPages } from "./worldImpl";
+import WebBrowserManager from "../manager/browserManager";
+import RestRequest from "../api/actions/RESTRequest";
 
 
-export default class CustomWorld extends World {
+
+export default class CustomWorld extends World implements WorldImplPages {
     scmLoginPage !: SCMLoginPage;
     scmHomePage !: SCMHomePage;
     inventoryManagamentPage !: InventoryManagementPage;
@@ -41,15 +46,39 @@ export default class CustomWorld extends World {
     receiveGoodsPage!: ReceiveGoodsPage;
     putAwayGoodsPage!: PutAwayGoodsPage;
     shipmentLinePage!: ShipmentLinesPage;
+    confirmPicksPage!: ConfirmPicksPage;
     web: UIActions;
     page: Page;
+    rest: RestRequest;
+    browser!: Browser;
+    context!: BrowserContext;
+
 
     constructor(options: IWorldOptions) {
         super(options);
     }
 
-    async init() {
+
+    async init(browser: Browser) {
+
+        //Initialize the Browsers 
+
+        if (!browser) {
+            browser = await WebBrowserManager.launch("chromium");
+        }
+        this.browser = browser;
+        this.context = await browser.newContext({
+            viewport: null,
+            ignoreHTTPSErrors: true,
+            acceptDownloads: true,
+            storageState: undefined,
+        });
+        await this.context.clearCookies();
+        this.page = await this.context?.newPage();
+
+        // Initialize Page Objects
         this.web = new UIActions(this.page);
+        this.rest = new RestRequest(this.page);
         this.scmLoginPage = new SCMLoginPage(this.web);
         this.scmHomePage = new SCMHomePage(this.web);
         this.inventoryManagamentPage = new InventoryManagementPage(this.web);
@@ -68,7 +97,8 @@ export default class CustomWorld extends World {
         this.receiveGoodsPage = new ReceiveGoodsPage(this.web);
         this.putAwayGoodsPage = new PutAwayGoodsPage(this.web);
         this.shipmentLinePage = new ShipmentLinesPage(this.web);
+        this.confirmPicksPage = new ConfirmPicksPage(this.web);
     }
 }
 
-setWorldConstructor(CustomWorld)
+export type ICustomWorld = CustomWorld;

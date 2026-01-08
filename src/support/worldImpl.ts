@@ -1,0 +1,50 @@
+import { IWorldOptions, setWorldConstructor, World } from "@cucumber/cucumber";
+import axios from "axios";
+import SCMLoginPage from "../webui/pages/scm/SCMLoginPage";
+import SCMHomePage from "../webui/pages/scm/SCMHomePage";
+import UIActions from "../webui/actions/UIActions";
+import { Page } from "@playwright/test";
+import InventoryManagementPage from "../webui/pages/scm/InventoryManagementPage";
+import CreateMiscellaneousTransactions from "../webui/pages/scm/CreateMiscellaneousTransactionsPage";
+import VBCSOrderCaptureUIPage from "../webui/pages/vbcsoc/VBSOrderCaptureUI";
+import StockAvailabilityCheckPage from "../webui/pages/scm/StockAvailabilityCheckPage";
+import OrderCaptureUIPage from "../webui/pages/vbcsoc/OrderCaptureUIPage";
+import VBSOCHomePage from "../webui/pages/vbcsoc/VBSOCHomePage";
+import OrderManagementPage from "../webui/pages/scm/OrderManagementPage";
+import CreateOrderPage from "../webui/pages/scm/CreateOrderPage";
+import SupplyOrchestrationPage from "../webui/pages/scm/SupplyOrchestrationPage";
+import ManageSupplyPage from "../webui/pages/scm/ManageSupplyPage";
+import InventoryManagementActionsPage from "../webui/pages/scm/InventoryManagementActionsPage";
+import SCMTransferOrdersPage from "../webui/pages/scm/SCMTransferOrdersPage";
+import InventoryExecutionPage from "../webui/pages/scm/InventoryExecutionPage";
+import ReceiveGoodsPage from "../webui/pages/scm/ReceiveGoodsPage";
+import PutAwayGoodsPage from "../webui/pages/scm/PutAwayGoodsPage";
+import ShipmentLinesPage from "../webui/pages/scm/ShipmentLinesPage";
+import ConfirmPicksPage from "../webui/pages/scm/ConfirmPicksPage";
+import RestRequest from "../api/actions/RESTRequest";
+
+export interface WorldImplPages {
+
+    scmLoginPage : SCMLoginPage;
+    scmHomePage : SCMHomePage;
+    inventoryManagamentPage : InventoryManagementPage;
+    createMiscelleneousTransactionPage : CreateMiscellaneousTransactions;
+    vbcsOrderCaptureUIPage : VBCSOrderCaptureUIPage;
+    stockAvailabilityPage : StockAvailabilityCheckPage;
+    orderCaptureUIPage : OrderCaptureUIPage;
+    vbsocHomePage : VBSOCHomePage;
+    orderManagementPage : OrderManagementPage;
+    createOrderPage : CreateOrderPage;
+    supplyOrchestrationPage: SupplyOrchestrationPage;
+    manageSupplyPage: ManageSupplyPage;
+    inventoryManagementActionsPage: InventoryManagementActionsPage;
+    scmTransferOrdersPage: SCMTransferOrdersPage;
+    invExecutionPage: InventoryExecutionPage;
+    receiveGoodsPage: ReceiveGoodsPage;
+    putAwayGoodsPage: PutAwayGoodsPage;
+    shipmentLinePage: ShipmentLinesPage;
+    confirmPicksPage: ConfirmPicksPage;
+    web: UIActions;
+    page: Page;
+    rest:RestRequest;
+}

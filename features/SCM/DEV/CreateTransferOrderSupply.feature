@@ -13,7 +13,7 @@ Feature: Validate Transfer Order Creation receiving process
 
     #     Examples:
     #         | product | DestinationOrg | DestinationSubOrg | SourceOrg | quantity |
-    #         | 511040  | 1BL            | 1BL               | F6        | 3        |
+    #         | 511040  | 1BL            | 1BL               | F6        | 2      |
 
     # @SCM
     # Scenario Outline: Validate Transfer Order created in SaaS
@@ -122,7 +122,7 @@ Feature: Validate Transfer Order Creation receiving process
     #         | WOLSELEY CENTERS DISTRIBUTION - F6 |
 
     # @SCM
-    #     Scenario Outline: Perform Receive Goods for the TO created
+    #     Scenario Outline: Perform PutAway for the TO created
     #         Given User login into SCM application
     #         When User Clicks on Home Icon
     #         And User navigate to Inventory Execution
@@ -156,26 +156,49 @@ Feature: Validate Transfer Order Creation receiving process
 
     ## Shipment Lines - Check Shipment Status = Ready To Release , [ Generate New Pick Wave ] Released to Warehouse --
 
+    # @SCM
+    # Scenario Outline: Validate Transfer Order Status  in SaaS after Received
+    #     Given User login into SCM application
+    #     When User Clicks on Home Icon
+    #     And User navigate to Inventory Management
+    #     And  Select the "<SubInventory>" on InventoryManagement Screen
+    #     And User Select "Shipment Lines" from Quick Access
+    #     And User enter the TransferOrder Number under Shipment lines
+    #     And User tabs out
+    #     And User enter the Customer Sales Order Number
+    #     # Then User Should see Shipment Lines Page with Line Status as Ready to release
+    #     # When User clicks on Pick Release from More Actions
+    #     Then User should see the status as "Released to warehouse"
+
+
+    #     Examples:
+    #         | SubInventory  |
+    #         | Peckham - 1BL |
+
+    # Confirm Pick
+
     @SCM
-    Scenario Outline: Validate Transfer Order Status  in SaaS after Received
+    Scenario Outline: Perform Confirm Pick for the TO created
         Given User login into SCM application
         When User Clicks on Home Icon
-        And User navigate to Inventory Management
-        And  Select the "<SubInventory>" on InventoryManagement Screen
-        And User Select "Shipment Lines" from Quick Access
-        And User enter the TransferOrder Number under Shipment lines
+        And User navigate to Inventory Execution
+        And User Clicks on "Confirm Pick"
+        Then User Should see Confirm Picks page
+        When User selects the Organization as "<branch>"
+        When User clicks on Continue
+        Then User Should see Confirm Picks page
+        When User selects "Order Number" from Advanced search
+        And User enters Customer Sales Order Number
         And User tabs out
-        And User enter the Customer Sales Order Number
-        Then User Should see Shipment Lines Page with Line Status as Ready to release
-        When User clicks on Pick Release from More Actions
-        Then User should see the status as Released to warehouse
+        Then User should see the tile contaning product information
+        When User selects the tile for pick confirm
+        And user enter subinventory code
+        And User enter Item Number
+        And User enters Picked Quantity
+        And Click on Confirm Pick and Close
 
         Examples:
-            | SubInventory  |
+            | branch        |
             | Peckham - 1BL |
-
-
-
-## Confirm Pick
 
 ## Ship Goods

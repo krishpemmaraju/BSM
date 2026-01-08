@@ -15,11 +15,16 @@
         "allowSyntheticDefaultImports": true,
     },
     "include": [
-        "**/*.ts",
+        // "**/*.ts",
         "playwright.config.ts",
-        "src/support/world.ts",
-        "**/webui/pages/**/*.ts",
+        // "src/support/world.ts",
+        // "**/webui/pages/**/*.ts",
+        "src/**/*.ts",
         "src/**/**/**/*.ts"
     ],
-    "exclude": ["node_modules", "dist", "reports"]
+    "exclude": [
+        "node_modules",
+        "dist",
+        "reports"
+    ]
 }

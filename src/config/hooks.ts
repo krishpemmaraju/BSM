@@ -1,4 +1,4 @@
-import { After, AfterAll, Before, BeforeAll, context, formatterHelpers, ITestCaseHookParameter, setDefaultTimeout } from "@cucumber/cucumber";
+import { After, AfterAll, Before, BeforeAll, context, formatterHelpers, ITestCaseHookParameter, setDefaultTimeout, setWorldConstructor } from "@cucumber/cucumber";
 import { Browser, BrowserContext, firefox } from "@playwright/test";
 import WebBrowserManager from "../manager/browserManager";
 import UIActions from "../webui/actions/UIActions";
@@ -6,10 +6,12 @@ import * as data from "../config/env/envDetails.json"
 import RealityLogoutPage from "../webui/pages/reality/RealityLogoutPage";
 import RestRequest from "../api/actions/RESTRequest";
 import SCMLogoutPage from "../webui/pages/scm/SCMLogoutPage";
+import CustomWorld from "../support/CustomWorld";
 
 const timeInMin: number = 60 * 1000;
 //setDefaultTimeout(Number.parseInt(process.env.TEST_TIMEOUT, 10) * timeInMin);
 let browser: Browser | undefined;
+setWorldConstructor(CustomWorld);
 
 // BeforeAll(async function () {
 
@@ -140,21 +142,21 @@ Before({ tags: "@VBSOC" }, async function ({ pickle }: ITestCaseHookParameter) {
     this.rest = new RestRequest(this.page);
 })
 
-Before({ tags: "@SCM" }, async function ({ result, pickle }: ITestCaseHookParameter) {
+Before({ tags: "@SCM" }, async function ( this: CustomWorld,{ result, pickle }: ITestCaseHookParameter) {
     console.log(" **********************   TEST STARTED **************************************************** \n");
     console.log(" ****************** EXECUTION STARTED FOR SCENARIO - " + pickle.name + " ******************* \n");
-    if (!browser) {
-        browser = await WebBrowserManager.launch("chromium");
-    }
-    this.browser = browser;
-    this.context = await browser.newContext({
-        viewport: null,
-        ignoreHTTPSErrors: true,
-        acceptDownloads: true,
-        storageState: undefined,
-    });
-    await this.context.clearCookies();
-    this.page = await this.context?.newPage();
+    // if (!browser) {
+    //     browser = await WebBrowserManager.launch("chromium");
+    // }
+    // this.browser = browser;
+    // this.context = await browser.newContext({
+    //     viewport: null,
+    //     ignoreHTTPSErrors: true,
+    //     acceptDownloads: true,
+    //     storageState: undefined,
+    // });
+    // await this.context.clearCookies();
+    // this.page = await this.context?.newPage();
     const env = process.env.ENV?.toLowerCase() || 'dev';
     const envMap = { 'dev': 'DEV', 'stg': 'STG', 'staging': 'STG', 'tst': 'TST' };
     const envKey = envMap[env] || 'DEV'
@@ -172,7 +174,7 @@ Before({ tags: "@SCM" }, async function ({ result, pickle }: ITestCaseHookParame
         VBCSUSER: vbcsConfig[`VBCS${envKey}OCUSERNAME`],
         VBCSPASSWORD: vbcsConfig[`VBCS${envKey}OCPASSWORD`]
     })
-    await this.init();
+    await this.init(browser);
     this.web = new UIActions(this.page);
     this.rest = new RestRequest(this.page);
 })
