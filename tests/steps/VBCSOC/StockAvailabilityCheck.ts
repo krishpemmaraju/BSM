@@ -1,4 +1,4 @@
-import { Given, setDefaultTimeout, Then, When } from "@cucumber/cucumber";
+import { Given, IWorld, setDefaultTimeout, Then, When } from "@cucumber/cucumber";
 import Assert from "../../../src/asserts/Assert";
 import RequestHeaders from "../../../src/api/actions/RequestHeaders";
 import APIConstants from "../../../src/api/APIConstants/APIConstants";
@@ -7,6 +7,7 @@ import ReportGeneration from "../../../src/helper/reportGeneration";
 import UIActions from "../../../src/webui/actions/UIActions";
 import JSONUtils from "../../../src/utils/JSONUtils";
 import DateUtils from "../../../src/utils/DateUtils";
+import type { ICustomWorld } from "../../../src/support/CustomWorld";
 
 
 setDefaultTimeout(60 * 10 * 1000);
@@ -19,12 +20,12 @@ function getRequestHeadersWithOutAuth() {
 let stockCheckFromUI: any;
 let atpDateFromUI: any;
 
-Given('User login into VBCS Order Capture', async function () {
+Given('User login into VBCS Order Capture', async function (this: ICustomWorld) {
     await this.vbcsOrderCaptureUIPage.loginIntoVBCSOrderCaptureUI(this.VBCSURL, Buffer.from(this.VBCSUSER, 'base64').toString('utf-8'), Buffer.from(this.VBCSPASSWORD, 'base64').toString('utf-8'));
 });
 
 let isStkExistsNormalized: string;
-Then('get the stock of the {string} having {string} added to the basket', async function (product, isStockExists) {
+Then('get the stock of the {string} having {string} added to the basket', async function (this:ICustomWorld,product, isStockExists) {
     isStkExistsNormalized = isStockExists.toLowerCase();
     stockCheckFromUI = await this.stockAvailabilityPage.GetStockAvailabilityForProduct(product, isStockExists);
     if (isStkExistsNormalized == 'no') {
@@ -123,9 +124,8 @@ When('user invokes Quick Availability Check API for the {string} and {string}', 
 
 Then('extract the ExpectedShipDateTime from the response', async function () {
     if (isStkExistsNormalized == 'no') {
-        console.log("from UI" + atpDateFromUI + " from response " + await DateUtils.getSuffixOfDay(StkChkAvailAPI[0], false));
         await ReportGeneration.attachReportForAPI(" The Reponse for Check Availability is \n " + JSON.stringify(await stkChkAvailResp.json(), null, 2), this);
-        await Assert.AssertTrue(atpDateFromUI === await DateUtils.getSuffixOfDay(StkChkAvailAPI[0], false))
+        await Assert.AssertTrue(atpDateFromUI === await DateUtils.getSuffixOfDay(StkChkAvailAPI, false))
     }
 });
 

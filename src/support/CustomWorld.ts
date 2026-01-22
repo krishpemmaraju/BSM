@@ -24,10 +24,22 @@ import ConfirmPicksPage from "../webui/pages/scm/ConfirmPicksPage";
 import { WorldImplPages } from "./worldImpl";
 import WebBrowserManager from "../manager/browserManager";
 import RestRequest from "../api/actions/RESTRequest";
+import ConfirmShipmentPage from "../webui/pages/scm/ConfirmShipmentPage";
+import SCMWolOrderCaptureHomePage from "../webui/pages/scm/SCMOrderCaptureHomePage";
 
 
 
 export default class CustomWorld extends World implements WorldImplPages {
+    /* Declaring the variables */
+    SCMURL: string;
+    SCMUSER: string;
+    SCMPASSWORD: string;
+    SCMSTOCKCHKAPI: string;
+    SCMCHKAVAILABILITY: string;
+    VBCSURL: string;
+    VBCSUSER: string;
+    VBCSPASSWORD: string;
+    /* Page Objects Declaration */
     scmLoginPage !: SCMLoginPage;
     scmHomePage !: SCMHomePage;
     inventoryManagamentPage !: InventoryManagementPage;
@@ -47,6 +59,8 @@ export default class CustomWorld extends World implements WorldImplPages {
     putAwayGoodsPage!: PutAwayGoodsPage;
     shipmentLinePage!: ShipmentLinesPage;
     confirmPicksPage!: ConfirmPicksPage;
+    confirmShipmentPage!: ConfirmShipmentPage;
+    scmWolOrderCaptureHomePage!: SCMWolOrderCaptureHomePage;
     web: UIActions;
     page: Page;
     rest: RestRequest;
@@ -59,46 +73,60 @@ export default class CustomWorld extends World implements WorldImplPages {
     }
 
 
-    async init(browser: Browser) {
-
+    async init(browser: Browser, app: string) {
         //Initialize the Browsers 
+        if (!['api', 'db'].includes(app.toLowerCase())) {
+            if (app.toLowerCase() === 'vbsoc') {
+                browser = await WebBrowserManager.launch("firefox");
+            }
+            else {
+                if (!browser) {
+                    browser = await WebBrowserManager.launch("chromium");
+                }
+            }
+            this.browser = browser;
+            this.context = await browser.newContext({
+                viewport: null,
+                screen: { width: 1920, height: 1080 },
+                ignoreHTTPSErrors: true,
+                acceptDownloads: true,
+                storageState: undefined,
+            });
+            await this.context.clearCookies();
+            this.page = await this.context?.newPage();
+            // Force maximize for Firefox (and others)
+            await this.page.evaluate(() => {
+                window.moveTo(0, 0);
+                window.resizeTo(screen.availWidth, screen.availHeight);
+            });
 
-        if (!browser) {
-            browser = await WebBrowserManager.launch("chromium");
+
+            // Initialize Page Objects
+            this.web = new UIActions(this.page);
+            this.rest = new RestRequest(this.page);
+            this.scmLoginPage = new SCMLoginPage(this.web);
+            this.scmHomePage = new SCMHomePage(this.web);
+            this.inventoryManagamentPage = new InventoryManagementPage(this.web);
+            this.createMiscelleneousTransactionPage = new CreateMiscellaneousTransactions(this.web);
+            this.vbcsOrderCaptureUIPage = new VBCSOrderCaptureUIPage(this.web);
+            this.stockAvailabilityPage = new StockAvailabilityCheckPage(this.web);
+            this.orderCaptureUIPage = new OrderCaptureUIPage(this.web);
+            this.vbsocHomePage = new VBSOCHomePage(this.web);
+            this.orderManagementPage = new OrderManagementPage(this.web);
+            this.createOrderPage = new CreateOrderPage(this.web);
+            this.supplyOrchestrationPage = new SupplyOrchestrationPage(this.web);
+            this.manageSupplyPage = new ManageSupplyPage(this.web);
+            this.inventoryManagementActionsPage = new InventoryManagementActionsPage(this.web);
+            this.scmTransferOrdersPage = new SCMTransferOrdersPage(this.web);
+            this.invExecutionPage = new InventoryExecutionPage(this.web);
+            this.receiveGoodsPage = new ReceiveGoodsPage(this.web);
+            this.putAwayGoodsPage = new PutAwayGoodsPage(this.web);
+            this.shipmentLinePage = new ShipmentLinesPage(this.web);
+            this.confirmPicksPage = new ConfirmPicksPage(this.web);
+            this.confirmShipmentPage = new ConfirmShipmentPage(this.web);
+            this.scmWolOrderCaptureHomePage = new SCMWolOrderCaptureHomePage(this.web);
         }
-        this.browser = browser;
-        this.context = await browser.newContext({
-            viewport: null,
-            ignoreHTTPSErrors: true,
-            acceptDownloads: true,
-            storageState: undefined,
-        });
-        await this.context.clearCookies();
-        this.page = await this.context?.newPage();
-
-        // Initialize Page Objects
-        this.web = new UIActions(this.page);
-        this.rest = new RestRequest(this.page);
-        this.scmLoginPage = new SCMLoginPage(this.web);
-        this.scmHomePage = new SCMHomePage(this.web);
-        this.inventoryManagamentPage = new InventoryManagementPage(this.web);
-        this.createMiscelleneousTransactionPage = new CreateMiscellaneousTransactions(this.web);
-        this.vbcsOrderCaptureUIPage = new VBCSOrderCaptureUIPage(this.web);
-        this.stockAvailabilityPage = new StockAvailabilityCheckPage(this.web);
-        this.orderCaptureUIPage = new OrderCaptureUIPage(this.web);
-        this.vbsocHomePage = new VBSOCHomePage(this.web);
-        this.orderManagementPage = new OrderManagementPage(this.web);
-        this.createOrderPage = new CreateOrderPage(this.web);
-        this.supplyOrchestrationPage = new SupplyOrchestrationPage(this.web);
-        this.manageSupplyPage = new ManageSupplyPage(this.web);
-        this.inventoryManagementActionsPage = new InventoryManagementActionsPage(this.web);
-        this.scmTransferOrdersPage = new SCMTransferOrdersPage(this.web);
-        this.invExecutionPage = new InventoryExecutionPage(this.web);
-        this.receiveGoodsPage = new ReceiveGoodsPage(this.web);
-        this.putAwayGoodsPage = new PutAwayGoodsPage(this.web);
-        this.shipmentLinePage = new ShipmentLinesPage(this.web);
-        this.confirmPicksPage = new ConfirmPicksPage(this.web);
     }
-}
 
+}
 export type ICustomWorld = CustomWorld;

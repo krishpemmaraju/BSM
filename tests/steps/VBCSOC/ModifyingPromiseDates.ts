@@ -5,8 +5,7 @@ import Assert from "../../../src/asserts/Assert";
 import OrderCaptureUIPage from "../../../src/webui/pages/vbcsoc/OrderCaptureUIPage";
 import CreateOrderPage from "../../../src/webui/pages/scm/CreateOrderPage";
 import DateUtils from "../../../src/utils/DateUtils";
-import { get } from "https";
-
+import type { ICustomWorld } from "../../../src/support/CustomWorld";
 
 setDefaultTimeout(60 * 10 * 1000);
 
@@ -18,11 +17,11 @@ setDefaultTimeout(60 * 10 * 1000);
 
 // });
 
-When('User navigate to Order Management', async function () {
+When('User navigate to Order Management', async function (this: ICustomWorld) {
    await this.scmHomePage.navigateToOrdermanagement();
 });
 
-When('User navigate to {string} Sub section', async function (subSectionMenu) {
+When('User navigate to {string} Sub section', async function (this: ICustomWorld, subSectionMenu) {
    await this.orderManagementPage.navigateToSubSectionMenu(subSectionMenu);
 });
 
@@ -85,62 +84,62 @@ When('User navigate to {string} Sub section', async function (subSectionMenu) {
 
 // });
 
-When('User clicks on Create Order', async function () {
+When('User clicks on Create Order', async function (this: ICustomWorld) {
    await this.orderManagementPage.clickOnCreateOrderUnderSCMOM();
 });
 
-Then('User should see Create Order Page', async function () {
+Then('User should see Create Order Page', async function (this: ICustomWorld) {
    await Assert.AssertTrue(await new CreateOrderPage(this.web).IsCreateOrderPageDisplayed());
 });
 
-When('User Select Customer as {string}', async function (customer: string) {
+When('User Select Customer as {string}', async function (this: ICustomWorld, customer: string) {
    await this.createOrderPage.SelectCustomerSCMOM(customer);
 });
 
-When('User select Order Type as {string}', async function (orderType: string) {
+When('User select Order Type as {string}', async function (this: ICustomWorld, orderType: string) {
    await this.createOrderPage.SelectOrderType(orderType);
 });
 
-When('User search and add the product {string}', async function (product: string) {
+When('User search and add the product {string}', async function (this: ICustomWorld, product: string) {
    await this.createOrderPage.SelectProductSCMOM(product);
 });
 
-When('User click on Shipment Details option', async function () {
+When('User click on Shipment Details option', async function (this: ICustomWorld) {
    await this.createOrderPage.ClickOnShipmentDetailsOrderLineSCMOM();
 });
 
-Then('User should see Shipment Details Page', async function () {
+Then('User should see Shipment Details Page', async function (this: ICustomWorld) {
    await Assert.AssertTrue(await new CreateOrderPage(this.web).IsShipmentDetailsSectionSCMOM());
 });
 
-When('User navigate to supply tab under Shipment Details', async function () {
+When('User navigate to supply tab under Shipment Details', async function (this: ICustomWorld) {
    await this.createOrderPage.NavigateToSupplyUnderShipmentDetailsSCMOM();
 });
 
-When('User enters {string} in warehouse dropdown', async function (location: string) {
+When('User enters {string} in warehouse dropdown', async function (this: ICustomWorld, location: string) {
    await this.createOrderPage.SelectWarehouseSupplyUnderShipmentDetailsSCMOM(location);
 });
 
-When('User clicks on submit under Shipment Details', async function () {
+When('User clicks on submit under Shipment Details', async function (this: ICustomWorld) {
    await this.createOrderPage.ClickOnSubmitButtonSCMOM();
 });
 
-Then('User should see Sales Order Confirmation pop up', async function () {
+Then('User should see Sales Order Confirmation pop up', async function (this: ICustomWorld) {
    await Assert.AssertTrue(await new CreateOrderPage(this.web).IsConfirmationPopAvailableSCMOM());
 });
 
-Then('Capture the Requested Date for the Order Line', async function () {
+Then('Capture the Requested Date for the Order Line', async function (this: ICustomWorld) {
    await this.createOrderPage.GetStringMatchNumbers();
 });
 
-When('User clicks on OK', async function () {
+When('User clicks on OK', async function (this: ICustomWorld) {
    await this.createOrderPage.ClickOkOnSOConfirmationPopUpSCMOM();
 });
 
 
 let IsOrderStatusCorrect: boolean = false;
 let orderStatus: string;
-When('User select Create Revision under actions dropdown', async function () {
+When('User select Create Revision under actions dropdown', async function (this: ICustomWorld) {
    for (let i = 0; i < 40; i++) {
       orderStatus = await new CreateOrderPage(this.web).GetOrderStatusSCMOM();
       if (orderStatus == "Awaiting Shipping") {
@@ -158,7 +157,7 @@ When('User select Create Revision under actions dropdown', async function () {
 });
 
 let getRequestedDateBefore: string;
-When('User selects Override Order Line', async function () {
+When('User selects Override Order Line', async function (this: ICustomWorld) {
    if (!IsOrderStatusCorrect) {
       throw new Error("Order status is not 'Awaiting Shipping'. Skipping remaining steps.");
    } else {
@@ -168,7 +167,7 @@ When('User selects Override Order Line', async function () {
    }
 });
 
-Then('User should see the Override Order Line pop up', async function () {
+Then('User should see the Override Order Line pop up', async function (this: ICustomWorld) {
    if (!IsOrderStatusCorrect) {
       throw new Error("Order status is not 'Awaiting Shipping'. Skipping remaining steps.");
    } else {
@@ -179,16 +178,20 @@ Then('User should see the Override Order Line pop up', async function () {
 });
 
 let dateToChange: string;
-When('User changes the Requested Date', async function () {
+let updatedDate: string;
+When('User changes the Requested Date', async function (this: ICustomWorld) {
    if (!IsOrderStatusCorrect) {
       throw new Error("Order status is not 'Awaiting Shipping'. Skipping remaining steps.");
    } else {
+      getRequestedDateBefore = await this.createOrderPage.GetRequestedDateSCMOM();
+      console.log(getRequestedDateBefore)
       dateToChange = (await DateUtils.IncreaseDateByDaysWithFormat('DD/MM/YY HH:mm', 12)).toString();
       await this.createOrderPage.ChangeOrderRequestDateSCMOM(dateToChange);
    }
+   updatedDate = await this.createOrderPage.GetUpdatedDate();
 });
 
-Then('User clicks on Ok', async function () {
+Then('User clicks on Ok', async function (this: ICustomWorld) {
    if (!IsOrderStatusCorrect) {
       throw new Error("Order status is not 'Awaiting Shipping'. Skipping remaining steps.");
    } else {
@@ -206,11 +209,11 @@ Then('User clicks on Ok', async function () {
    }
 });
 
-Then('User should see pop up {string}', async function (string) {
+Then('User should see pop up {string}', async function (this: ICustomWorld, string) {
    await Assert.AssertTrue(await this.createOrderPage.GetConfirmationTextAfterReqDateChangeSCMOM())
 });
 
-Then('User should see the Updated Requested Date under Order Line Details', async function () {
+Then('User should see the Updated Requested Date under Order Line Details', async function (this: ICustomWorld) {
    let getUpdatedValue = await this.createOrderPage.GetRequestDateAfterChangeSCMOM();
-      await Assert.AssertTrue(getUpdatedValue.split(' ')[0].includes(dateToChange.split(' ')[0]));
+   await Assert.AssertTrue(getUpdatedValue.split(' ')[0].includes(updatedDate.split(' ')[0]));
 }); 

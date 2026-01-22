@@ -22,19 +22,21 @@ import PutAwayGoodsPage from "../webui/pages/scm/PutAwayGoodsPage";
 import ShipmentLinesPage from "../webui/pages/scm/ShipmentLinesPage";
 import ConfirmPicksPage from "../webui/pages/scm/ConfirmPicksPage";
 import RestRequest from "../api/actions/RESTRequest";
+import ConfirmShipmentPage from "../webui/pages/scm/ConfirmShipmentPage";
+import SCMWolOrderCaptureHomePage from "../webui/pages/scm/SCMOrderCaptureHomePage";
 
 export interface WorldImplPages {
 
-    scmLoginPage : SCMLoginPage;
-    scmHomePage : SCMHomePage;
-    inventoryManagamentPage : InventoryManagementPage;
-    createMiscelleneousTransactionPage : CreateMiscellaneousTransactions;
-    vbcsOrderCaptureUIPage : VBCSOrderCaptureUIPage;
-    stockAvailabilityPage : StockAvailabilityCheckPage;
-    orderCaptureUIPage : OrderCaptureUIPage;
-    vbsocHomePage : VBSOCHomePage;
-    orderManagementPage : OrderManagementPage;
-    createOrderPage : CreateOrderPage;
+    scmLoginPage: SCMLoginPage;
+    scmHomePage: SCMHomePage;
+    inventoryManagamentPage: InventoryManagementPage;
+    createMiscelleneousTransactionPage: CreateMiscellaneousTransactions;
+    vbcsOrderCaptureUIPage: VBCSOrderCaptureUIPage;
+    stockAvailabilityPage: StockAvailabilityCheckPage;
+    orderCaptureUIPage: OrderCaptureUIPage;
+    vbsocHomePage: VBSOCHomePage;
+    orderManagementPage: OrderManagementPage;
+    createOrderPage: CreateOrderPage;
     supplyOrchestrationPage: SupplyOrchestrationPage;
     manageSupplyPage: ManageSupplyPage;
     inventoryManagementActionsPage: InventoryManagementActionsPage;
@@ -44,7 +46,9 @@ export interface WorldImplPages {
     putAwayGoodsPage: PutAwayGoodsPage;
     shipmentLinePage: ShipmentLinesPage;
     confirmPicksPage: ConfirmPicksPage;
+    confirmShipmentPage: ConfirmShipmentPage;
+    scmWolOrderCaptureHomePage: SCMWolOrderCaptureHomePage;
     web: UIActions;
     page: Page;
-    rest:RestRequest;
+    rest: RestRequest;
 }

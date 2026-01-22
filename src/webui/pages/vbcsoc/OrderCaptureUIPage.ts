@@ -14,7 +14,7 @@ let ENTER_PRODUCT: string = "input[placeholder='Search by Product Code, Descript
 let CLICK_PRINT_CLOSE = "oj-button[title='Close']"
 let PRINT_TEXT = ".oj-message-title"
 
-setDefaultTimeout(60 * 10 * 1000);
+setDefaultTimeout(300000);
 
 export default class OrderCaptureUIPage {
 
@@ -115,6 +115,16 @@ export default class OrderCaptureUIPage {
         await reportGeneration.getScreenshot(this.web.getPage(), "After Selecting Product " + product, world);
     }
 
+    public async GetPriceOfTheProduct() {
+        const getTextProductCount = await this.web.getPageLocator("span.oj-typography-body-md.oj-typography-bold")
+        for (let i = 0; i < await getTextProductCount.count(); i++) {
+            let getPriceText = await getTextProductCount.nth(i).innerText()
+            if (/£\d+(\.\d{1,2})/.test(getPriceText)) {
+                return getPriceText.trim();
+            }
+        }
+    }
+
     public async AddProductsToBasket(product: string) {
         await expect((await this.web.getPageLocator("button[aria-label='Add to Basket']")).first()).toBeVisible({ timeout: TEST_CONFIG.TIMEOUTS.element });
         ((await this.web.getPageLocator("button[aria-label='Add to Basket']")).first()).click({ timeout: 5000 });
@@ -127,11 +137,30 @@ export default class OrderCaptureUIPage {
         return await expect(await this.web.getElementByText(product)).toBeVisible({ timeout: TEST_CONFIG.TIMEOUTS.element });
     }
 
+    public async IsDeleteBtnAvailable() {
+        await this.GetPriceOfTheProduct();
+         await (this.web.getPage().locator("li.wolPanel", { hasText: await this.GetPriceOfTheProduct() })
+        .locator("oj-c-button[display='label'] > button[aria-label='Delete']")).isVisible({timeout: 9000})
+ //       await (await this.web.getPageLocator("div.oj-sm-justify-content-space-between.oj-sm-align-items-center div oj-c-button[display='label'] button[aria-label='Delete']")).isVisible({ timeout: 9000 })
+    }
+
+    public async IsMoveBtnAvailable() {
+        await this.GetPriceOfTheProduct();
+        await (this.web.getPage().locator("li.wolPanel", { hasText: await this.GetPriceOfTheProduct() })
+        .locator("oj-c-button[display='label'] > button[aria-label='Move']")).isVisible({timeout: 9000})
+//        await (await this.web.getPageLocator("div.oj-sm-justify-content-space-between.oj-sm-align-items-center div oj-c-button[display='label'] button[aria-label='Move']")).isVisible({ timeout: 9000 })
+    }
+
+    public async ClickOnBackBtnBasketPane() {
+        await (await this.web.getPageLocator("oj-c-button#btnBack button[aria-label='Back']")).click()
+    }
+
     public async WaitForCheckOutPopUp() {
-        //  await this.web.RetryElementFindingsByRole('button','Confirm','enable',2,TEST_CONFIG.TIMEOUTS.element);
-        await expect(await this.web.getElementByRolebyExactText('button', 'Confirm')).toBeEnabled({ timeout: TEST_CONFIG.TIMEOUTS.element });
-        await reportGeneration.getScreenshot(this.web.getPage(), "After clicking on Submit", world);
-        return (await this.web.getElementByRolebyExactText('heading', 'Checkout')).isVisible({ timeout: TEST_CONFIG.TIMEOUTS.element });
+        console.log(await (await this.web.getPageLocator("button[aria-label='Submit']")).isVisible())
+        await expect(await this.web.getPageLocator("button[aria-label='Submit']")).toBeVisible({ timeout: 90000 });
+        await reportGeneration.getScreenshot(this.web.getPage(), "After clicking on Checkout", world);
+        console.log("for Checkout heading " + await (await this.web.getElementByRolebyExactText('heading', 'Checkout')).isVisible())
+        return await (await this.web.getPageLocator('h1.oj-sp-header-general-overview-page-title')).isVisible({ timeout: 15000 })
     }
 
     public async ClickOnConfirm(isPrintRequired: string) {
@@ -146,13 +175,16 @@ export default class OrderCaptureUIPage {
         }
     }
 
+    public async ClickOnSubmitBthCheckOutPage() {
+        await (await this.web.getPageLocator("button[aria-label='Submit']")).click();
+    }
+
     public async CaptureOrderNumber() {
         await reportGeneration.getScreenshot(this.web.getPage(), "After Clicking on Confirm , Capture Order Number", world);
-        return this.web.element('#oj_gop1_h_pageSubtitle', 'Capture the Order Number').getTextValue();
+        return await (await this.web.getPageLocator('#oj_gop1_pageSubtitle')).textContent()
     }
 
     public async IsOrderConfirmationPageLoaded(orderConfHeading: string): Promise<boolean> {
-
         try {
             await this.web.getPage().waitForLoadState('domcontentloaded');
             const getOrderConfirmationHeadingEle = this.web.getPage().locator("text=" + orderConfHeading);
@@ -162,6 +194,24 @@ export default class OrderCaptureUIPage {
         } catch (error) {
             console.log(error)
         }
+    }
+
+    public async IsCreateShipmentButtonDisplayed(btnName): Promise<boolean> {
+        await reportGeneration.getScreenshot(this.web.getPage(), "Create Shipment button displayed after submitting the Order " + await this.CaptureOrderNumber(), world);
+        return await (await this.web.getPageLocator("button[aria-label='Create Shipment']")).isVisible({ timeout: 9000 })
+    }
+
+    public async IsOrderSuccessSubmitMessageDisplayed(orderNumber: string) {
+        await expect.poll(async () => {
+            const count = await this.web.getPage()
+                .locator('div.oj-message-summary.oj-message-title')
+                .count();
+            return count ?? 0;   // ensures a number is always returned
+        }, {
+            timeout: 5000
+        }).toBeGreaterThan(0);
+
+
     }
 
     //** Below are the duplication methods of Order Capture UI , this will be used when the fix for navigating OC UI page 

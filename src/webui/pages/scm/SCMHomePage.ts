@@ -63,7 +63,7 @@ export default class SCMHomePage {
         }
     }
 
-    public async navigateToInventoryExecution(){
+    public async navigateToInventoryExecution() {
         await this.ClickOnHomeIcon();
         await this.web.element(WAIT_FOR_SEARCH_ICON, "Wait for search icon on Home Page").waitForElementToVisible(TEST_CONFIG.TIMEOUTS.element);
         await this.web.element(CLICK_ON_SUPPLYCHAINEXECUTION, "Click on Supply Chain Execution").click();
@@ -75,9 +75,24 @@ export default class SCMHomePage {
     public async NavigateToOrderCaptureUI() {
         await this.ClickOnHomeIcon();
         await this.web.element(WAIT_FOR_SEARCH_ICON, "Wait for search icon on Home Page").waitForElementToVisible(TEST_CONFIG.TIMEOUTS.element);
-        await this.web.element(CLICK_ON_ORDERMANAGEMENT, "Click on Order Management").click();
-        await reportGeneration.getScreenshot(this.web.getPage(), "AFTER CLICKING ON ORDER MANAGEMENT", world)
-        await (await this.web.getElementByRoleByName('link', 'Wolseley Order Capture')).click();
+        await reportGeneration.getScreenshot(this.web.getPage(), "SCM HOME PAGE LAUNCHED", world);
+        const getNavMenuLinks = await this.web.getPageLocator(GET_NAV_LINKS);
+        const rightHandNav = await this.web.getPageLocator(CLICK_RIGHT_HAND_NAV);
+        for (let i = 0; i < await getNavMenuLinks.count(); i++) {
+            if (await getNavMenuLinks.nth(i).textContent({ timeout: 6000 }) == "Order Management") {
+                console.log(await getNavMenuLinks.nth(i).textContent());
+                await getNavMenuLinks.nth(i).click();
+                break;
+            }
+            else {
+                if (i == 7) {
+                    await rightHandNav.click();
+                }
+            }
+        }
+        await (await this.web.getPageLocator('div[title="Wolseley Order Capture"] a')).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.probElements });
+        await (await this.web.getPageLocator('div[title="Wolseley Order Capture"] a')).click()
+        await reportGeneration.getScreenshot(this.web.getPage(), "WOLSELEY ORDER CAPTURE PAGE DISPLAYED", world);
     }
 
     public async IsOrderCaptureUILoaded() {
@@ -93,7 +108,6 @@ export default class SCMHomePage {
         const rightHandNav = await this.web.getPageLocator(CLICK_RIGHT_HAND_NAV);
         for (let i = 0; i < await getNavMenuLinks.count(); i++) {
             if (await getNavMenuLinks.nth(i).textContent({ timeout: 6000 }) == "Order Management") {
-                console.log(await getNavMenuLinks.nth(i).textContent());
                 await getNavMenuLinks.nth(i).click();
                 break;
             }
@@ -126,11 +140,11 @@ export default class SCMHomePage {
             }
         }
         (await this.web.getPageLocator('#itemNode_supply_chain_execution_SupplyChainOrchestration_0')).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.probElements });
-        await reportGeneration.getScreenshot(this.web.getPage(), "ORDER MANAGEMENT PAGE SECTION LAUNCHED", world);
+        await reportGeneration.getScreenshot(this.web.getPage(), "SUPPLY CHAIN ORCHESTRATION PAGE SECTION LAUNCHED", world);
     }
 
 
-    public async ClickOnSupplyChainOrchestration(){
+    public async ClickOnSupplyChainOrchestration() {
         await (await this.web.getPageLocator('#itemNode_supply_orchestration_supply_orchestration_0')).click();
     }
 

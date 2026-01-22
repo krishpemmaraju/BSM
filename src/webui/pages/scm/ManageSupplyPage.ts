@@ -2,11 +2,12 @@ import { TestInfo } from "@playwright/test";
 import ReportGeneration from "../../../helper/reportGeneration";
 import UIActions from "../../actions/UIActions";
 import { TEST_CONFIG } from "../../../config/test-config";
-import { world } from "@cucumber/cucumber";
+import { setDefaultTimeout, world } from "@cucumber/cucumber";
 
 let reportGeneration: ReportGeneration;
 let orderData: string;
 let ENTER_SUPPLY_REFRENCE_NUMBER: string = "input[aria-label=' Supply Request Reference Number']";
+setDefaultTimeout(3000000);
 export default class ManageSupplyPage {
 
     constructor(private web: UIActions, testInfo?: TestInfo) {
@@ -14,7 +15,8 @@ export default class ManageSupplyPage {
         testInfo = testInfo!;
     }
 
-    public async IsManageSupplyLinesPageDisplayed(): Promise<boolean> {
+    public async IsManageSupplyLinesPageDisplayed() {
+        await (await this.web.getPageLocator("div[title='Manage Supply Lines']")).waitFor({timeout: TEST_CONFIG.TIMEOUTS.element})
         return await (await this.web.getPageLocator("div[title='Manage Supply Lines']")).isVisible({ timeout: TEST_CONFIG.TIMEOUTS.element })
     }
 public async ExpandSearch(){

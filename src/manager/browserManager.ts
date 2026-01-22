@@ -3,41 +3,39 @@ import { chromium, firefox } from "playwright";
 let headlessConfig: boolean = false;
 
 export default class WebBrowserManager {
+
     public static async launch(browser: string) {
-        switch (browser) {
+        const browserOptions = {
+            slowMo: 3000,
+            headless: headlessConfig,
+            timeout: 60000,
+            ignoreDefaultArgs: ['--enable-automation']
+        }
+        switch (browser.toLowerCase()) {
             case 'chrome':
             case 'chromium':
                 return await chromium.launch({
-                    slowMo: 3000,
-                    headless: headlessConfig,
+                    ...browserOptions,
                     args: ["--start-maximized", "--disable-extensions", "--disable-plugins"],
-                    ignoreDefaultArgs: ['--enable-automation'],
-                    timeout: 60000
                 })
             case 'firefox':
                 return await firefox.launch({
-                    slowMo: 3000,
-                    headless: headlessConfig,
+                    ...browserOptions,
                     ignoreDefaultArgs: ['--enable-automation'],
-                    timeout: 60000,
                     firefoxUserPrefs: {
-                        'browser.startup.homepage': 'about:blank'
+                        'browser.startup.homepage': 'about:blank',
+                        "browser.tabs.warnOnClose": false
                     }
                 })
             case 'webkit':
                 return await chromium.launch({
-                    slowMo: 3000,
-                    headless: headlessConfig,
+                    ...browserOptions,
                     args: ["--start-maximized", "--disable-extensions", "--disable-plugins"],
-                    timeout: 60000
                 })
             default:
                 return await chromium.launch({
-                    slowMo: 3000,
-                    headless: headlessConfig,
+                    ...browserOptions,
                     args: ["--start-maximized", "--disable-extensions", "--disable-plugins"],
-                    ignoreDefaultArgs: ['--enable-automation'],
-                    timeout: 60000
                 });
 
         }

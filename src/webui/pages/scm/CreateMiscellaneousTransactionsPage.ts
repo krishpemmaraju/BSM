@@ -119,11 +119,11 @@ export default class CreateMiscellaneousTransactions {
         await (await this.web.getElementByRolebyExactText('button', ADD_ITEM_BTN)).isVisible({ timeout: 5000 });
     }
 
-    public async ClickOnSubmit() {
-        const clickOnSubmitBtn = this.web.getPage().locator("button[aria-label='Submit']")
+    public async ClickOnCheckoutBtn() {
+        const clickOnCheckoutBtn = this.web.getPage().locator("button[aria-label='Checkout']")
         await reportGeneration.getScreenshot(this.web.getPage(), "AFTER SAVING THE TRANSACTION ", world);
-        await expect(clickOnSubmitBtn).toBeEnabled({ timeout: 30000 })
-        await clickOnSubmitBtn.click();
+        await expect(clickOnCheckoutBtn).toBeEnabled({ timeout: 30000 })
+        await clickOnCheckoutBtn.click();
     }
 
     public async GetItemReceivedTextDisplayed(textToBeDisplayed: string) {

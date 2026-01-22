@@ -81,9 +81,10 @@ export default class DateUtils {
      */
 
     public static async getSuffixOfDay(dateStr: string, isSuffixReq: boolean): Promise<string> {
-        const dayInStr = moment.utc(dateStr).format("DD")
-        const day = parseInt(dayInStr)
-        const mon = moment(dateStr).format("MMM");
+        const normalized = dateStr.replace(/([+-]\d{2})(\d{2})$/, "$1:$2");
+        const dayInStr = moment.utc(normalized);
+        const day = dayInStr.date()
+        const mon = dayInStr.format("MMM");
         const suffix = (day === 1 || day === 21 || day === 31) ? 'st' :
             (day === 2 || day === 22) ? 'nd' :
                 (day === 3 || day === 23) ? 'rd' : 'th';

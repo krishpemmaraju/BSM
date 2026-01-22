@@ -1,7 +1,7 @@
 {
     "DEV": {
         "paths": [
-            "features/SCM/DEV/CreateTransferOrderSupply.feature"
+            "features/SCM/DEV/SCM/ModifyingPromiseDates.feature"
         ],
         "formatOptions": {
             "snippetInterface": "async-await"

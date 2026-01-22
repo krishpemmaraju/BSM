@@ -2,8 +2,7 @@ import { Given, When, Then, setDefaultTimeout } from "@cucumber/cucumber";
 import SCMLoginPage from "../../../src/webui/pages/scm/SCMLoginPage";
 import Assert from "../../../src/asserts/Assert";
 import SCMHomePage from "../../../src/webui/pages/scm/SCMHomePage";
-import InventoryManagementPage from "../../../src/webui/pages/scm/InventoryManagementPage";
-import CreateMiscellaneousTransactions from "../../../src/webui/pages/scm/CreateMiscellaneousTransactionsPage";
+import type { ICustomWorld } from "../../../src/support/CustomWorld";
 
 //setDefaultTimeout(60 * 1000 * 2);
 
@@ -13,7 +12,7 @@ let getNewSOH: number;
 let transactionType: string = "";
 
 
-Given('User login into SCM application', async function () {
+Given('User login into SCM application', async function (this:ICustomWorld) {
    await this.scmLoginPage.loginIntoSCMApp(this.SCMURL, this.SCMUSER, this.SCMPASSWORD);
    await Assert.AssertTrue(await new SCMHomePage(this.web).isHomePageDisplayed());
 });
@@ -107,8 +106,8 @@ Then('User should see {string} dashboard with line details', async function (str
 });
 
 
-When('User clicks on submit', async function () {
-   await this.createMiscelleneousTransactionPage.ClickOnSubmit();
+When('User clicks on checkout button', async function (this:ICustomWorld) {
+   await this.createMiscelleneousTransactionPage.ClickOnCheckoutBtn();
 });
 
 Then('User should see pop up as {string}', async function (textToBeDisplayed) {

@@ -1,7 +1,7 @@
 {
-  "SourceTransactionNumber": "1BL|99664701",
+  "SourceTransactionNumber": "1BL|99673277",
   "SourceTransactionSystem": "OPS",
-  "SourceTransactionId": "1BL|99664701",
+  "SourceTransactionId": "1BL|99673277",
   "BuyingPartyId": "300001732158752",
   "RequestingBusinessUnitName": "Wolseley UK",
   "FreezePriceFlag": true,
@@ -18,7 +18,7 @@
       "SourceScheduleNumber": "1",
       "RequestedFulfillmentOrganizationCode": "1BL",
       "TransactionCategoryCode": "ORDER",
-      "RequestedArrivalDate": "2026-01-07T16:15:34.514+00:00",
+      "RequestedArrivalDate": "2026-01-15T16:36:27.440+00:00",
       "ProductNumber": "511040",
       "OrderedQuantity": 2,
       "OrderedUOM": "EA",

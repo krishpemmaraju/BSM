@@ -6,14 +6,15 @@ Feature: Create Account Order in Order Capture UI
         Then User should see Order Capture dashboard
         When Select customer as "<customer>"
         And Search  and add  "<products>" to basket
-        And User clicks on submit
+        And User clicks on checkout button
         Then User should see Checkout popup
         When User Clicks on Confirm depends on "<PrintVerification>"
         Then Capture the Order Number
-        Then User Should see "Order Confirmation" page
+        # Then User Should see "Order Confirmation" page
+        Then User Should see "Create Shipment" button
 
         Examples:
             | customer             | products      | PrintVerification |
             | SMITH AND BYFORD LTD | R40003        | No                |
-            | SMITH AND BYFORD LTD | R40003,608955 | Yes               |
+            | SMITH AND BYFORD LTD | R40063,R40001 | Yes               |
 

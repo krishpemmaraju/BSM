@@ -121,7 +121,6 @@ export default class CreateOrderPage {
         let match = SOStr.match(/\d+/);
         if (match) {
             const orderNumber = match[0]
-            console.log(orderNumber)
         }
     }
 
@@ -129,7 +128,7 @@ export default class CreateOrderPage {
         await (await this.web.getElementByRoleByName('button', 'Refresh')).click({ delay: 2000 });
     }
 
-    public async GetOrderStatusSCMOM() {
+    public async GetOrderStatusSCMOM(): Promise<string> {
         await (await this.web.getElementByRoleByName('button', 'Refresh')).click({ delay: 2000 });
         const columnIndex = parseInt(await this.GetIndexOfColumnHeader('Status'));
         const getTDStatus = (await this.web.getPageLocator("//table[@summary='Order Lines']//tr//table[@_afrit]//tr//td[@class='xen'][" + columnIndex + "]")).textContent();
@@ -158,40 +157,101 @@ export default class CreateOrderPage {
         return await (await this.web.getPageLocator("td:has(> label:has-text('Ordered Date')) + td span")).textContent()
     }
 
+    public async GetCurrentDayFromDatePicker() {
+        const getSelectedDate = await (await this.web.getPageLocator("div.AFPopupSelector td.p_AFSelected")).textContent();
+        return getSelectedDate;
+    }
+
+    public async GetCurrentMonthFromDatePicker() {
+        const getSelectedMonth = await (await this.web.getPageLocator("option[selected='true']")).getAttribute('title')
+        return getSelectedMonth;
+    }
+
+    public async GetCurrentYearFromDatePicker() {
+        const getSelectedYearByTitle = await (this.web.getPage().getByTitle('2026')).getAttribute('title')
+        return getSelectedYearByTitle;
+    }
+
+    public async ChangeMonth(selectedMonth: string) {
+        switch (selectedMonth.toLocaleLowerCase()) {
+            case 'january':
+                await this.web.getPage().selectOption("select[title='" + selectedMonth + "']", { label: 'February' });
+                break;
+            case 'february':
+                await this.web.getPage().selectOption("select[title='" + selectedMonth + "']", { label: 'March' });
+                break;
+            case 'march':
+                await this.web.getPage().selectOption("select[title='" + selectedMonth + "']", { label: 'April' });
+                break;
+            case 'april':
+                await this.web.getPage().selectOption("select[title='" + selectedMonth + "']", { label: 'May' });
+                break;
+            case 'may':
+                await this.web.getPage().selectOption("select[title='" + selectedMonth + "']", { label: 'June' });
+                break;
+            case 'june':
+                await this.web.getPage().selectOption("select[title='" + selectedMonth + "']", { label: 'July' });
+                break;
+            case 'july':
+                await this.web.getPage().selectOption("select[title='" + selectedMonth + "']", { label: 'August' });
+                break;
+            case 'august':
+                await this.web.getPage().selectOption("select[title='" + selectedMonth + "']", { label: 'September' });
+                break;
+            case 'september':
+                await this.web.getPage().selectOption("select[title='" + selectedMonth + "']", { label: 'October' });
+                break;
+            case 'october':
+                await this.web.getPage().selectOption("select[title='" + selectedMonth + "']", { label: 'November' });
+                break;
+            case 'november':
+                await this.web.getPage().selectOption("select[title='" + selectedMonth + "']", { label: 'December' });
+                break;
+            case 'december':
+                await this.web.getPage().selectOption("select[title='" + selectedMonth + "']", { label: 'January' });
+                break;
+        }
+    }
+
+
     public async ChangeOrderRequestDateSCMOM(dateToUpdate: string) {
-        // let GetSelectedDate = await (await this.web.getPageLocator
-        // ("//td[@id='pt1:_FOr1:1:_FONSr2:0:_FOTsr1:3:APRS1:r5:0:id4::pop::dlg::contentContainer']//td[@class='x12k p_AFSelected']")).textContent();
         let getDatesSplitArray = dateToUpdate.split(' ');
         let getRequestDate = getDatesSplitArray[0].split('/');
         await (await this.web.getPageLocator('a[title="Select Date and Time"]')).first().scrollIntoViewIfNeeded();
         await (await this.web.getPageLocator('a[title="Select Date and Time"]')).first().click({ delay: 3000 });
         await (await this.web.getPageLocator('[id*="id4::pop::dlg::tb"]')).waitFor({ state: 'attached', timeout: 8000 });
         let getDayVal = parseInt(getRequestDate[0]);
-        let getSumDays = getDayVal + 10;
+        let getSumDays: any;
+        if (getDayVal != 31) {
+            getSumDays = getDayVal + 10;
+        } else { getSumDays = getDayVal; }
         if ((getSumDays) <= 31) {
-            await (await this.web.getElementByText(getSumDays.toString())).first().click();
+            if (await (await this.web.getElementByText(getSumDays.toString())).first().getAttribute('data-afr-adfday') === 'cm') {
+                await this.ChangeMonth(await this.GetCurrentMonthFromDatePicker())
+                await (await this.web.getElementByText(getSumDays.toString())).first().click();
+            }
         } else {
             getSumDays = getSumDays - 10;
-            await (await this.web.getElementByText(getSumDays.toString())).first().click();
+            console.log(getSumDays)
+            if (await (await this.web.getElementByText(getSumDays.toString())).first().isDisabled({ timeout: 8000 })) {
+                console.log(await (await this.web.getElementByText(getSumDays.toString())).first().isDisabled({ timeout: 8000 }))
+                await (await this.web.getElementByText(getSumDays.toString())).first().click();
+            }
         }
         const okButton = this.web.getPage().locator("div.AFPopupSelector button[_afrpdo='ok']");
-
         // Wait for the dialog to appear
         await okButton.waitFor({ state: 'visible', timeout: 10000 });
-
         // Optional: wait for any transition or animation to complete
         await this.web.getPage().waitForTimeout(500);
-
         // Wait for the OK button to become visible
         await okButton.waitFor({ state: 'visible', timeout: 10000 });
-
         // Click the OK button
         await okButton.click();
-
-        // await (await this.web.getPageLocator('[id*="pop::dlg::ok"]')).first().waitFor({ timeout: 9000 })
-        // await expect((await this.web.getPageLocator('[id*="pop::dlg::ok"]')).first()).toBeVisible({ timeout: 9000 });
-        // await (await this.web.getPageLocator('[id*="pop::dlg::ok"]')).first().click({ force: true, delay: 6000 });
         (await this.web.getPageLocator("div.AFPopupSelector")).waitFor({ state: 'visible', timeout: 15000 });
+    }
+
+    public async GetUpdatedDate() {
+        return await ((await this.web.getPageLocator("div.af_showDetailItem input[aria-label='Requested Date']")).first()).inputValue();
     }
 
 

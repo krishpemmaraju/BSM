@@ -23,15 +23,15 @@ export default class StockAvailabilityCheckPage {
         setDefaultTimeout(60 * 10 * 1000);
         const isStkExistsNormalized = isStkExists.toLowerCase();
         if (isStkExistsNormalized == "yes") {
-            await expect(await this.web.getPageLocator("div[slot='inventory'] span.oj-badge-info")).toBeVisible({ timeout: 5000 })
-            const availableStockEle = this.web.getPageLocator("div[slot='inventory'] span.oj-badge-info");
-            return await (await availableStockEle).innerText()
+            await expect(await this.web.getPageLocator("wol-stock-quantity.oj-complete span.custom-badge.oj-badge-info")).toBeVisible({ timeout: 5000 })
+            const availableStockEle = await this.web.getPageLocator("wol-stock-quantity.oj-complete span.custom-badge.oj-badge-info");
+            return  (await (availableStockEle).innerText()).split(' ')[0];
         }
         if (isStkExistsNormalized == "no") {
             await this.web.getPage().waitForTimeout(3000);
             try {
-                (await this.web.getPageLocator("div.clickable span.oj-badge-danger")).waitFor({ state: 'visible', timeout: 10000 })
-                const availableStockEle = (await this.web.getPageLocator("div.clickable span.oj-badge-danger")).innerText();
+                await (await this.web.getPageLocator("span.custom-badge.oj-badge-danger")).waitFor({ state: 'visible', timeout: 10000 })
+                const availableStockEle = (await this.web.getPageLocator("span.custom-badge.oj-badge-danger")).innerText();
                 return (await availableStockEle).split(' ')[0];
             }
             catch (error) {
@@ -46,7 +46,7 @@ export default class StockAvailabilityCheckPage {
 
     public async GetATPAvailableDate(isStkExists: string): Promise<string> {
         let isStkExistsNormalized = isStkExists.toLowerCase();
-        const getListOfSpanElements = isStkExistsNormalized == 'no' ? (await this.web.getPageLocator("div[slot='inventory'] span.custom-badge-atp.oj-badge-sm")) : null
+        const getListOfSpanElements = isStkExistsNormalized == 'no' ? ((await this.web.getPageLocator("wol-stock-quantity.oj-complete span.custom-badge-clear.custom-badge")).first()) : null
         return (await getListOfSpanElements.textContent()).trim();
     }
 

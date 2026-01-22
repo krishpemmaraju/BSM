@@ -7,6 +7,8 @@ import RealityLogoutPage from "../webui/pages/reality/RealityLogoutPage";
 import RestRequest from "../api/actions/RESTRequest";
 import SCMLogoutPage from "../webui/pages/scm/SCMLogoutPage";
 import CustomWorld from "../support/CustomWorld";
+import { shouldSkipScenario } from "../support/SkippingTestCases";
+import { clearScreenDown } from "readline";
 
 const timeInMin: number = 60 * 1000;
 //setDefaultTimeout(Number.parseInt(process.env.TEST_TIMEOUT, 10) * timeInMin);
@@ -57,7 +59,7 @@ Before({ tags: "@api" }, async function ({ pickle }) {
         ONPREMUSER: onpremConfig[`ONPREM${envKey}USERNAME`],
         ONPREMPASSWORD: onpremConfig[`ONPREM${envKey}PASSWORD`]
     })
-    await this.init();
+    await this.init(browser, 'api');
 });
 
 Before({ tags: "@DB" }, async function ({ pickle }) {
@@ -75,7 +77,7 @@ Before({ tags: "@DB" }, async function ({ pickle }) {
         HJUSER: hjConfig[`HJ${envKey}USERNAME`],
         HJPASSWORD: hjConfig[`HJ${envKey}PASSWORD`],
     })
-    await this.init();
+    await this.init(browser, 'db');
 });
 
 // Before({ tags: "@api" }, async function ({ pickle }) {
@@ -103,22 +105,35 @@ Before({ tags: "@web" }, async function ({ pickle }: ITestCaseHookParameter) {
     this.web = new UIActions(this.page);
 })
 
-Before({ tags: "@VBSOC" }, async function ({ pickle }: ITestCaseHookParameter) {
-    console.log(process.env.ENV);
+Before({ tags: "@VBSOC" }, async function (this: CustomWorld,{ pickle }: ITestCaseHookParameter) {
     console.log(" *************************   TEST STARTED *************************  \n");
     console.log(" ****************** EXECUTION STARTED FOR SCENARIO - " + pickle.name + " ******************* \n");
-    if (!browser) {
-        browser = await WebBrowserManager.launch("firefox");
-    }
-    this.browser = browser;
-    this.context = await this.browser.newContext({
-        viewport: null,
-        ignoreHTTPSErrors: true,
-        acceptDownloads: true,
-        storageState: undefined,
-    });
-    await this.context.clearCookies();
-    this.page = await this.context?.newPage();
+    const env = process.env.ENV?.toLowerCase() || 'dev';
+    const envMap = { 'dev': 'DEV', 'stg': 'STG', 'staging': 'STG', 'tst': 'TST' };
+    const envKey = envMap[env] || 'DEV'
+
+    const scmConfig = data[`SCM_${envKey}`][0];
+    const vbcsConfig = data[`VBCSOC_${envKey}`][0];
+
+    Object.assign(this, {
+        SCMURL: scmConfig[`SCM${envKey}URL`],
+        SCMUSER: scmConfig[`SCM${envKey}USERNAME`],
+        SCMPASSWORD: scmConfig[`SCM${envKey}PASSWORD`],
+        SCMSTOCKCHKAPI: scmConfig[`SCM${envKey}STOCKCHKAPI`],
+        SCMCHKAVAILABILITY: scmConfig[`SCM${envKey}CHKAVAILABILITY`],
+        VBCSURL: vbcsConfig[`VBCS${envKey}OCURL`],
+        VBCSUSER: vbcsConfig[`VBCS${envKey}OCUSERNAME`],
+        VBCSPASSWORD: vbcsConfig[`VBCS${envKey}OCPASSWORD`]
+    })
+    await this.init(browser, 'vbsoc');
+    // this.web = new UIActions(this.page);
+    // this.rest = new RestRequest(this.page);
+})
+
+Before({ tags: "@SCM" }, async function (this: CustomWorld, { result, pickle }: ITestCaseHookParameter) {
+
+    console.log(" **********************   TEST STARTED **************************************************** \n");
+    console.log(" ****************** EXECUTION STARTED FOR SCENARIO - " + pickle.name + " ******************* \n");
 
     const env = process.env.ENV?.toLowerCase() || 'dev';
     const envMap = { 'dev': 'DEV', 'stg': 'STG', 'staging': 'STG', 'tst': 'TST' };
@@ -137,26 +152,20 @@ Before({ tags: "@VBSOC" }, async function ({ pickle }: ITestCaseHookParameter) {
         VBCSUSER: vbcsConfig[`VBCS${envKey}OCUSERNAME`],
         VBCSPASSWORD: vbcsConfig[`VBCS${envKey}OCPASSWORD`]
     })
-    await this.init();
+    await this.init(browser, 'scm');
     this.web = new UIActions(this.page);
     this.rest = new RestRequest(this.page);
 })
 
-Before({ tags: "@SCM" }, async function ( this: CustomWorld,{ result, pickle }: ITestCaseHookParameter) {
-    console.log(" **********************   TEST STARTED **************************************************** \n");
+Before({ tags: "@conditionalSkipping" }, async function () {
+    if (shouldSkipScenario()) {
+        return "skipped"
+    }
+})
+
+Before({tags: "@SCMVBSOC"}, async function(this: CustomWorld, { pickle }: ITestCaseHookParameter) {
+     console.log(" *************************   TEST STARTED *************************  \n");
     console.log(" ****************** EXECUTION STARTED FOR SCENARIO - " + pickle.name + " ******************* \n");
-    // if (!browser) {
-    //     browser = await WebBrowserManager.launch("chromium");
-    // }
-    // this.browser = browser;
-    // this.context = await browser.newContext({
-    //     viewport: null,
-    //     ignoreHTTPSErrors: true,
-    //     acceptDownloads: true,
-    //     storageState: undefined,
-    // });
-    // await this.context.clearCookies();
-    // this.page = await this.context?.newPage();
     const env = process.env.ENV?.toLowerCase() || 'dev';
     const envMap = { 'dev': 'DEV', 'stg': 'STG', 'staging': 'STG', 'tst': 'TST' };
     const envKey = envMap[env] || 'DEV'
@@ -174,9 +183,7 @@ Before({ tags: "@SCM" }, async function ( this: CustomWorld,{ result, pickle }: 
         VBCSUSER: vbcsConfig[`VBCS${envKey}OCUSERNAME`],
         VBCSPASSWORD: vbcsConfig[`VBCS${envKey}OCPASSWORD`]
     })
-    await this.init(browser);
-    this.web = new UIActions(this.page);
-    this.rest = new RestRequest(this.page);
+    await this.init(browser, 'scmvbsoc');
 })
 
 After({ tags: "@web" }, async function ({ result, pickle }: ITestCaseHookParameter) {
@@ -190,6 +197,7 @@ After({ tags: "@web" }, async function ({ result, pickle }: ITestCaseHookParamet
 After({ tags: "@SCM" }, async function ({ result, pickle }: ITestCaseHookParameter) {
     const status = result.status;
     const scenario = pickle.name;
+    if (status === 'SKIPPED') { return; }
     await new SCMLogoutPage(this.web).LogoutApplication();
     console.log("************************ " + pickle.name + " is completed with " + status + " *******************");
     this.page ? await this.page.close() : console.warn('No Pages Found')
@@ -216,5 +224,6 @@ After({ tags: "@VBSOC" }, async function ({ result, pickle }: ITestCaseHookParam
     const scenario = pickle.name;
     this.page ? await this.page.close() : console.warn('No Pages Found')
     this.context ? await this.context.close() : console.warn('No Context Found')
+    this.browser ? await this.browser.close() : console.log("No Browser Found")
     console.log("************************ " + scenario + " is completed with " + status + " *******************");
 })

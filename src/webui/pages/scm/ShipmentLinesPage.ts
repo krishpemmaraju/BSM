@@ -42,6 +42,7 @@ export default class ShipmentLinesPage {
     }
 
     public async GetDataFromShipmentLinesPage(colName: string) {
+        await new Promise(resolve => setTimeout(resolve, 3000));
         let getIndexOfColName = await (await this.web.getPage().locator("th[title*='" + colName + "']")).evaluate(el => (el as HTMLTableCellElement).cellIndex)
         return await ((await this.web.getPageLocator("tr.oj-table-body-row td:nth-child(" + (getIndexOfColName + 1) + ")"))).textContent();
     }
@@ -60,5 +61,10 @@ export default class ShipmentLinesPage {
             await new Promise(resolve => setTimeout(resolve, 14000));
         }
         return false;
+    }
+
+    public async GetShipmentNumber(shipmentColName: string){
+        let getShipmentNumber = await this.GetDataFromShipmentLinesPage('Shipment');
+        return getShipmentNumber.trim();
     }
 }
