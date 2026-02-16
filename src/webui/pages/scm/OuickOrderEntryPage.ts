@@ -59,7 +59,7 @@ export default class QuickOrderEntryPage {
         const getProductLocators =  this.web.getPage().locator(GET_PROD_INFO);
         for(let i=0; i<await getProductLocators.count();i++){
             const loc = await getProductLocators.nth(i);
-            products.push(await loc.textContent());
+            products.push(await loc.textContent() ?? '');
         }
         return products;
     }

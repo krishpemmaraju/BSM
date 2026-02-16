@@ -10,7 +10,7 @@ export default class APIClient {
                         headers: { ...headers },
                         params
                 };
-
+                console.log(reqOptions.data)
                 return axios(reqOptions);
         }
 

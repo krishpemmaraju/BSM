@@ -7,6 +7,7 @@ import { TEST_CONFIG } from "../../../config/test-config";
 let reportGeneration: ReportGeneration;
 let testInfo: TestInfo;
 let CLICK_ON_TASKS = "div[title='Tasks']";
+setDefaultTimeout(3000000);
 export default class SupplyOrchestrationPage {
 
     constructor(private web: UIActions, testInfo?: TestInfo) {

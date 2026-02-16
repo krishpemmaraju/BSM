@@ -232,6 +232,17 @@ export default class UIActions {
     }
 
     /**
+* Click on Element by Role by namewith argument as Page
+* @param page
+* @param role
+* @param name
+* @returns
+*/
+
+    public async getElementByRoleByNameWithPageArg(page: Page, roleVal: Parameters<Page['getByRole']>[0], nameToIdentify: string): Promise<Locator> {
+        return page.getByRole(roleVal, { name: nameToIdentify, exact: true });
+    }
+    /**
 * Identify Element By Text
 * @param textVal
 * @returns
@@ -247,7 +258,7 @@ export default class UIActions {
      * @param fameLocatorText
      */
 
-    public async getFrameLocatorObject(frameLocatorText: string){
+    public async getFrameLocatorObject(frameLocatorText: string) {
         return this.getPage().frameLocator(frameLocatorText);
     }
 
@@ -258,6 +269,16 @@ export default class UIActions {
 
     public async getPageLocator(locatorText: string): Promise<Locator> {
         return this.page.locator(locatorText);
+    }
+
+    /**
+    * Return the locator Object
+    * @param page 
+    * @param locatorText
+    */
+
+    public async getPageLocatorBypage(page: Page, locatorText: string): Promise<Locator> {
+        return page.locator(locatorText);
     }
 
     /**
@@ -298,8 +319,8 @@ export default class UIActions {
                     console.log('Coming for try');
                     await this.getPage().reload();
                     await this.page.waitForLoadState('networkidle');
-                    await this.page.waitForSelector('.loading', { state: 'hidden', timeout: 5000 }).catch(() => {});
-                    await this.page.waitForSelector('.spinner', { state: 'hidden', timeout: 5000 }).catch(() => {});
+                    await this.page.waitForSelector('.loading', { state: 'hidden', timeout: 5000 }).catch(() => { });
+                    await this.page.waitForSelector('.spinner', { state: 'hidden', timeout: 5000 }).catch(() => { });
                     await expect(this.page.getByRole(roleVal, { name: nameToIdentify })).toBeVisible({ timeout: timeout });
                     await expect(this.page.getByRole(roleVal, { name: nameToIdentify })).toBeEnabled({ timeout: timeout });
                     return;
@@ -308,8 +329,8 @@ export default class UIActions {
                     await this.getPage().reload();
                     await expect(this.page.getByRole(roleVal, { name: nameToIdentify })).toBeEnabled({ timeout: timeout });
                     await this.page.waitForLoadState('networkidle');
-                    await this.page.waitForSelector('.loading', { state: 'hidden', timeout: 5000 }).catch(() => {});
-                    await this.page.waitForSelector('.spinner', { state: 'hidden', timeout: 5000 }).catch(() => {});
+                    await this.page.waitForSelector('.loading', { state: 'hidden', timeout: 5000 }).catch(() => { });
+                    await this.page.waitForSelector('.spinner', { state: 'hidden', timeout: 5000 }).catch(() => { });
                     await expect(this.page.getByRole(roleVal, { name: nameToIdentify })).toBeVisible({ timeout: timeout });
                     await expect(this.page.getByRole(roleVal, { name: nameToIdentify })).toBeEnabled({ timeout: timeout });
                     return;
@@ -318,20 +339,20 @@ export default class UIActions {
                 console.log(`Attempt ${i + 1} failed, retrying...`);
                 await this.getPage().reload();
                 await this.page.waitForLoadState('networkidle');
-                await this.page.waitForSelector('.loading', { state: 'hidden', timeout: 5000 }).catch(() => {});
-                await this.page.waitForSelector('.spinner', { state: 'hidden', timeout: 5000 }).catch(() => {});
-                if (forOperation === 'visible') { 
-                if( await this.page.getByRole(roleVal, { name: nameToIdentify }).isVisible({timeout:TEST_CONFIG.TIMEOUTS.element})) {
-                    console.log('coming here for visible');
-                    return;
+                await this.page.waitForSelector('.loading', { state: 'hidden', timeout: 5000 }).catch(() => { });
+                await this.page.waitForSelector('.spinner', { state: 'hidden', timeout: 5000 }).catch(() => { });
+                if (forOperation === 'visible') {
+                    if (await this.page.getByRole(roleVal, { name: nameToIdentify }).isVisible({ timeout: TEST_CONFIG.TIMEOUTS.element })) {
+                        console.log('coming here for visible');
+                        return;
+                    }
                 }
-            }
-            if (forOperation === 'enable') { 
-                if( await this.page.getByRole(roleVal, { name: nameToIdentify }).isEnabled({timeout:TEST_CONFIG.TIMEOUTS.element})) {
-                    console.log('coming here for enable');
-                    return;
+                if (forOperation === 'enable') {
+                    if (await this.page.getByRole(roleVal, { name: nameToIdentify }).isEnabled({ timeout: TEST_CONFIG.TIMEOUTS.element })) {
+                        console.log('coming here for enable');
+                        return;
+                    }
                 }
-            }
                 await this.page.waitForLoadState('networkidle');
             }
         }
@@ -357,27 +378,27 @@ export default class UIActions {
                     await expect(this.page.getByText(nameToIdentify)).toBeEnabled({ timeout: timeouts });
                     return;
                 }
-            } 
+            }
             catch (error) {
                 console.log(`Attempt ${i + 1} failed, retrying...`);
-            if (forOperation === 'visible') { 
+                if (forOperation === 'visible') {
                     console.log("Coming for visible");
-                if( await (this.page.getByText(nameToIdentify)).isVisible({timeout:TEST_CONFIG.TIMEOUTS.element})) {
-                    console.log('coming here for visible');
-                    return;
+                    if (await (this.page.getByText(nameToIdentify)).isVisible({ timeout: TEST_CONFIG.TIMEOUTS.element })) {
+                        console.log('coming here for visible');
+                        return;
+                    }
                 }
-            }
-            if (forOperation === 'enable') { 
-                console.log("Coming for enable");
-                if( await (this.page.getByText(nameToIdentify)).isEnabled({timeout:TEST_CONFIG.TIMEOUTS.element})) {
-                    console.log('coming here for enable');
-                    return;
+                if (forOperation === 'enable') {
+                    console.log("Coming for enable");
+                    if (await (this.page.getByText(nameToIdentify)).isEnabled({ timeout: TEST_CONFIG.TIMEOUTS.element })) {
+                        console.log('coming here for enable');
+                        return;
+                    }
                 }
-            }
                 await this.page.waitForLoadState('networkidle');
             }
         }
-        throw new Error(' Locator By Text '  + nameToIdentify + ' never became enabled after ' + maxRetries + ' retries');
+        throw new Error(' Locator By Text ' + nameToIdentify + ' never became enabled after ' + maxRetries + ' retries');
     }
 
 }

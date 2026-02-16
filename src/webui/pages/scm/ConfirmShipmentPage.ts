@@ -48,13 +48,35 @@ export default class ConfirmShipmentPage {
     }
 
     public async ClickOnConfirmShipment() {
-        await (await this.web.getPageLocator("(//button[@aria-label='Update']//ancestor::oj-toolbar//button[@aria-label='Cancel'])[1]")).click()
-        await (await this.web.getPageLocator("div.oj-sp-header-general-overview-button-group button[aria-label='Confirm Shipment']")).click();
+        const isConfirmShipmentBtnVisible = await this.web.getPageLocator("div.oj-sp-header-general-overview-button-group button[aria-label='Confirm Shipment']");
+        const isCovered = await isConfirmShipmentBtnVisible
+            .click({ trial: true })
+            .then(() => true)
+            .catch(() => false);
+        if (isCovered) {
+            await (await this.web.getPageLocator("div.oj-sp-header-general-overview-button-group button[aria-label='Confirm Shipment']")).click();
+            await new Promise(resolve => setTimeout(resolve, 5000));
+        } else {
+            await (await this.web.getPageLocator("(//button[@aria-label='Update']//ancestor::oj-toolbar//button[@aria-label='Cancel'])[1]")).click()
+            await (await this.web.getPageLocator("div.oj-sp-header-general-overview-button-group button[aria-label='Confirm Shipment']")).click();
+            await new Promise(resolve => setTimeout(resolve, 5000));
+        }
     }
 
     public async IsShipmentConfirmationMessageDisplayed(shipmentNumber: string) {
         const expectedMsg = `Shipment ${shipmentNumber} confirmed`;
-        await (await this.web.getPageLocator('#shipmentconfirm_messagesLogContainer li')).filter({hasText: expectedMsg}).waitFor({state: 'attached',timeout: 40000})
-        return await (await this.web.getPageLocator('#shipmentconfirm_messagesLogContainer li')).filter({hasText: expectedMsg}).isVisible()
+        await (await this.web.getPageLocator('#shipmentconfirm_messagesLogContainer li')).filter({ hasText: expectedMsg }).waitFor({ state: 'attached', timeout: 40000 })
+        return await (await this.web.getPageLocator('#shipmentconfirm_messagesLogContainer li')).filter({ hasText: expectedMsg }).isVisible()
+    }
+
+    public async IsShipmentForProductDisplayed(shipmentNumber: string, itemNum1: string, itemNum2: string) {
+        await (await this.web.getElementByRolebyExactText('heading', shipmentNumber)).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element })
+        await (await this.web.getPageLocator("div[aria-label*='" + itemNum1 + "']")).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element })
+        await reportGeneration.getScreenshot(this.web.getPage(), "SHIPMENT PAGE WITH SHIPMENT NUMBER " + shipmentNumber + " IS DISPLAYED", world);
+        return (await (await this.web.getPageLocator("div[aria-label*='" + itemNum1 + "']")).isVisible() && await (await this.web.getPageLocator("div[aria-label*='" + itemNum2 + "']")).isVisible())
+    }
+
+    public async ClickOnCancelOnShipmentPage() {
+        await (await this.web.getPageLocator("oj-drawer-popup oj-c-button[title='Cancel'].oj-sp-create-edit-drawer-template-cancel-action")).click()
     }
 }

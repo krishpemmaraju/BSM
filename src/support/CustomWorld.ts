@@ -1,5 +1,5 @@
-import { IWorldOptions, setWorldConstructor, World } from "@cucumber/cucumber";
-import axios from "axios";
+import { ITestCaseHookParameter, IWorldOptions, setWorldConstructor, World } from "@cucumber/cucumber";
+import axios, { AxiosResponse } from "axios";
 import SCMLoginPage from "../webui/pages/scm/SCMLoginPage";
 import SCMHomePage from "../webui/pages/scm/SCMHomePage";
 import UIActions from "../webui/actions/UIActions";
@@ -26,19 +26,25 @@ import WebBrowserManager from "../manager/browserManager";
 import RestRequest from "../api/actions/RESTRequest";
 import ConfirmShipmentPage from "../webui/pages/scm/ConfirmShipmentPage";
 import SCMWolOrderCaptureHomePage from "../webui/pages/scm/SCMOrderCaptureHomePage";
+import ManageOrdersRedwood from "../webui/pages/scm/ManageOrdersRedwood";
 
 
 
 export default class CustomWorld extends World implements WorldImplPages {
     /* Declaring the variables */
-    SCMURL: string;
-    SCMUSER: string;
-    SCMPASSWORD: string;
-    SCMSTOCKCHKAPI: string;
-    SCMCHKAVAILABILITY: string;
-    VBCSURL: string;
-    VBCSUSER: string;
-    VBCSPASSWORD: string;
+    SCMURL: string = '';
+    SCMUSER: string = '';
+    SCMPASSWORD: string = '';
+    SCMSTOCKCHKAPI: string = '';
+    SCMCHKAVAILABILITY: string = '';
+    VBCSURL: string = '';
+    VBCSUSER: string = '';
+    VBCSPASSWORD: string = '';
+    CUSTOMERSALESORDER: string = ''
+    customerSalesEndPointAPI: string = ''
+    getResponse!: AxiosResponse;
+    originalPage!: Page;
+    newWindow!: Page;
     /* Page Objects Declaration */
     scmLoginPage !: SCMLoginPage;
     scmHomePage !: SCMHomePage;
@@ -61,11 +67,13 @@ export default class CustomWorld extends World implements WorldImplPages {
     confirmPicksPage!: ConfirmPicksPage;
     confirmShipmentPage!: ConfirmShipmentPage;
     scmWolOrderCaptureHomePage!: SCMWolOrderCaptureHomePage;
-    web: UIActions;
-    page: Page;
-    rest: RestRequest;
+    manageOrderSCMRedwood!: ManageOrdersRedwood;
+    web!: UIActions;
+    page!: Page;
+    rest!: RestRequest;
     browser!: Browser;
     context!: BrowserContext;
+    hook!: ITestCaseHookParameter;
 
 
     constructor(options: IWorldOptions) {
@@ -73,32 +81,25 @@ export default class CustomWorld extends World implements WorldImplPages {
     }
 
 
-    async init(browser: Browser, app: string) {
+
+    async init(app: string) {
         //Initialize the Browsers 
         if (!['api', 'db'].includes(app.toLowerCase())) {
-            if (app.toLowerCase() === 'vbsoc') {
-                browser = await WebBrowserManager.launch("firefox");
-            }
-            else {
-                if (!browser) {
-                    browser = await WebBrowserManager.launch("chromium");
-                }
-            }
-            this.browser = browser;
-            this.context = await browser.newContext({
+            this.browser = await WebBrowserManager.launch(app === 'vbsoc' ? 'firefox' : 'chromium');
+            await new Promise(r => setTimeout(r, 300));
+            this.context = await this.browser.newContext({
                 viewport: null,
-                screen: { width: 1920, height: 1080 },
+                // screen: { width: 1920, height: 1080 },
                 ignoreHTTPSErrors: true,
-                acceptDownloads: true,
-                storageState: undefined,
+                acceptDownloads: true
             });
-            await this.context.clearCookies();
-            this.page = await this.context?.newPage();
+            // await this.context.clearCookies();
+            this.page = await this.context.newPage();
             // Force maximize for Firefox (and others)
-            await this.page.evaluate(() => {
-                window.moveTo(0, 0);
-                window.resizeTo(screen.availWidth, screen.availHeight);
-            });
+            // await this.page.evaluate(() => {
+            //     window.moveTo(0, 0);
+            //     window.resizeTo(screen.availWidth, screen.availHeight);
+            // });
 
 
             // Initialize Page Objects
@@ -125,6 +126,7 @@ export default class CustomWorld extends World implements WorldImplPages {
             this.confirmPicksPage = new ConfirmPicksPage(this.web);
             this.confirmShipmentPage = new ConfirmShipmentPage(this.web);
             this.scmWolOrderCaptureHomePage = new SCMWolOrderCaptureHomePage(this.web);
+            this.manageOrderSCMRedwood = new ManageOrdersRedwood(this.web);
         }
     }
 

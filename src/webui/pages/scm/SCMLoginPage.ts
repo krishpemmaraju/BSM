@@ -19,9 +19,10 @@ export default class SCMLoginPage {
     }
 
     public async loginIntoSCMApp(url: string, username: string, password: string) {
-        try{
-        await this.web.gotToURL(url); }
-        catch(error){
+        try {
+            await this.web.gotToURL(url);
+        }
+        catch (error) {
             await this.web.gotToURL(url);
         }
         //(await this.web.getPageLocator(SINGLE_SIGN_ON)).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element });

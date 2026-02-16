@@ -1,15 +1,15 @@
 {
   "InterfaceSourceCode": "EXT",
-  "InterfaceBatchNumber": "KK151641",
+  "InterfaceBatchNumber": "KK161232",
   "SupplyRequestStatus": "NEW",
-  "SupplyRequestDate": "2026-01-15T16:20:33.420+00:00",
+  "SupplyRequestDate": "2026-02-16T12:57:15.326+00:00",
   "SupplyOrderSource": "EXT",
-  "SupplyOrderReferenceNumber": "KK151641",
+  "SupplyOrderReferenceNumber": "KK161232",
   "SupplyOrderReferenceId": 1,
   "ProcessRequestFlag": "Y",
   "supplyRequestLines": [
     {
-      "InterfaceBatchNumber": "KK151641",
+      "InterfaceBatchNumber": "KK161232",
       "SupplyOrderReferenceLineNumber": "1",
       "SupplyOrderReferenceLineId": 1,
       "DestinationOrganizationCode": "1BL",
@@ -20,7 +20,7 @@
       "BackToBackFlag": "N",
       "InterfaceSourceCode": "EXT",
       "SupplyOrderSource": "EXT",
-      "NeedByDate": "2026-01-15T16:20:33.420+00:00",
+      "NeedByDate": "2026-02-16T12:57:15.326+00:00",
       "DestinationTypeCode": "INVENTORY",
       "SupplyType": "TRANSFER",
       "Quantity": 2,

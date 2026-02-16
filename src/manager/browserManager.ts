@@ -6,7 +6,7 @@ export default class WebBrowserManager {
 
     public static async launch(browser: string) {
         const browserOptions = {
-            slowMo: 3000,
+            slowMo: 800,
             headless: headlessConfig,
             timeout: 60000,
             ignoreDefaultArgs: ['--enable-automation']
@@ -16,15 +16,17 @@ export default class WebBrowserManager {
             case 'chromium':
                 return await chromium.launch({
                     ...browserOptions,
-                    args: ["--start-maximized", "--disable-extensions", "--disable-plugins"],
+                    args: ["--start-maximized", "--disable-extensions", "--disable-plugins", "--no-sandbox", "--disable-dev-shm-usage"]
                 })
             case 'firefox':
                 return await firefox.launch({
                     ...browserOptions,
+                    args: ['-width', '1920', '-height', '1080'],
                     ignoreDefaultArgs: ['--enable-automation'],
                     firefoxUserPrefs: {
                         'browser.startup.homepage': 'about:blank',
-                        "browser.tabs.warnOnClose": false
+                        "browser.tabs.warnOnClose": false,
+                        'browser.tabs.loadInBackground': false
                     }
                 })
             case 'webkit':

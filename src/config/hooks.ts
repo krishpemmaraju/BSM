@@ -8,7 +8,9 @@ import RestRequest from "../api/actions/RESTRequest";
 import SCMLogoutPage from "../webui/pages/scm/SCMLogoutPage";
 import CustomWorld from "../support/CustomWorld";
 import { shouldSkipScenario } from "../support/SkippingTestCases";
-import { clearScreenDown } from "readline";
+import { sharedData } from "../support/SharedData";
+import { handleFailScenarioBeforeScenario } from "../support/SkippingScenariosPreviousFail";
+import { InitSCMApplicationConfig } from "../support/InitApplicationConfig";
 
 const timeInMin: number = 60 * 1000;
 //setDefaultTimeout(Number.parseInt(process.env.TEST_TIMEOUT, 10) * timeInMin);
@@ -22,6 +24,8 @@ setWorldConstructor(CustomWorld);
 // AfterAll({tags:"@SCM"},async function() {
 //     await browser.close();
 // });
+
+
 
 Before({ tags: "@reality" }, async function ({ pickle }) {
     console.log(" **********************   TEST STARTED **************************************************** \n");
@@ -37,16 +41,26 @@ Before({ tags: "@reality" }, async function ({ pickle }) {
     this.web.gotToURL(data.prdReality[0].url);
 })
 
-Before({ tags: "@api" }, async function ({ pickle }) {
+Before({ tags: "@api" }, async function (this: CustomWorld, { pickle }) {
+
     console.log(" **********************   TEST STARTED **************************************************** \n");
     console.log(" ****************** EXECUTION STARTED FOR SCENARIO - " + pickle.name + "******************* \n");
 
-    const env = process.env.ENV?.toLowerCase() || 'dev';
-    const envMap = { 'dev': 'DEV', 'stg': 'STG', 'staging': 'STG', 'tst': 'TST' };
-    const envKey = envMap[env] || 'DEV'
+    type Env = 'dev' | 'stg' | 'staging' | 'tst'
+    type EnvKey = 'DEV' | 'STG' | 'TST'
 
-    const scmConfig = data[`SCM_${envKey}`][0];
-    const onpremConfig = data[`ONPREM_${envKey}`][0];
+    const envMap: Record<Env, EnvKey> = {
+        dev: 'DEV',
+        stg: 'STG',
+        staging: 'STG',
+        tst: 'TST'
+    }
+
+    const env = (process.env.ENV?.toLowerCase() as Env) || 'dev';
+    const envKey: EnvKey = envMap[env] || 'DEV'
+
+    const scmConfig: any = data[`SCM_${envKey}`][0];
+    const onpremConfig: any = data[`ONPREM_${envKey}`][0];
 
     Object.assign(this, {
         SCMURL: scmConfig[`SCM${envKey}URL`],
@@ -59,25 +73,35 @@ Before({ tags: "@api" }, async function ({ pickle }) {
         ONPREMUSER: onpremConfig[`ONPREM${envKey}USERNAME`],
         ONPREMPASSWORD: onpremConfig[`ONPREM${envKey}PASSWORD`]
     })
-    await this.init(browser, 'api');
+    await this.init('api');
 });
 
-Before({ tags: "@DB" }, async function ({ pickle }) {
+Before("@DB", async function (this: CustomWorld, { pickle }) {
+
     console.log(" **********************   TEST STARTED **************************************************** \n");
     console.log(" ****************** EXECUTION STARTED FOR SCENARIO - " + pickle.name + "******************* \n");
 
-    const env = process.env.ENV?.toLowerCase() || 'dev';
-    const envMap = { 'dev': 'DEV', 'stg': 'STG', 'staging': 'STG', 'tst': 'TST' };
-    const envKey = envMap[env] || 'DEV'
+    type Env = 'dev' | 'stg' | 'staging' | 'tst'
+    type EnvKey = 'DEV' | 'STG' | 'TST'
 
-    const hjConfig = data[`HIGHJUMP_${envKey}`][0];
+    const envMap: Record<Env, EnvKey> = {
+        dev: 'DEV',
+        stg: 'STG',
+        staging: 'STG',
+        tst: 'TST'
+    }
+
+    const env = (process.env.ENV?.toLowerCase() as Env) || 'dev';
+    const envKey: EnvKey = envMap[env] || 'DEV'
+
+    const hjConfig: any = data[`HIGHJUMP_${envKey}`][0];
 
     Object.assign(this, {
         HJURL: hjConfig[`HJ${envKey}ALIAS`],
         HJUSER: hjConfig[`HJ${envKey}USERNAME`],
         HJPASSWORD: hjConfig[`HJ${envKey}PASSWORD`],
     })
-    await this.init(browser, 'db');
+    await this.init('db');
 });
 
 // Before({ tags: "@api" }, async function ({ pickle }) {
@@ -105,15 +129,25 @@ Before({ tags: "@web" }, async function ({ pickle }: ITestCaseHookParameter) {
     this.web = new UIActions(this.page);
 })
 
-Before({ tags: "@VBSOC" }, async function (this: CustomWorld,{ pickle }: ITestCaseHookParameter) {
+Before({ tags: "@VBSOC" }, async function (this: CustomWorld, { pickle }: ITestCaseHookParameter) {
+
     console.log(" *************************   TEST STARTED *************************  \n");
     console.log(" ****************** EXECUTION STARTED FOR SCENARIO - " + pickle.name + " ******************* \n");
-    const env = process.env.ENV?.toLowerCase() || 'dev';
-    const envMap = { 'dev': 'DEV', 'stg': 'STG', 'staging': 'STG', 'tst': 'TST' };
-    const envKey = envMap[env] || 'DEV'
+    type Env = 'dev' | 'stg' | 'staging' | 'tst'
+    type EnvKey = 'DEV' | 'STG' | 'TST'
 
-    const scmConfig = data[`SCM_${envKey}`][0];
-    const vbcsConfig = data[`VBCSOC_${envKey}`][0];
+    const envMap: Record<Env, EnvKey> = {
+        dev: 'DEV',
+        stg: 'STG',
+        staging: 'STG',
+        tst: 'TST'
+    }
+
+    const env = (process.env.ENV?.toLowerCase() as Env) || 'dev';
+    const envKey: EnvKey = envMap[env] || 'DEV'
+
+    const scmConfig: any = data[`SCM_${envKey}`][0];
+    const vbcsConfig: any = data[`ONPREM_${envKey}`][0];
 
     Object.assign(this, {
         SCMURL: scmConfig[`SCM${envKey}URL`],
@@ -125,9 +159,9 @@ Before({ tags: "@VBSOC" }, async function (this: CustomWorld,{ pickle }: ITestCa
         VBCSUSER: vbcsConfig[`VBCS${envKey}OCUSERNAME`],
         VBCSPASSWORD: vbcsConfig[`VBCS${envKey}OCPASSWORD`]
     })
-    await this.init(browser, 'vbsoc');
-    // this.web = new UIActions(this.page);
-    // this.rest = new RestRequest(this.page);
+    await this.init('vbsoc');
+    this.web = new UIActions(this.page);
+    this.rest = new RestRequest(this.page);
 })
 
 Before({ tags: "@SCM" }, async function (this: CustomWorld, { result, pickle }: ITestCaseHookParameter) {
@@ -135,12 +169,21 @@ Before({ tags: "@SCM" }, async function (this: CustomWorld, { result, pickle }: 
     console.log(" **********************   TEST STARTED **************************************************** \n");
     console.log(" ****************** EXECUTION STARTED FOR SCENARIO - " + pickle.name + " ******************* \n");
 
-    const env = process.env.ENV?.toLowerCase() || 'dev';
-    const envMap = { 'dev': 'DEV', 'stg': 'STG', 'staging': 'STG', 'tst': 'TST' };
-    const envKey = envMap[env] || 'DEV'
+    type Env = 'dev' | 'stg' | 'staging' | 'tst'
+    type EnvKey = 'DEV' | 'STG' | 'TST'
 
-    const scmConfig = data[`SCM_${envKey}`][0];
-    const vbcsConfig = data[`VBCSOC_${envKey}`][0];
+    const envMap: Record<Env, EnvKey> = {
+        dev: 'DEV',
+        stg: 'STG',
+        staging: 'STG',
+        tst: 'TST'
+    }
+
+    const env = (process.env.ENV?.toLowerCase() as Env) || 'dev';
+    const envKey: EnvKey = envMap[env] || 'DEV'
+
+    const scmConfig: any = data[`SCM_${envKey}`][0];
+    const vbcsConfig: any = data[`ONPREM_${envKey}`][0];
 
     Object.assign(this, {
         SCMURL: scmConfig[`SCM${envKey}URL`],
@@ -152,7 +195,7 @@ Before({ tags: "@SCM" }, async function (this: CustomWorld, { result, pickle }: 
         VBCSUSER: vbcsConfig[`VBCS${envKey}OCUSERNAME`],
         VBCSPASSWORD: vbcsConfig[`VBCS${envKey}OCPASSWORD`]
     })
-    await this.init(browser, 'scm');
+    await this.init('scm');
     this.web = new UIActions(this.page);
     this.rest = new RestRequest(this.page);
 })
@@ -163,15 +206,26 @@ Before({ tags: "@conditionalSkipping" }, async function () {
     }
 })
 
-Before({tags: "@SCMVBSOC"}, async function(this: CustomWorld, { pickle }: ITestCaseHookParameter) {
-     console.log(" *************************   TEST STARTED *************************  \n");
-    console.log(" ****************** EXECUTION STARTED FOR SCENARIO - " + pickle.name + " ******************* \n");
-    const env = process.env.ENV?.toLowerCase() || 'dev';
-    const envMap = { 'dev': 'DEV', 'stg': 'STG', 'staging': 'STG', 'tst': 'TST' };
-    const envKey = envMap[env] || 'DEV'
+Before({ tags: "@SCMVBSOC" }, async function (this: CustomWorld, { pickle }: ITestCaseHookParameter) {
 
-    const scmConfig = data[`SCM_${envKey}`][0];
-    const vbcsConfig = data[`VBCSOC_${envKey}`][0];
+    console.log(" *************************   TEST STARTED *************************  \n");
+    console.log(" ****************** EXECUTION STARTED FOR SCENARIO - " + pickle.name + " ******************* \n");
+
+    type Env = 'dev' | 'stg' | 'staging' | 'tst'
+    type EnvKey = 'DEV' | 'STG' | 'TST'
+
+    const envMap: Record<Env, EnvKey> = {
+        dev: 'DEV',
+        stg: 'STG',
+        staging: 'STG',
+        tst: 'TST'
+    }
+
+    const env = (process.env.ENV?.toLowerCase() as Env) || 'dev';
+    const envKey: EnvKey = envMap[env] || 'DEV'
+
+    const scmConfig: any = data[`SCM_${envKey}`][0];
+    const vbcsConfig: any = data[`VBCSOC_${envKey}`][0];
 
     Object.assign(this, {
         SCMURL: scmConfig[`SCM${envKey}URL`],
@@ -183,47 +237,63 @@ Before({tags: "@SCMVBSOC"}, async function(this: CustomWorld, { pickle }: ITestC
         VBCSUSER: vbcsConfig[`VBCS${envKey}OCUSERNAME`],
         VBCSPASSWORD: vbcsConfig[`VBCS${envKey}OCPASSWORD`]
     })
-    await this.init(browser, 'scmvbsoc');
+    await this.init('scmvbsoc');
 })
 
 After({ tags: "@web" }, async function ({ result, pickle }: ITestCaseHookParameter) {
-    const status = result.status;
+    const status = result?.status;
     const scenario = pickle.name;
     console.log("************************ " + pickle.name + " is completed with " + status + "*******************");
+    if (status === 'FAILED') { sharedData.previousScenarioStatusFailed = true; sharedData.previousScenarioName = pickle.name }
     await this.page.close();
     await this.context?.close();
 })
 
-After({ tags: "@SCM" }, async function ({ result, pickle }: ITestCaseHookParameter) {
-    const status = result.status;
+After({ tags: "@api" }, async function (this: CustomWorld, { result, pickle }: ITestCaseHookParameter) {
+    const status = result?.status;
+    const scenario = pickle.name;
+    console.log("************************ " + pickle.name + " is completed with " + status + "*******************");
+    if (status === 'FAILED') { sharedData.previousScenarioStatusFailed = true; sharedData.previousScenarioName = pickle.name }
+})
+
+After({ tags: "@SCM" }, async function (this: CustomWorld, this1: ITestCaseHookParameter) {
+    const result = this1.result;
+    const pickle = this1.pickle;
+    const status = result?.status;
     const scenario = pickle.name;
     if (status === 'SKIPPED') { return; }
-    await new SCMLogoutPage(this.web).LogoutApplication();
+    if (status === 'FAILED') { sharedData.previousScenarioStatusFailed = true; sharedData.previousScenarioName = pickle.name }
+    if (!sharedData.previousScenarioStatusFailed) {
+        await new SCMLogoutPage(this.web).LogoutApplication();
+    }
     console.log("************************ " + pickle.name + " is completed with " + status + " *******************");
     this.page ? await this.page.close() : console.warn('No Pages Found')
     this.context ? await this.context.close() : console.warn('No Context Found')
 })
 
-After({ tags: "@api" }, async function ({ result, pickle }: ITestCaseHookParameter) {
-    const status = result.status;
+After({ tags: "@api" }, async function (this: CustomWorld, { result, pickle }: ITestCaseHookParameter) {
+    const status = result?.status;
     const scenario = pickle.name;
+    if (status === 'FAILED') { sharedData.previousScenarioStatusFailed = true; sharedData.previousScenarioName = pickle.name }
     console.log("************************ " + scenario + " API is completed with " + status + "*******************");
 })
 
-After({ tags: "@reality" }, async function ({ result, pickle }: ITestCaseHookParameter) {
-    const status = result.status;
+After({ tags: "@reality" }, async function (this: CustomWorld, { result, pickle }: ITestCaseHookParameter) {
+    const status = result?.status;
     const scenario = pickle.name;
     console.log("************************ " + scenario + " is completed with " + status + "*******************");
     await new RealityLogoutPage(this.page).LogoutReality();
+    if (status === 'FAILED') { sharedData.previousScenarioStatusFailed = true; sharedData.previousScenarioName = pickle.name }
     this.page.close();
     this.context?.close();
 })
 
-After({ tags: "@VBSOC" }, async function ({ result, pickle }: ITestCaseHookParameter) {
-    const status = result.status;
+After({ tags: "@VBSOC" }, async function (this: CustomWorld, { result, pickle }: ITestCaseHookParameter) {
+    const status = result?.status;
     const scenario = pickle.name;
     this.page ? await this.page.close() : console.warn('No Pages Found')
     this.context ? await this.context.close() : console.warn('No Context Found')
     this.browser ? await this.browser.close() : console.log("No Browser Found")
+    if (status === 'FAILED') { sharedData.previousScenarioStatusFailed = true; sharedData.previousScenarioName = pickle.name }
     console.log("************************ " + scenario + " is completed with " + status + " *******************");
 })

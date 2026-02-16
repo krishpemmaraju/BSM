@@ -42,12 +42,15 @@ export default class OrderManagementPage {
         await (await this.web.getElementByRolebyExactText('heading', 'Create Order')).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element });
     }
 
-
-
     public async IsOrderCaptureUILoaded(headerText: string) {
         await (await this.getFramePageObject()).getByRole('heading', { name: headerText }).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element });
         await reportGeneration.getScreenshot(this.web.getPage(), "AFTER CLICKING ON CREATE ORDER", world);
         return await (await this.getFramePageObject()).getByRole('heading', { name: headerText }).isVisible({ timeout: TEST_CONFIG.TIMEOUTS.element });
     }
+
+      public async ClickOnManageOrdersRedwood(optionToSelect: string){
+                  await (await this.web.getElementByRoleByName('heading', 'Order Management')).waitFor({state:'visible', timeout:TEST_CONFIG.TIMEOUTS.element})
+                  return  (await this.web.switchToNewWindow("a[title='"+optionToSelect+"']",'Clicking on Manage Order'));
+            }
 
 }

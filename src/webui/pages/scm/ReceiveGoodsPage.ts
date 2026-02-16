@@ -20,7 +20,7 @@ export default class ReceiveGoodsPage {
 
     public async IsReceiveGoodsPageDisplayed() {
         await (await this.web.getElementByRolebyExactText('heading', 'Receive Goods')).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element })
-        getHeadingPageText = await (await this.web.getElementByRolebyExactText('heading', 'Receive Goods')).textContent()
+        getHeadingPageText = await (await this.web.getElementByRolebyExactText('heading', 'Receive Goods')).textContent() ?? ''
         await reportGeneration.getScreenshot(this.web.getPage(), `${getHeadingPageText} PAGE DISPLAYED `, world);
         return await (await this.web.getElementByRolebyExactText('heading', 'Receive Goods')).isVisible({ timeout: TEST_CONFIG.TIMEOUTS.element })
     }

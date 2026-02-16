@@ -151,5 +151,203 @@ export default class JSONUtils {
         await fs.promises.writeFile(filePath, updatedJson, 'utf-8');
         return updatedJson;
     }
+
+    public static async updatedAllArrays(filePath: string, parentArray: string, updates: Record<string, any>) {
+        const rawJson = await fs.promises.readFile(filePath, 'utf-8');
+        const parsedJson = JSON.parse(rawJson)
+
+        function updateAllArray(updArray: any) {
+            if (Array.isArray(updArray)) {
+                for (const item of updArray) {
+                    updateAllArray(item)
+                }
+                return;
+            }
+            if (typeof updArray === 'object' && updArray != null) {
+                for (const key of Object.keys(updArray)) {
+                    if (key === parentArray && Array.isArray(updArray[key])) {
+                        const updateArray = updates[parentArray]
+                        if (Array.isArray(updateArray) && updateArray.length > 0) {
+                            const updateObj = updateArray[0];
+                            for (const child of updArray[key]) {
+                                for (const field of Object.keys(updateObj)) {
+                                    child[field] = updateObj[field]
+                                }
+                            }
+                        }
+                    }
+                    updateAllArray(updArray[key])
+                }
+            }
+        }
+        updateAllArray(parsedJson);
+
+        const updatedJson = JSON.stringify(parsedJson, null, 2);
+        await fs.promises.writeFile(filePath, updatedJson, "utf-8");
+
+        return updatedJson;
+
+    }
+
+
+    public static async UpdateMultipleArraysJson(filePath: string, parentArray: string, updates: Record<string, any>) {
+        const rawJson = await fs.promises.readFile(filePath, "utf-8");
+        const parsedJson = JSON.parse(rawJson);
+
+        for (const key of Object.keys(updates)) {
+            if (key != parentArray && key in parsedJson) {
+                console.log('Not the parent array' + key)
+                parsedJson[key] = updates[key]
+            }
+        }
+        const originalLines = parsedJson[parentArray]
+        const updateLines = updates[parentArray]
+
+        if (Array.isArray(originalLines) && Array.isArray(updateLines)) {
+            originalLines.forEach((line, index) => {
+                const updateLine = updateLines[index]
+                if (!updateLine) return;
+
+                for (const key of Object.keys(updateLine)) {
+                    if (key != "charges" && key in line) {
+                        console.log(`from lines array - we are updating - ${updateLine[key]}`)
+                        line[key] = updateLine[key]
+                    }
+                }
+
+                //update second array charges
+                if (updateLine.charges && Array.isArray(updateLine.charges)) {
+                    line.charges.forEach((charge, cIndex) => {
+                        const updateCharge = updateLine.charges[cIndex];
+                        if (!updateCharge) return;
+
+                        for (const key of Object.keys(updateCharge)) {
+                            if (key != "chargeComponents" && key in charge) {
+                                charge[key] = updateCharge[key]
+                            }
+                        }
+                        // Update Second Component
+                        if (
+                            updateCharge.chargeComponents &&
+                            Array.isArray(updateCharge.chargeComponents)
+                        ) {
+                            charge.chargeComponents.forEach((comp, compIndex) => {
+                                const updateComp = updateCharge.chargeComponents[compIndex];
+                                if (!updateComp) return;
+
+                                Object.entries(updateComp).forEach(([key, value]) => {
+                                    comp[key] = value;
+                                });
+
+                            });
+                        }
+                    })
+                }
+
+            })
+        }
+        const updatedJson = JSON.stringify(parsedJson, null, 2);
+        await fs.promises.writeFile(filePath, updatedJson, "utf-8");
+        return updatedJson;
+
+    }
+
+
+    public static async updateJSONDataAllArrays(filePath: string, parentArray: string, updates: Record<string, any>) {
+        const rawJson = await fs.promises.readFile(filePath, "utf-8");
+        const parsedJson = JSON.parse(rawJson);
+
+        for (const key of Object.keys(updates)) {
+            if (key !== "lines" && key !== "chargeComponents" && key in parsedJson) {
+                parsedJson[key] = updates[key];
+            }
+        }
+
+        if (Array.isArray(parsedJson.lines) && Array.isArray(updates.lines)) {
+            parsedJson.lines.forEach((line, index) => {
+                const updateLine = updates.lines[index];
+                if (!updateLine) return;
+
+                Object.entries(updateLine).forEach(([key, value]) => {
+                    if (key in line) {
+                        line[key] = value;
+                    }
+                });
+            });
+        }
+
+
+        if (Array.isArray(updates.chargeComponents)) {
+            parsedJson.lines.forEach((line) => {
+                const targetComponents = line?.charges?.[0]?.chargeComponents;
+                if (!Array.isArray(targetComponents)) return;
+
+                updates.chargeComponents.forEach((updateComp, compIndex) => {
+                    const targetComp = targetComponents[compIndex];
+                    if (!targetComp) return;
+
+                    Object.entries(updateComp).forEach(([key, value]) => {
+                        targetComp[key] = value;
+                    });
+                });
+            });
+
+        }
+
+        // --------------------------------------
+        // 4. Save file
+        // --------------------------------------
+        const updatedJson = JSON.stringify(parsedJson, null, 2);
+        await fs.promises.writeFile(filePath, updatedJson, "utf-8");
+
+        return updatedJson;
+
+    }
+
+
+    public static async updateAllUpdatedFieldsInJSONPayload(filePath: string, updates: Record<string, any>, parentArray?: string,) {
+        const rawJson = await fs.promises.readFile(filePath, "utf-8");
+        const parsedJson = JSON.parse(rawJson);
+
+           for (const key of Object.keys(updates)) {
+            if (key !== "lines" && key !== "chargeComponents" && key in parsedJson) {
+                parsedJson[key] = updates[key];
+            }
+        }
+
+        parsedJson.lines.forEach((line, index) => {
+            const updateLine = updates.lines[index];
+            if (!updateLine) return;
+
+            // Update simple fields
+            Object.entries(updateLine).forEach(([key, value]) => {
+                if (key !== "chargeComponents" && key in line) {
+               //     console.log(`the value of the lines is ${line[key]}`)
+                    line[key] = value;
+                }
+            });
+
+            // Update chargeComponents for this line
+            if (Array.isArray(updateLine.chargeComponents)) {
+                const targetComponents = line?.charges?.[0]?.chargeComponents;
+                if (!Array.isArray(targetComponents)) return;
+
+                updateLine.chargeComponents.forEach((compUpdate, compIndex) => {
+                    const targetComp = targetComponents[compIndex];
+                    if (!targetComp) return;
+
+                    Object.entries(compUpdate).forEach(([key, value]) => {
+                        targetComp[key] = value;
+                    });
+                });
+            }
+        });
+        const updatedJson = JSON.stringify(parsedJson, null, 2);
+        await fs.promises.writeFile(filePath, updatedJson, "utf-8");
+
+        return updatedJson;
+
+    }
+
 }
 

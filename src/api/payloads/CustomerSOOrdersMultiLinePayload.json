@@ -1,0 +1,107 @@
+{
+  "SourceTransactionNumber": "1BL|16021456",
+  "SourceTransactionSystem": "OPS",
+  "SourceTransactionId": "1BL|16021456",
+  "BuyingPartyId": "300001732158752",
+  "RequestingBusinessUnitName": "Wolseley UK",
+  "FreezePriceFlag": true,
+  "FreezeShippingChargeFlag": true,
+  "FreezeTaxFlag": true,
+  "TransactionalCurrencyCode": "GBP",
+  "SubmittedFlag": true,
+  "PartialShipAllowedFlag": true,
+  "lines": [
+    {
+      "SourceTransactionLineId": "1",
+      "SourceTransactionLineNumber": "1",
+      "SourceTransactionScheduleId": "1",
+      "SourceScheduleNumber": "1",
+      "RequestedFulfillmentOrganizationCode": "1BL",
+      "TransactionCategoryCode": "ORDER",
+      "RequestedArrivalDate": "2026-02-16T14:03:52.570+00:00",
+      "ProductNumber": "123305",
+      "OrderedQuantity": 1,
+      "OrderedUOM": "EA",
+      "charges": [
+        {
+          "SourceChargeId": "C1",
+          "ApplyTo": "Price",
+          "PriceType": "One time",
+          "ChargeType": "Sale",
+          "ChargeSubType": "Price",
+          "ChargeCurrencyCode": "GBP",
+          "SequenceNumber": 1,
+          "ChargeDefinitionCode": "QP_SALE_PRICE",
+          "PrimaryFlag": true,
+          "RollupFlag": false,
+          "chargeComponents": [
+            {
+              "SourceChargeComponentId": "C1-CC1",
+              "PriceElementCode": "QP_LIST_PRICE",
+              "PriceElementUsageCode": "LIST_PRICE",
+              "HeaderCurrencyUnitPrice": "35.04",
+              "HeaderCurrencyExtendedAmount": 35.04,
+              "RollupFlag": false,
+              "SequenceNumber": 1
+            },
+            {
+              "SourceChargeComponentId": "C1-CC2",
+              "PriceElementCode": "QP_NET_PRICE",
+              "PriceElementUsageCode": "NET_PRICE",
+              "HeaderCurrencyUnitPrice": "35.04",
+              "HeaderCurrencyExtendedAmount": 35.04,
+              "RollupFlag": false,
+              "SequenceNumber": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "SourceTransactionLineId": "2",
+      "SourceTransactionLineNumber": "2",
+      "SourceTransactionScheduleId": "2",
+      "SourceScheduleNumber": "2",
+      "RequestedFulfillmentOrganizationCode": "1BL",
+      "TransactionCategoryCode": "ORDER",
+      "RequestedArrivalDate": "2026-02-16T14:03:52.570+00:00",
+      "ProductNumber": "123306",
+      "OrderedQuantity": 1,
+      "OrderedUOM": "EA",
+      "charges": [
+        {
+          "SourceChargeId": "C2",
+          "ApplyTo": "Price",
+          "PriceType": "One time",
+          "ChargeType": "Sale",
+          "ChargeSubType": "Price",
+          "ChargeCurrencyCode": "USD",
+          "SequenceNumber": 1,
+          "ChargeDefinitionCode": "QP_SALE_PRICE",
+          "PrimaryFlag": true,
+          "RollupFlag": false,
+          "chargeComponents": [
+            {
+              "SourceChargeComponentId": "C2-CC1",
+              "PriceElementCode": "QP_LIST_PRICE",
+              "PriceElementUsageCode": "LIST_PRICE",
+              "HeaderCurrencyUnitPrice": "53.09",
+              "HeaderCurrencyExtendedAmount": 53.09,
+              "RollupFlag": false,
+              "SequenceNumber": 1
+            },
+            {
+              "SourceChargeComponentId": "C2-CC2",
+              "PriceElementCode": "QP_NET_PRICE",
+              "PriceElementUsageCode": "NET_PRICE",
+              "HeaderCurrencyUnitPrice": "53.09",
+              "HeaderCurrencyExtendedAmount": 53.09,
+              "RollupFlag": false,
+              "SequenceNumber": 2
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

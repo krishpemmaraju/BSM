@@ -1,1 +1,1 @@
-features\SCM\TST\ModifyingPromiseDates.feature:38
+features\SCM\TST\SCM\ModifyingPromiseDates.feature:38

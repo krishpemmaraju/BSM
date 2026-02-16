@@ -16,12 +16,12 @@ export default class ManageSupplyPage {
     }
 
     public async IsManageSupplyLinesPageDisplayed() {
-        await (await this.web.getPageLocator("div[title='Manage Supply Lines']")).waitFor({timeout: TEST_CONFIG.TIMEOUTS.element})
+        await (await this.web.getPageLocator("div[title='Manage Supply Lines']")).waitFor({ timeout: TEST_CONFIG.TIMEOUTS.element })
         return await (await this.web.getPageLocator("div[title='Manage Supply Lines']")).isVisible({ timeout: TEST_CONFIG.TIMEOUTS.element })
     }
-public async ExpandSearch(){
-    (await this.web.getPageLocator("a[title='Expand Search']")).click();
-}
+    public async ExpandSearch() {
+        (await this.web.getPageLocator("a[title='Expand Search']")).click();
+    }
 
     public async EnterSupplyReferenceNumber(orderNumber: string) {
         orderData = orderNumber;
@@ -36,9 +36,10 @@ public async ExpandSearch(){
         await (await this.web.getPageLocator('span[title="Document number in the supply system"]')).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element });
     }
 
-    public async GetDocumentNumber(colName: string): Promise<string> {
-        await (await this.web.getPageLocator("table[summary='This table contains column headers corresponding to the data body table below']")).nth(1).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element });
-        await (await this.web.getPageLocator("table[summary='Show Table'] tr td  span:has-text('Transfer')")).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element })
+    public async GetDocumentNumber(colName: string) {
+        await new Promise(resolve => setTimeout(resolve, 5000));
+        await (await this.web.getPageLocator("table[summary='This table contains column headers corresponding to the data body table below']")).nth(1).waitFor({ state: 'visible', timeout: 30000 });
+        await (await this.web.getPageLocator("table[summary='Show Table'] tr td  span:has-text('Transfer')")).waitFor({ state: 'visible', timeout: 30000 })
         await reportGeneration.getScreenshot(this.web.getPage(), 'SEARCH RESULTS FOR TRANSFER ORDER NUMBER - ' + orderData, world);
         let getIndex;
         const getAllElementsInTableSupplyLines = (await this.web.getPageLocator("table[summary='This table contains column headers corresponding to the data body table below'] tr:nth-child(3) th:has(span)"));
@@ -48,7 +49,7 @@ public async ExpandSearch(){
                 break;
             }
         }
-        return (await (await this.web.getPageLocator("table[summary='Show Table'] table tr td:nth-of-type(" + getIndex + ")")).textContent()).trim();
+        return (await (await this.web.getPageLocator("table[summary='Show Table'] table tr td:nth-of-type(" + getIndex + ")")).textContent()) ?? "";
     }
 
 

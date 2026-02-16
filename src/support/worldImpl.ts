@@ -24,6 +24,7 @@ import ConfirmPicksPage from "../webui/pages/scm/ConfirmPicksPage";
 import RestRequest from "../api/actions/RESTRequest";
 import ConfirmShipmentPage from "../webui/pages/scm/ConfirmShipmentPage";
 import SCMWolOrderCaptureHomePage from "../webui/pages/scm/SCMOrderCaptureHomePage";
+import ManageOrdersRedwood from "../webui/pages/scm/ManageOrdersRedwood";
 
 export interface WorldImplPages {
 
@@ -48,6 +49,7 @@ export interface WorldImplPages {
     confirmPicksPage: ConfirmPicksPage;
     confirmShipmentPage: ConfirmShipmentPage;
     scmWolOrderCaptureHomePage: SCMWolOrderCaptureHomePage;
+    manageOrderSCMRedwood:ManageOrdersRedwood;
     web: UIActions;
     page: Page;
     rest: RestRequest;

@@ -92,9 +92,11 @@ export default class CreateOrderPage {
         await (await this.web.getPageLocator('a[title="Search: Warehouse"]')).click();
         await (await this.web.getElementByRoleByName('link', 'Search...')).click();
         await (await this.web.getElementByText('Search and Select: Warehouse')).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element });
-        await (await this.web.getPageLocator("input[aria-label=' Warehouse']")).fill(location.trim())
+        await (await this.web.getPageLocator("input[aria-label=' Warehouse']")).fill(location.split('-')[1].trim())
         await (await this.web.getElementByRoleByName('button', 'Search')).click();
-        await (await this.web.getPageLocator('.x2ey')).filter({ has: this.web.getPage().locator("text='" + location.trim() + "'") }).click();
+        const row = this.web.getPage().locator('tr', { has: this.web.getPage().getByText(location, { exact: true }) }).first();
+        await row.click();
+
         await (await this.web.getPageLocator(".AFPopupSelector button[_afrpdo='ok']")).click();
     }
 

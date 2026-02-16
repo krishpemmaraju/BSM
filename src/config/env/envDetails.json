@@ -83,6 +83,14 @@
             "HJDEVALIAS": "svdwmsdb105:1521/HJUAADD_RW"
         }
     ],
+    "HIGHJUMP_TST": [
+        {
+            "DBTYPE": "HJ",
+            "HJTSTUSERNAME": "ABB7375",
+            "HJTSTPASSWORD": "wLkAEaHrBju$#1#20",
+            "HJTSTALIAS": "SVSWMSDB103:1521/HJUAADS_RW"
+        }
+    ],
     "ONPREM_DEV": [
         {
             "ONPREMDEVOSBURL": "http://toposb-dev.sys.ad.wolseleyuk.com",

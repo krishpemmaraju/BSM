@@ -2,12 +2,16 @@
     "compilerOptions": {
         "typeRoots": [
             "./node_modules/@types",
-            "src/helper/types"
+            "src/helper/types",
+        ],
+        "types": [
+            "node"
         ],
         "experimentalDecorators": true,
         "target": "ESNext",
         "module": "CommonJS",
         "moduleResolution": "node",
+        "ignoreDeprecations": "6.0",
         "sourceMap": true,
         "outDir": "../tests-out",
         "resolveJsonModule": true,
@@ -15,7 +19,7 @@
         "allowSyntheticDefaultImports": true,
     },
     "include": [
-        // "**/*.ts",
+        "**/*.ts",
         "playwright.config.ts",
         // "src/support/world.ts",
         // "**/webui/pages/**/*.ts",

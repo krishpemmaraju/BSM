@@ -22,7 +22,7 @@ export default class PutAwayGoodsPage {
 
     public async IsPutAwayGoodsPageDisplayed() {
         await (await this.web.getElementByRolebyExactText('heading', 'Put Away Goods')).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element })
-        getHeadingPageText = await (await this.web.getElementByRolebyExactText('heading', 'Put Away Goods')).textContent()
+        getHeadingPageText = await (await this.web.getElementByRolebyExactText('heading', 'Put Away Goods')).textContent() ?? ''
         await reportGeneration.getScreenshot(this.web.getPage(), "PUT AWAY GOODS PAGE DISPLAYED ", world);
         return await (await this.web.getElementByRolebyExactText('heading', getHeadingPageText)).isVisible({ timeout: TEST_CONFIG.TIMEOUTS.element })
     }
