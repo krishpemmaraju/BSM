@@ -4,78 +4,78 @@ Feature: Validate Transfer Order Creation receiving process
     # with in SCM. This feature will not be able to check the Supply Planning as it will take one hour to run the collection
     # get the order to be available in the planning
 
-    # @api
-    # Scenario Outline: Create Transfer Order for "<product>" and receive at branch "<DestinationOrg>"
-    #     Given the API end point for Create Transfer Order API
-    #     When user update the payload with "<product>","<DestinationOrg>","<DestinationSubOrg>","<SourceOrg>","<quantity>"
-    #     And User send the post request to the endpoint
-    #     Then User should have 201 response code successful and capture interface number
+    @api
+    Scenario Outline: Create Transfer Order for "<product>" and receive at branch "<DestinationOrg>"
+        Given the API end point for Create Transfer Order API
+        When user update the payload with "<product>","<DestinationOrg>","<DestinationSubOrg>","<SourceOrg>","<quantity>"
+        And User send the post request to the endpoint
+        Then User should have 201 response code successful and capture interface number
 
-    #     Examples:
-    #         | product | DestinationOrg | DestinationSubOrg | SourceOrg | quantity |
-    #         | 511040  | 1BL            | 1BL               | F6        | 2        |
+        Examples:
+            | product | DestinationOrg | DestinationSubOrg | SourceOrg | quantity |
+            | 511040  | 1BL            | 1BL               | F6        | 2        |
 
-    # @SCM
-    # Scenario Outline: Validate Transfer Order created in SaaS
-    #     Given User login into SCM application
-    #     When User navigate to Supply Chain Execution
-    #     And User click on Supply Orchestration
-    #     Then User should see Supply Orchestration Page
-    #     When navigate to Manage Supply Lines
-    #     Then User should see Manage Supply Lines Page
-    #     When User enter the Supply Reference number
-    #     And Click on Search
-    #     Then User should see Transfer Order Created and Capture the Transfer Order number
-    #     When User Clicks on Home Icon
-    #     And User navigate to Inventory Management
-    #     And  Select the "<SubInventory>" on InventoryManagement Screen
-    #     And User click on "View all actions"
-    #     Then User should see Actions pop up
-    #     When User click on "Transfer Orders" under "Inventory Transactions"
-    #     Then User should see "Transfer Orders" Page
-    #     When Select the "Today" from filter
-    #     And  User enter the Transfer Order Number
-    #     Then Capture the "Item", "Requested Quantity", "Interface Status"
+    @SCM
+    Scenario Outline: Validate Transfer Order created in SaaS
+        Given User login into SCM application
+        When User navigate to Supply Chain Execution
+        And User click on Supply Orchestration
+        Then User should see Supply Orchestration Page
+        When navigate to Manage Supply Lines
+        Then User should see Manage Supply Lines Page
+        When User enter the Supply Reference number
+        And Click on Search
+        Then User should see Transfer Order Created and Capture the Transfer Order number
+        When User Clicks on Home Icon
+        And User navigate to Inventory Management
+        And  Select the "<SubInventory>" on InventoryManagement Screen
+        And User click on "View all actions"
+        Then User should see Actions pop up
+        When User click on "Transfer Orders" under "Inventory Transactions"
+        Then User should see "Transfer Orders" Page
+        When Select the "Today" from filter
+        And  User enter the Transfer Order Number
+        Then Capture the "Item", "Requested Quantity", "Interface Status"
 
-    #     Examples:
-    #         | SubInventory                       |
-    #         | WOLSELEY CENTERS DISTRIBUTION - F6 |
+        Examples:
+            | SubInventory                       |
+            | WOLSELEY CENTERS DISTRIBUTION - F6 |
 
-    # @DB
-    # Scenario Outline: Validate TO created in Highjump
-    #     Given User Connected to HJ DB
-    #     When User runs the select query
-    #     Then User should see the results
+    @DB
+    Scenario Outline: Validate TO created in Highjump
+        Given User Connected to HJ DB
+        When User runs the select query
+        Then User should see the results
 
-    # @api
-    # Scenario Outline: Run IF206 API to Ship Confirm
-    #     Given the API end point IF206 Ship Confirm
-    #     When user update the payload with values captured from HJ DB
-    #     And User send the post request
-    #     Then User should have 200 response code successful
+    @api
+    Scenario Outline: Run IF206 API to Ship Confirm
+        Given the API end point IF206 Ship Confirm
+        When user update the payload with values captured from HJ DB
+        And User send the post request
+        Then User should have 200 response code successful
 
-    # @SCM
-    # Scenario Outline: Validate Transfer Order Status created in SaaS after Ship Confirm
-    #     Given User login into SCM application
-    #     When User Clicks on Home Icon
-    #     And User navigate to Inventory Management
-    #     And  Select the "<SubInventory>" on InventoryManagement Screen
-    #     And User click on "View all actions"
-    #     Then User should see Actions pop up
-    #     When User click on "Transfer Orders" under "Inventory Transactions"
-    #     Then User should see "Transfer Orders" Page
-    #     When Select the "Today" from filter
-    #     And  User enter the Transfer Order Number
-    #     Then Validate fulfillment status updated as "Shipped"
-    #     When User clicks on TO from search results
-    #     Then User should see the TO Page
-    #     When User clicks on the product Link on TO search results Page
-    #     Then User should see the Shipment and Receipt page and capture the Shipment ID
+    @SCM
+    Scenario Outline: Validate Transfer Order Status created in SaaS after Ship Confirm
+        Given User login into SCM application
+        When User Clicks on Home Icon
+        And User navigate to Inventory Management
+        And  Select the "<SubInventory>" on InventoryManagement Screen
+        And User click on "View all actions"
+        Then User should see Actions pop up
+        When User click on "Transfer Orders" under "Inventory Transactions"
+        Then User should see "Transfer Orders" Page
+        When Select the "Today" from filter
+        And  User enter the Transfer Order Number
+        Then Validate fulfillment status updated as "Shipped"
+        When User clicks on TO from search results
+        Then User should see the TO Page
+        When User clicks on the product Link on TO search results Page
+        Then User should see the Shipment and Receipt page and capture the Shipment ID
 
 
-    #     Examples:
-    #         | SubInventory                       |
-    #         | WOLSELEY CENTERS DISTRIBUTION - F6 |
+        Examples:
+            | SubInventory                       |
+            | WOLSELEY CENTERS DISTRIBUTION - F6 |
 
 @SCM
 Scenario Outline: Perform Receive Goods for the TO created

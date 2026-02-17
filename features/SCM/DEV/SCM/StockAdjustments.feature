@@ -21,12 +21,12 @@ Feature: Stock Adjustments
         And  User enter Product Reference as "Product Change code <Transaction>"
         And  User clicks on Done
         Then User should see "Miscellaneous Transactions" dashboard with line details
-        When User clicks on submit
+        When User clicks on Submit
         Then User should see pop up as "Item received"
 
         Examples:
             | Products | ReasonCode | Transaction           | SubInventory | SubInventoryAdj | Locator | quantity |
-            | R40003   | B          | Account Alias Receipt | 1BL          | 1BL-LOC         | M1A01   | 100      |
+            |  123305  | B          | Account Alias Receipt | 1BL          | 1BL-LOC         | M1A01   | 100      |
 
     @SCM
     Scenario Outline: Validate "<Transaction>" for "<Products>"
@@ -49,9 +49,9 @@ Feature: Stock Adjustments
         And  User enter Product Reference as "Product Change code <Transaction>"
         And  User clicks on Done
         Then User should see "Miscellaneous Transactions" dashboard with line details
-        When User clicks on submit
+        When User clicks on Submit
         Then User should see pop up as "items issued"
 
         Examples:
             | Products | ReasonCode | Transaction         | SubInventory | SubInventoryAdj | Locator | quantity |
-            | R40003   | B          | Account Alias Issue | 1BL          | 1BL-LOC         | M1A01   | 5        |
+            |123305   | B          | Account Alias Issue | 1BL          | 1BL-LOC         | M1A01   | 5        |

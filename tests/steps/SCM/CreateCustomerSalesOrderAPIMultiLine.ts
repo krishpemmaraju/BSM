@@ -105,13 +105,13 @@ When('User enters the customer sales order number for multiline order', async fu
     }
   }
   customerSO = data.customerSalesOrderNumber;
-  await this.manageOrderSCMRedwood.EnterCustomerSalesOrder(this.newWindow,sharedData.CUSTOMERSALESORDERNUMBER)
+  await this.manageOrderSCMRedwood.EnterCustomerSalesOrder(this.newWindow, sharedData.CUSTOMERSALESORDERNUMBER)
 });
 
 let statusOf_itemNum1: string
 let statusOf_itemNum2: string
 Then('User should see the order status as {string} for all products', async function (this: ICustomWorld, string) {
-  await this.manageOrderSCMRedwood.ClickOnCustomerSalesOrderLink(this.newWindow,sharedData.CUSTOMERSALESORDERNUMBER.trim());
+  await this.manageOrderSCMRedwood.ClickOnCustomerSalesOrderLink(this.newWindow, sharedData.CUSTOMERSALESORDERNUMBER.trim());
   for (let j = 0; j < 10; j++) {
     statusOf_itemNum1 = await this.manageOrderSCMRedwood.GetMultiLineOrderStatusFromManageOrders(this.newWindow, sharedData.ItemNumber1, 'Status');
     statusOf_itemNum2 = await this.manageOrderSCMRedwood.GetMultiLineOrderStatusFromManageOrders(this.newWindow, sharedData.ItemNumber2, 'Status');
@@ -174,7 +174,7 @@ Then('User should Capture ShipmentID for CustomerSalesOrder for products {string
     fs.writeFileSync('src/data/TransferOrderData/CustomerMultiLineSalesOrderData.json', JSON.stringify(
       data, null, 2));
   } else {
-        sharedData.shipmentNumberMulti = shipmentID.trim()
+    sharedData.shipmentNumberMulti = shipmentID.trim()
     let data: any = {};
     if (fs.existsSync('src/data/TransferOrderData/CustomerMultiLineSalesOrderData.json')) {
       const content = fs.readFileSync('src/data/TransferOrderData/CustomerMultiLineSalesOrderData.json', 'utf8');
@@ -204,6 +204,7 @@ When('User enters  CustomerSalesOrder Number for MultiLine', async function (thi
   // }
   // customerSO = data.customerSalesOrderNumber;
   // itemQuantity = data.SOorderQty;
+  sharedData.CUSTOMERSALESORDERNUMBER = '1BL|17020968';
   await this.confirmPicksPage.EnterCustomerSalesOrderNumberOnConfirmPicksPage(sharedData.CUSTOMERSALESORDERNUMBER);
 });
 

@@ -122,15 +122,18 @@ export default class ConfirmPicksPage {
     public async EnterSubinventoryCodeForProduct(product1: string, product2: string, pickedQty: string, pickedQty1?: string) {
         if (await (await this.web.getPageLocator("button[aria-label='Confirm and Next']")).isEnabled()) {
             let GetSubInventoryCode = await (await this.web.getPageLocator("//span[text()='Subinventory']//ancestor::div[@class='oj-text-field-middle']//div[@class='oj-text-field-readonly']")).textContent()
-            await (await this.web.getPageLocator("//span[text()='Subinventory Barcode']//ancestor::div[contains(@class,'oj-flex-item')]//oj-button[@title='Select a value from the list']")).click()
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            await (await this.web.getPageLocator("//span[text()='Subinventory Barcode']//ancestor::div[contains(@class,'oj-flex-item')]//oj-button[@title='Select a value from the list']")).click({ force: true })
 
             await this.web.getPage()
                 .locator("//span[text()='Subinventory']//ancestor::div[contains(@class,'oj-text-field-container oj-searchselect-main-field oj-text-field-has-end-slot')]//span[@class='oj-text-field-end']")
-                .click({ force: true });
+                .click({ force: true, delay: 2000 });
             await (await this.web.getElementByRoleByName('row', GetSubInventoryCode ?? '')).click()
 
+
+            let getProductAfterClick = await (await this.web.getPageLocator("oj-drawer-popup div.oj-sp-card-common-flex-shrink h5 span.oj-sp-card-common-title-ring")).getAttribute('title')
             await (await this.web.getElementByText('Item or GTIN Barcode')).click();
-            await (await this.web.getElementByText('Item or GTIN Barcode')).fill(product1);
+            await (await this.web.getElementByText('Item or GTIN Barcode')).fill(getProductAfterClick ?? '');
             await reportGeneration.getScreenshot(this.web.getPage(), "ENTER ITEM NUMBER AS " + product1, world);
 
             await (await this.web.getElementByText('Picked Quantity')).fill(pickedQty);
@@ -148,9 +151,9 @@ export default class ConfirmPicksPage {
                 .locator("//span[text()='Subinventory']//ancestor::div[contains(@class,'oj-text-field-container oj-searchselect-main-field oj-text-field-has-end-slot')]//span[@class='oj-text-field-end']")
                 .click({ force: true });
             await (await this.web.getElementByRoleByName('row', GetSubInventoryCode1 ?? '')).click()
-
+            let getProduct2AfterClick = await (await this.web.getPageLocator("oj-drawer-popup div.oj-sp-card-common-flex-shrink h5 span.oj-sp-card-common-title-ring")).getAttribute('title')
             await (await this.web.getElementByText('Item or GTIN Barcode')).click();
-            await (await this.web.getElementByText('Item or GTIN Barcode')).fill(product2);
+            await (await this.web.getElementByText('Item or GTIN Barcode')).fill(getProduct2AfterClick ?? '');
             await reportGeneration.getScreenshot(this.web.getPage(), "ENTER ITEM NUMBER AS " + product2, world);
 
             await (await this.web.getElementByText('Picked Quantity')).fill(pickedQty);

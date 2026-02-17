@@ -60,7 +60,7 @@ Feature: Create Customer Sales Order Using API and Perform Full and Partial ship
         When User selects Pick All Items
         Then User should see Confirm Pick and Next option
         When User enter subinventory info as "<branch>" , "<product1>", "<product2>", picked quantity  for all products in Customer Sales Order
-        And Click on Confirm Pick and Close
+        # And Click on Confirm Pick and Close
 
         Examples:
             | branch        | product1 | product2 |

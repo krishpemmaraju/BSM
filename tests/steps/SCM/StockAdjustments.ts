@@ -17,10 +17,10 @@ Given('User login into SCM application', async function (this:ICustomWorld) {
    await Assert.AssertTrue(await new SCMHomePage(this.web).isHomePageDisplayed());
 });
 
-When('User navigate to Inventory Management', async function () {
+When('User navigate to Inventory Management', async function (this:ICustomWorld) {
    await this.scmHomePage.navigateToInventoryManagement();
    const getInvMgmtHeaderText = await this.inventoryManagamentPage.getInventoryManagmentDashboardHeader();
-   await Assert.assertEquals("Inventory Management", getInvMgmtHeaderText);
+   await Assert.assertEquals("Inventory Management", getInvMgmtHeaderText??'');
 });
 
 When('Select the {string} on InventoryManagement Screen', async function (branchSel) {
@@ -76,7 +76,7 @@ When('User enter product as {string}', async function (product) {
 });
 
 
-When('User select subinventory as {string} and Locator as {string}', async function (subInventory, locator) {
+When('User select subinventory as {string} and Locator as {string}', async function (this:ICustomWorld,subInventory, locator) {
    await this.createMiscelleneousTransactionPage.SelectSubInventoryAndLocator(subInventory, locator);
 });
 
