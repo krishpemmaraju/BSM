@@ -4,9 +4,10 @@ import { createObjectCsvWriter } from 'csv-writer'
 import ExcelJS from 'exceljs'
 import path from 'path';
 
-let connection: oracledb.Connection = null;
+
 export default class DBConnection {
-    public async connectToDB(dbType: string, dbUsername: string, dbPassword: string, dbAlias: string): Promise<oracledb.Connection> {
+    public async connectToDB(dbType: string, dbUsername: string, dbPassword: string, dbAlias: string): Promise<oracledb.Connection | null> {
+        let connection: oracledb.Connection| null = null;
         switch (dbType) {
 
             case 'ODS':
@@ -20,7 +21,12 @@ export default class DBConnection {
                     console.log("Connected")
                     return connection;
                 } catch (error) {
-                    console.log("Not connected" + error.message)
+                    if (error instanceof Error) {
+                        console.log("Not connected: " + error.message);
+                    } else {
+                        console.log("Not connected: " + error);
+                    }
+
                 }
             case 'HJ':
                 try {
@@ -33,8 +39,15 @@ export default class DBConnection {
                     console.log("Connected")
                     return connection;
                 } catch (error) {
-                    console.log("Not connected" + error.message)
+                    if (error instanceof Error) {
+                        console.log("Not connected: " + error.message);
+                    } else {
+                        console.log("Not connected: " + error);
+                    }
                 }
+            default:
+                return null;
+          
         }
 
     }
@@ -52,13 +65,13 @@ export default class DBConnection {
     }
 
     public async getQueryResultWithHeaders(connection: oracledb.Connection,queryToExecute: string) {
-        let rowValues;
+        let rowValues:any;
         const allRows: string[] = [];
         const result = await connection.execute(queryToExecute, [], {
             outFormat: oracledb.OUT_FORMAT_OBJECT
         })
         let headers = result.metaData?.map(col => col.name) ?? [];
-        for (const row of result.rows ?? []) {
+        for (const row of (result.rows ?? []) as Record<string,any>[]) {
             rowValues = headers.map(header => row[header]);
             allRows.push(rowValues)
             console.log(rowValues.join('|'))
@@ -74,7 +87,7 @@ export default class DBConnection {
         })
         await connection.close();
 
-        return (result.rows ?? []).map(row => row[colName]);
+        return (result.rows ?? []).map(row => (row as Record<string,any>)[colName]);
     }
 
     public async writeTableResultsToCSVFile(connection: oracledb.Connection,queryToExecute: string, filePaths: string, fileType: string) {
@@ -107,7 +120,7 @@ export default class DBConnection {
                 const workbook = new ExcelJS.Workbook();
                 const worksheet = workbook.addWorksheet('Results');
                 if (rows.length == 0) {
-                    worksheet.addRow['No data Available']
+                    worksheet.addRow(['No data Available'])
                 }
                 else {
                     const headers = Object.keys(rows[0]);
@@ -115,8 +128,8 @@ export default class DBConnection {
                         header,
                         key: header,
                         width: 20
-                    }))
-                    rows.forEach(row => {
+                    }));
+                    (rows as Record<string,any>[]).forEach(row => {
                         worksheet.addRow(row);
                     })
                     const filePath = path.resolve(filePaths);
@@ -179,8 +192,8 @@ export default class DBConnection {
                         key: headers,
                         width: 20
 
-                    }))
-                    rows.forEach(row => {
+                    }));
+                    (rows as Record<string,any>[]).forEach(row => {
                         worksheet.addRow(row)
                     })
                     await workbook.xlsx.writeFile(path.resolve(filePath) + '/MultipleResultsQuery.xlsx')

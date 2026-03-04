@@ -38,6 +38,30 @@
             "SCMTSTCHKAVAILABILITY": "fscmRestApi/msp/latest/globalOrderPromises/checkAvailability"
         }
     ],
+    "MFT_DEV": [
+        {
+            "MFTDEVURL": "https://wos-mft2.sys.ad.wolseleyuk.com/webclient/Login.xhtml",
+            "MFTDEVUSERNAME": "SIT",
+            "MFTDEVPASSWORD": "Mftsit01",
+            "MFTDEVNAVIGATION": "/opc/dev/outbound/SCM_Order_Lines_To_Invoice_For_ODS/To_ODS"
+        }
+    ],
+    "MFT_TST": [
+        {
+            "MFTTSTURL": "https://wos-mft2.sys.ad.wolseleyuk.com/webclient/Login.xhtml",
+            "MFTTSTUSERNAME": "sit",
+            "MFTTSTPASSWORD": "Mftsit01",
+            "MFTTSTNAVIGATION": "/opc/test/outbound/SCM_Order_Lines_To_Invoice_For_ODS/To_ODS"
+        }
+    ],
+    "MFT_STG": [
+        {
+            "MFTSTGURL": "https://wos-mft2.sys.ad.wolseleyuk.com/webclient/Login.xhtml",
+            "MFTSTGUSERNAME": "sit",
+            "MFTSTGPASSWORD": "Mftsit01",
+            "MFTSTGNAVIGATION": "/opc/staging/outbound/SCM_Order_Lines_To_Invoice_For_ODS/To_ODS"
+        }
+    ],
     "VBCSOC_DEV": [
         {
             "VBCSDEVOCURL": "https://vb04.wolseleyuk.com/ic/builder/rt/wol-order-capture/live/webApps/wol-order-capture/",
@@ -63,8 +87,24 @@
         {
             "DBTYPE": "ODS",
             "ODSSTGUSERNAME": "ODS_CORE",
-            "ODSPASSWORD": "core",
-            "ODSALIAS": "ODSSTG"
+            "ODSSTGPASSWORD": "core",
+            "ODSSTGALIAS": "ODSSTG"
+        }
+    ],
+    "ODS_DEV": [
+        {
+            "DBTYPE": "ODS",
+            "ODSDEVUSERNAME": "ODS_CORE",
+            "ODSDEVPASSWORD": "core",
+            "ODSDEVALIAS": "SVTODSDB006:1521/ODSD"
+        }
+    ],
+    "ODS_TST": [
+        {
+            "DBTYPE": "ODS",
+            "ODSTSTUSERNAME": "ODS_CORE",
+            "ODSTSTPASSWORD": "core",
+            "ODSTSTALIAS": "odst-rr.sys.ad.wolseleyuk.com:1521/ODST"
         }
     ],
     "HIGHJUMP_STG": [
@@ -87,7 +127,7 @@
         {
             "DBTYPE": "HJ",
             "HJTSTUSERNAME": "ABB7375",
-            "HJTSTPASSWORD": "wLkAEaHrBju$#1#20",
+            "HJTSTPASSWORD": "Varahi16$$",
             "HJTSTALIAS": "SVSWMSDB103:1521/HJUAADS_RW"
         }
     ],
@@ -109,8 +149,8 @@
     ],
     "ONPREM_TST": [
         {
-            "ONPREMTSTOSB": "http://toposb-tst.sys.ad.wolseleyuk.com",
-            "ONPREMTSTSOA": "http://topsoa-tst.sys.ad.wolseleyuk.com",
+            "ONPREMTSTOSBURL": "http://toposb-tst.sys.ad.wolseleyuk.com",
+            "ONPREMTSTSOAURL": "http://topsoa-tst.sys.ad.wolseleyuk.com",
             "ONPREMTSTUSERNAME": "ABB7375",
             "ONPREMTSTPASSWORD": "krishonpremtest@2021"
         }

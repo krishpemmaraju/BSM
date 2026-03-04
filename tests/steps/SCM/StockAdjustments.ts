@@ -23,7 +23,7 @@ When('User navigate to Inventory Management', async function (this:ICustomWorld)
    await Assert.assertEquals("Inventory Management", getInvMgmtHeaderText??'');
 });
 
-When('Select the {string} on InventoryManagement Screen', async function (branchSel) {
+When('Select the {string} on InventoryManagement Screen', async function (this:ICustomWorld,branchSel) {
    await this.inventoryManagamentPage.selectSubInventoryBranch(branchSel);
 });
 

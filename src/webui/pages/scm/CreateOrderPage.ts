@@ -1,4 +1,4 @@
-import { expect, TestInfo } from "playwright/test";
+import { expect, Page, TestInfo } from "playwright/test";
 import ReportGeneration from "../../../helper/reportGeneration";
 import { setDefaultTimeout, world } from "@cucumber/cucumber";
 import UIActions from "../../actions/UIActions";
@@ -27,7 +27,7 @@ export default class CreateOrderPage {
 
     public async GetIndexOfColumnHeader(colHeader: string): Promise<string> {
         return await (this.web.getPage().locator("table[summary='This table contains column headers corresponding to the data body table below'] tr th span", { hasText: colHeader }).
-            filter({ hasText: new RegExp(`^${colHeader}$`) }).locator('xpath=ancestor::th')).getAttribute('_d_index');
+            filter({ hasText: new RegExp(`^${colHeader}$`) }).locator('xpath=ancestor::th')).getAttribute('_d_index') ?? '';
     }
 
     public async SelectCustomerSCMOM(customer: string) {
@@ -114,12 +114,12 @@ export default class CreateOrderPage {
     }
 
     public async GetSalesOrderNumberSCMOM() {
-        let SOStr = await (this.web.getPage().getByText('Sales order')).textContent();
+        let SOStr = await (this.web.getPage().getByText('Sales order')).textContent() ?? '';
         console.log(await StringUtils.getStringBetweenTwoStrings(SOStr, "Sales order ", " was"));
     }
 
     public async GetStringMatchNumbers() {
-        let SOStr = await (this.web.getPage().getByText('Sales order')).textContent();
+        let SOStr = await (this.web.getPage().getByText('Sales order')).textContent() ?? '';
         let match = SOStr.match(/\d+/);
         if (match) {
             const orderNumber = match[0]
@@ -130,11 +130,15 @@ export default class CreateOrderPage {
         await (await this.web.getElementByRoleByName('button', 'Refresh')).click({ delay: 2000 });
     }
 
+    public async ClickOnRefreshSCMOMNewWindow(page: Page) {
+        await (await this.web.getElementByRoleByNameWithPageArg(page, 'button', 'Refresh')).click({ delay: 2000 });
+    }
+
     public async GetOrderStatusSCMOM(): Promise<string> {
         await (await this.web.getElementByRoleByName('button', 'Refresh')).click({ delay: 2000 });
         const columnIndex = parseInt(await this.GetIndexOfColumnHeader('Status'));
         const getTDStatus = (await this.web.getPageLocator("//table[@summary='Order Lines']//tr//table[@_afrit]//tr//td[@class='xen'][" + columnIndex + "]")).textContent();
-        return await getTDStatus;
+        return await getTDStatus ?? '';
     }
 
     public async ClickOnCreateRevisionUnderSCMOM() {
@@ -156,7 +160,7 @@ export default class CreateOrderPage {
     }
 
     public async GetRequestedDateSCMOM(): Promise<string> {
-        return await (await this.web.getPageLocator("td:has(> label:has-text('Ordered Date')) + td span")).textContent()
+        return await (await this.web.getPageLocator("td:has(> label:has-text('Ordered Date')) + td span")).textContent() ?? ''
     }
 
     public async GetCurrentDayFromDatePicker() {
@@ -166,7 +170,7 @@ export default class CreateOrderPage {
 
     public async GetCurrentMonthFromDatePicker() {
         const getSelectedMonth = await (await this.web.getPageLocator("option[selected='true']")).getAttribute('title')
-        return getSelectedMonth;
+        return getSelectedMonth ?? '';
     }
 
     public async GetCurrentYearFromDatePicker() {
@@ -270,6 +274,6 @@ export default class CreateOrderPage {
         await (await this.web.getElementByRoleByName('button', 'Refresh')).click({ delay: 2000 });
         let getColIndexOfDate = await this.GetIndexOfColumnHeader('Requested Date');
         let getChangedrequestedDate = await (await this.web.getPageLocator("(//table[@summary='Search Results']//tr[@_afrrk]//td//span[@class='x2ey'])[" + getColIndexOfDate + "]")).textContent();
-        return getChangedrequestedDate;
+        return getChangedrequestedDate ?? '';
     }
 }

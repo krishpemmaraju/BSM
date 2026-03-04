@@ -8,7 +8,7 @@ let reportGeneration: ReportGeneration;
 let testInfo: TestInfo;
 let CLICK_ON_SEARCH_ICON = "button[aria-label='Search by item, description, or MPN']";
 let WAIT_FOR_TABLE_DISPLAY = "th[title='Item']";
-setDefaultTimeout(3000000);
+//setDefaultTimeout(3000000);
 
 
 
@@ -86,8 +86,9 @@ export default class InventoryManagementPage {
     }
 
     public async SelectObjectType(objectTypeOption: string) {
+        await new Promise(resolve => setTimeout(resolve, 5000));
         await (await this.web.getElementByLabel('Object Type')).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element })
-        await (await this.web.getElementByLabel('Object Type')).click()
+        await (await this.web.getElementByLabel('Object Type')).click({ force: true })
         await (await this.web.getElementByText(objectTypeOption)).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element })
         await (await this.web.getElementByText(objectTypeOption)).click()
     }

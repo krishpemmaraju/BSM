@@ -13,6 +13,7 @@
   "lines": [
     {
       "SourceTransactionLineId": "1",
+      "TransactionLineTypeCode": "1",
       "SourceTransactionLineNumber": "1",
       "SourceTransactionScheduleId": "1",
       "SourceScheduleNumber": "1",

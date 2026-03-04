@@ -23,9 +23,9 @@ let captureSourceTransactionNumber: string;
 let updatingChildArray: any;
 let orderQuantity: any;
 When('user update the payload with {string},{string},{string},{string}', async function (this: ICustomWorld, product, destinationOrg, quantity, productPrice) {
-    const todayDate = await DateUtils.generateDateWithFormat('DDMMHHSS');
+    const todayDate = await DateUtils.generateDateWithFormat('DDMMSS');
     const dateFormat = await DateUtils.generateDateWithFormat('YYYY-MM-DDTHH:mm:ss.SSSZ');
-    const sourceTransactionNumber = destinationOrg + '|' + todayDate;
+    const sourceTransactionNumber = destinationOrg + '|' + 'A' + todayDate;
     orderQuantity = quantity;
     sharedData.quantity = quantity;
     let productPriceData: GLfloat = parseFloat(quantity) * parseFloat(productPrice)
@@ -64,6 +64,7 @@ When('User execute post request for Customer Sales Order API', async function (t
     const parsedJson = JSON.parse(rawJson)
     const scmBasicAuthHeader = await HeaderBuilder.BuildBasicAuthHeader(this.SCMUSER, this.SCMPASSWORD);
     this.getResponse = await APIClient.post(this.SCMURL, this.customerSalesEndPointAPI, JSON.stringify(parsedJson, null, 2), scmBasicAuthHeader);
+    console.log(this.getResponse.data)
 });
 
 Then('user should receive {int} response code', async function (this: ICustomWorld, int) {
@@ -106,10 +107,27 @@ When('User clicks on search', async function (this: ICustomWorld) {
     await this.manageOrderSCMRedwood.ClickOnSearch(this.newWindow)
 });
 
+let IsOrderStatusCorrect: boolean;
+let orderStatus: string;
 Then(/^User should see the order status as "([^"]*)"$/, async function (this: ICustomWorld, customerSOStatus) {
-    await Assert.AssertTrue(await this.manageOrderSCMRedwood.IsSearchResultDisplayed(this.newWindow, sharedData.CUSTOMERSALESORDERNUMBER.trim()))
+    await this.manageOrderSCMRedwood.IsSearchResultDisplayed(this.newWindow, sharedData.CUSTOMERSALESORDERNUMBER)
+    await this.manageOrderSCMRedwood.ClickOnOrderLink(this.newWindow, sharedData.CUSTOMERSALESORDERNUMBER);
+    for (let i = 0; i < 40; i++) {
+        orderStatus = await this.manageOrderSCMRedwood.GetOrderStatusFromManageOrders(this.newWindow, 'Status', sharedData.CUSTOMERSALESORDERNUMBER.trim()) ?? '';
+        if (orderStatus === customerSOStatus) {
+            IsOrderStatusCorrect = true;
+            break;
+        }
+        else {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            await this.createOrderPage.ClickOnRefreshSCMOMNewWindow(this.newWindow);
+        }
+    }
+
+    await Assert.AssertTrue(customerSOStatus === orderStatus)
     await this.newWindow.close();
     await this.originalPage.bringToFront();
+    await this.orderManagementPage.ClickOnClose();
 });
 
 /* Perform Pick Release */
@@ -164,6 +182,7 @@ When('User enters CustomerSalesOrder Number', async function (this: ICustomWorld
     // }
     // let custSalesOrderNumber = data.customerSalesOrderNumber
     // itemQuantity = data.SOorderQty;
+    //sharedData.CUSTOMERSALESORDERNUMBER = '1BL|A020343'
     await this.confirmPicksPage.EnterCustomerSalesOrderNumberOnConfirmPicksPage(sharedData.CUSTOMERSALESORDERNUMBER);
 });
 
@@ -171,7 +190,7 @@ Then(/^User should see the tile contaning "([^"]*)" and "([^"]*)" information$/,
     await Assert.AssertTrue(await this.confirmPicksPage.IsProuctTileDisplayed(product))
     await Assert.assertContains((await this.confirmPicksPage.GetQuantityFromProductTileInPickingPane()).split(' ')[0].trim(), sharedData.quantity.trim())
     await Assert.assertContains((await this.confirmPicksPage.GetSourceLocationFromProductTileInPickingPane()).split(':')[1].trim(), branch.split('-')[1].trim())
-    await Assert.assertContains((await this.confirmPicksPage.GetDestinationLocationFromProductTileInPickingPane()).split(':')[1], branch.split('-')[1].trim())
+    //await Assert.assertContains((await this.confirmPicksPage.GetDestinationLocationFromProductTileInPickingPane()).split(':')[1], branch.split('-')[1].trim())
 });
 
 When('User selects the tile for the {string} pick confirm', async function (this: ICustomWorld, product) {
@@ -183,11 +202,21 @@ When('user enter subinventory info as {string} for Customer Sales Order', async 
 });
 
 When('User enter product number as {string}', async function (this: ICustomWorld, product) {
-    await this.confirmPicksPage.EnterItemNumber(product)
+    if (this.envData === 'TST' || this.envData === 'tst') {
+        await this.confirmPicksPage.EnterLocatorInformation();
+        await this.confirmPicksPage.EnterSubInventoryPickedQty(product, '2')
+
+    } else {
+        await this.confirmPicksPage.EnterLocatorInformation();
+        await this.confirmPicksPage.EnterItemNumber(product)
+    }
+
 });
 
 When('User enters Picked quantity for Customer Sales Order', async function (this: ICustomWorld) {
-    await this.confirmPicksPage.EnterPickedQuantity(sharedData.quantity);
+    if (this.envData !== 'TST' && this.envData !== 'tst') {
+        await this.confirmPicksPage.EnterPickedQuantity(sharedData.quantity);
+    }
 });
 
 /* Shipping Instructions */

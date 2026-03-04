@@ -75,33 +75,79 @@ export default class ConfirmPicksPage {
     }
 
     public async EnterSubnventoryCode(branch: string) {
-        await (await this.web.getPageLocator("button[aria-label='Confirm Pick and Close']")).first().waitFor({ state: 'visible', timeout: 9000 })
+        await (await this.web.getPageLocator("button[aria-label='Confirm Pick and Close']")).first().waitFor({ state: 'visible', timeout: 30000 })
         await new Promise(resolve => setTimeout(resolve, 2000));
-        await (await this.web.getPageLocator("//span[text()='Subinventory Barcode']//ancestor::div[contains(@class,'oj-flex-item')]//oj-button[@title='Select a value from the list']")).click({ force: true })
-        let getLocationData = await (await this.web.getPageLocator("//span[text()='Subinventory']//ancestor::div[@class='oj-text-field-middle']//following-sibling::div")).textContent();
-
-        await this.web.getPage()
-            .locator("//span[text()='Subinventory']//ancestor::div[contains(@class,'oj-text-field-container oj-searchselect-main-field oj-text-field-has-end-slot')]//span[@class='oj-text-field-end']")
-            .waitFor({ state: 'visible', timeout: 18000 });
-        await this.web.getPage()
-            .locator("//span[text()='Subinventory']//ancestor::div[contains(@class,'oj-text-field-container oj-searchselect-main-field oj-text-field-has-end-slot')]//span[@class='oj-text-field-end']")
-            .click({ force: true });
-        if (getLocationData?.trim() === '1BL-LOC') {
-            await (await this.web.getElementByRoleByName('row', getLocationData)).click()
-            await reportGeneration.getScreenshot(this.web.getPage(), "SELECTED BRANCH AS  " + getLocationData, world);
-        } else { await (await this.web.getElementByRoleByName('row', branch)).click() }
+        // await (await this.web.getPageLocator("//span[text()='Subinventory Barcode']//ancestor::div[contains(@class,'oj-flex-item')]//oj-button[@title='Select a value from the list']")).click({ force: true })
+        // await new Promise(resolve => setTimeout(resolve, 1000));
+    //     let getLocationData = await (await this.web.getPageLocator("//span[text()='Subinventory']//ancestor::div[@class='oj-text-field-middle']//following-sibling::div")).textContent() ?? '';
+    //     console.log(getLocationData)
+    //     await (await this.web.getPageLocator(
+    //         "//span[text()='Subinventory']//ancestor::div[contains(@class,'oj-text-field-container oj-searchselect-main-field oj-text-field-has-end-slot')]//span[@class='oj-text-field-end']")
+    //     ).waitFor({ state: 'visible', timeout: 18000 });
+    //     await new Promise(resolve => setTimeout(resolve, 1000));
+    //     await (await this.web.getPageLocator("//span[text()='Subinventory']//ancestor::div[contains(@class,'oj-text-field-container oj-searchselect-main-field oj-text-field-has-end-slot')]//span[@class='oj-text-field-end']")
+    // ).click({ force: true });
+    //     await new Promise(resolve => setTimeout(resolve, 1000));
+    //     await (await this.web.getElementByRoleByName('row', getLocationData.trim())).click({ force: true })
+      
+    /* this is not required if you uncomments above code from line 82 */    
+    // if (getLocationData?.trim() === '1BL-LOC') {
+        //     await (await this.web.getElementByRoleByName('row', getLocationData?.trim())).click()
+        //     await reportGeneration.getScreenshot(this.web.getPage(), "SELECTED BRANCH AS  " + getLocationData, world);
+        // } else { await (await this.web.getElementByRoleByName('row', getLocationData?.trim())).click() }
         await reportGeneration.getScreenshot(this.web.getPage(), "SELECTED BRANCH AS  " + branch, world);
     }
 
+    public async EnterLocatorInformation() {
+        let getLocatorData = await (await this.web.getPageLocator("//span[text()='Locator']//ancestor::div[@class='oj-text-field-middle']//following-sibling::div")).textContent() ?? '';
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        await (await this.web.getElementByText('Locator Barcode')).fill(getLocatorData)
+    }
+
     public async EnterItemNumber(itemNumber: string) {
-        await (await this.web.getElementByText('Item or GTIN Barcode')).click();
-        await (await this.web.getElementByText('Item or GTIN Barcode')).fill(itemNumber);
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        await (await this.web.getPageLocator("//div[@class='oj-sp-create-edit-drawer-template-content-container']//span[text()='Item or GTIN Barcode']//ancestor::div[@class='oj-text-field-middle']//input")).scrollIntoViewIfNeeded()
+        await (await this.web.getPageLocator("//div[@class='oj-sp-create-edit-drawer-template-content-container']//span[text()='Item or GTIN Barcode']//ancestor::div[@class='oj-text-field-middle']//input")).click({ force: true });
+        await (await this.web.getPageLocator("//div[@class='oj-sp-create-edit-drawer-template-content-container']//span[text()='Item or GTIN Barcode']//ancestor::div[@class='oj-text-field-middle']//input")).clear();
+        await (await this.web.getPageLocator("//div[@class='oj-sp-create-edit-drawer-template-content-container']//span[text()='Item or GTIN Barcode']//ancestor::div[@class='oj-text-field-middle']//input")).fill(itemNumber);
         await reportGeneration.getScreenshot(this.web.getPage(), "ENTER ITEM NUMBER AS " + itemNumber, world);
     }
 
     public async EnterPickedQuantity(pickedQty: string) {
-        await (await this.web.getElementByText('Picked Quantity')).fill(pickedQty);
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        await (await this.web.getPageLocator("//span[text()='Picked Quantity']//ancestor::div[@class='oj-text-field-middle']//input")).clear();
+        await (await this.web.getPageLocator("//span[text()='Picked Quantity']//ancestor::div[@class='oj-text-field-middle']//input")).type(pickedQty);
         await reportGeneration.getScreenshot(this.web.getPage(), "ENTER PICKED QUANTITY AS  " + pickedQty, world);
+    }
+
+    public async EnterSubInventoryPickedQty(itemNumber: string, pickedQty: string) {
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        await (await this.web.getPageLocator("//div[@class='oj-sp-create-edit-drawer-template-content-container']//span[text()='Item or GTIN Barcode']//ancestor::div[@class='oj-text-field-middle']//input")).scrollIntoViewIfNeeded()
+        await (await this.web.getPageLocator("//div[@class='oj-sp-create-edit-drawer-template-content-container']//span[text()='Item or GTIN Barcode']//ancestor::div[@class='oj-text-field-middle']//input")).click({ force: true });
+        await (await this.web.getPageLocator("//div[@class='oj-sp-create-edit-drawer-template-content-container']//span[text()='Item or GTIN Barcode']//ancestor::div[@class='oj-text-field-middle']//input")).clear();
+        await (await this.web.getPageLocator("//span[text()='Picked Quantity']//ancestor::div[@class='oj-text-field-middle']//input")).click()
+        await (await this.web.getPageLocator("//div[@class='oj-sp-create-edit-drawer-template-content-container']//span[text()='Item or GTIN Barcode']//ancestor::div[@class='oj-text-field-middle']//input")).scrollIntoViewIfNeeded()
+        await (await this.web.getPageLocator("//div[@class='oj-sp-create-edit-drawer-template-content-container']//span[text()='Item or GTIN Barcode']//ancestor::div[@class='oj-text-field-middle']//input")).click({ force: true });
+        await (await this.web.getPageLocator("//div[@class='oj-sp-create-edit-drawer-template-content-container']//span[text()='Item or GTIN Barcode']//ancestor::div[@class='oj-text-field-middle']//input")).clear();
+        await (await this.web.getPageLocator("//div[@class='oj-sp-create-edit-drawer-template-content-container']//span[text()='Item or GTIN Barcode']//ancestor::div[@class='oj-text-field-middle']//input")).fill(itemNumber);
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        await (await this.web.getPageLocator("//span[text()='Picked Quantity']//ancestor::div[@class='oj-text-field-middle']//input")).click()
+        await (await this.web.getPageLocator("//span[text()='Picked Quantity']//ancestor::div[@class='oj-text-field-middle']//input")).clear();
+        await (await this.web.getPageLocator("//span[text()='Picked Quantity']//ancestor::div[@class='oj-text-field-middle']//input")).type(pickedQty);
+        await reportGeneration.getScreenshot(this.web.getPage(), "ENTER PICKED QUANTITY AS  " + pickedQty, world);
+    }
+
+    public async EnterSubInventoryPickedQtyMultiLine(pickedQty: string) {
+        const getNofPickTiles = (await this.web.getPageLocator("div.oj-sp-collection-container-main-panel li ul li.oj-listview-item-element"));
+        const getPickTilesCount = await getNofPickTiles.count()
+        for (let i = (getPickTilesCount-1); i >= 0; i--) {
+            await (await this.web.getPageLocator("div.oj-sp-collection-container-main-panel li ul li.oj-listview-item-element")).nth(i).click();
+            await this.EnterSubnventoryCode('1BL');
+            await this.EnterLocatorInformation();
+            const getItemInformation = await (await this.web.getPageLocator("div.oj-sp-create-edit-drawer-template-content-container div.oj-flex-item.oj-sp-card-common-title-ring")).textContent()??''
+            await this.EnterSubInventoryPickedQty(getItemInformation?.trim(), pickedQty)
+            await (await this.web.getPageLocator("oj-c-button[title='Cancel'] + oj-c-button button[aria-label='Confirm Pick and Close']")).click()
+        }
     }
 
     public async ClickOnConfirmPickAndClose() {

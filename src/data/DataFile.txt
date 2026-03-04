@@ -1,0 +1,39 @@
+
+Invoice file Data for dev
+| Peckham - 1BL | 123305  |
+/opc/dev/inbound/SCM_Order_Lines_To_Invoice_For_ODS
+
+Git Command Steps 
+
+// Creating Branch 
+
+First Pull the Code 
+
+//Git checkout main
+git pull 
+
+//Create Branch
+git checkout "new branch"
+
+//check the status 
+git status
+
+//Add files
+git add .
+
+//commit the changes 
+git commit -m "commit statement"
+
+//Push the changes
+git push -u origin "branch name"
+
+//push the code [ after more commits ]
+git push 
+
+//Merging branch changes
+git checkout main
+git pull
+git merge "branch name"
+git push
+
+

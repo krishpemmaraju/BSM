@@ -94,12 +94,17 @@ Before("@DB", async function (this: CustomWorld, { pickle }) {
     const env = (process.env.ENV?.toLowerCase() as Env) || 'dev';
     const envKey: EnvKey = envMap[env] || 'DEV'
 
+
     const hjConfig: any = data[`HIGHJUMP_${envKey}`][0];
+    const odsConfig: any = data[`ODS_${envKey}`][0];
 
     Object.assign(this, {
         HJURL: hjConfig[`HJ${envKey}ALIAS`],
         HJUSER: hjConfig[`HJ${envKey}USERNAME`],
         HJPASSWORD: hjConfig[`HJ${envKey}PASSWORD`],
+        ODSURL: odsConfig[`ODS${envKey}ALIAS`],
+        ODSUSER: odsConfig[`ODS${envKey}USERNAME`],
+        ODSPASSWORD: odsConfig[`ODS${envKey}PASSWORD`],
     })
     await this.init('db');
 });
@@ -183,7 +188,8 @@ Before({ tags: "@SCM" }, async function (this: CustomWorld, { result, pickle }: 
     const envKey: EnvKey = envMap[env] || 'DEV'
 
     const scmConfig: any = data[`SCM_${envKey}`][0];
-    const vbcsConfig: any = data[`ONPREM_${envKey}`][0];
+    const vbcsConfig: any = data[`VBCSOC_${envKey}`][0];
+    const onpremConfig:any = data[`ONPREM_${envKey}`][0];
 
     Object.assign(this, {
         SCMURL: scmConfig[`SCM${envKey}URL`],
@@ -193,9 +199,45 @@ Before({ tags: "@SCM" }, async function (this: CustomWorld, { result, pickle }: 
         SCMCHKAVAILABILITY: scmConfig[`SCM${envKey}CHKAVAILABILITY`],
         VBCSURL: vbcsConfig[`VBCS${envKey}OCURL`],
         VBCSUSER: vbcsConfig[`VBCS${envKey}OCUSERNAME`],
-        VBCSPASSWORD: vbcsConfig[`VBCS${envKey}OCPASSWORD`]
+        VBCSPASSWORD: vbcsConfig[`VBCS${envKey}OCPASSWORD`],
+        ONPREMOSBURL: onpremConfig[`ONPREM${envKey}OSBURL`],
+        ONPREMSOAURL: onpremConfig[`ONPREM${envKey}SOAURL`],
+        ONPREMUSER: onpremConfig[`ONPREM${envKey}USERNAME`],
+        ONPREMPASSWORD: onpremConfig[`ONPREM${envKey}PASSWORD`]
     })
     await this.init('scm');
+    this.envData = envKey
+    this.web = new UIActions(this.page);
+    this.rest = new RestRequest(this.page);
+})
+
+Before({ tags: "@MFT" }, async function (this: CustomWorld, { result, pickle }: ITestCaseHookParameter) {
+
+    console.log(" **********************   TEST STARTED **************************************************** \n");
+    console.log(" ****************** EXECUTION STARTED FOR SCENARIO - " + pickle.name + " ******************* \n");
+
+    type Env = 'dev' | 'stg' | 'staging' | 'tst'
+    type EnvKey = 'DEV' | 'STG' | 'TST'
+
+    const envMap: Record<Env, EnvKey> = {
+        dev: 'DEV',
+        stg: 'STG',
+        staging: 'STG',
+        tst: 'TST'
+    }
+
+    const env = (process.env.ENV?.toLowerCase() as Env) || 'dev';
+    const envKey: EnvKey = envMap[env] || 'DEV'
+
+    const mftConfig: any = data[`MFT_${envKey}`][0]
+
+    Object.assign(this, {
+        MFTURL: mftConfig[`MFT${envKey}URL`],
+        MFTUSER: mftConfig[`MFT${envKey}USERNAME`],
+        MFTPASSWORD: mftConfig[`MFT${envKey}PASSWORD`],
+        MFTNAVIGATION: mftConfig[`MFT${envKey}NAVIGATION`],
+    })
+    await this.init('mft');
     this.web = new UIActions(this.page);
     this.rest = new RestRequest(this.page);
 })
@@ -247,6 +289,21 @@ After({ tags: "@web" }, async function ({ result, pickle }: ITestCaseHookParamet
     if (status === 'FAILED') { sharedData.previousScenarioStatusFailed = true; sharedData.previousScenarioName = pickle.name }
     await this.page.close();
     await this.context?.close();
+})
+
+After({ tags: "@MFT" }, async function (this: CustomWorld, this1: ITestCaseHookParameter) {
+    const result = this1.result;
+    const pickle = this1.pickle;
+    const status = result?.status;
+    const scenario = pickle.name;
+    if (status === 'SKIPPED') { return; }
+    if (status === 'FAILED') { sharedData.previousScenarioStatusFailed = true; sharedData.previousScenarioName = pickle.name }
+    if (!sharedData.previousScenarioStatusFailed) {
+        await this.mftActionsPage.ClickOnMFTLogout()
+    }
+    console.log("************************ " + pickle.name + " is completed with " + status + " *******************");
+    this.page ? await this.page.close() : console.warn('No Pages Found')
+    this.context ? await this.context.close() : console.warn('No Context Found')
 })
 
 After({ tags: "@api" }, async function (this: CustomWorld, { result, pickle }: ITestCaseHookParameter) {

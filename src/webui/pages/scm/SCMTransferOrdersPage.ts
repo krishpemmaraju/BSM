@@ -43,7 +43,7 @@ export default class SCMTransferOrdersPage {
 
     public async getDataFromTransferOrderDetails(colHeader: string): Promise<string> {
         const getCellIndexForColHeader = await this.web.getPage().locator(`th[title="${colHeader}"]`).evaluate(el => Array.from(el.parentNode.children).indexOf(el));
-        return (await (await this.web.getPageLocator("tr.oj-table-body-row td:nth-child(" + (getCellIndexForColHeader + 1) + ")")).textContent()).trim();
+        return (await (await this.web.getPageLocator("tr.oj-table-body-row td:nth-child(" + (getCellIndexForColHeader + 1) + ")")).textContent()??'').trim();
     }
 
     public async clickOnTOLink(toNumber: string) {
@@ -58,7 +58,7 @@ export default class SCMTransferOrdersPage {
     public async isTransferOrderShipmentPageDisplayed(itemNum: string) {
         await (await this.web.getElementByText(itemNum)).waitFor({ state: 'visible', timeout: 40000 })
         await reportGeneration.getScreenshot(this.web.getPage(), 'TRANSFER ORDER PAGE DISPLAYED ', world)
-        return (await (await this.web.getPageLocator('h1.oj-sp-header-general-overview-page-title')).textContent()).trim()
+        return (await (await this.web.getPageLocator('h1.oj-sp-header-general-overview-page-title')).textContent()??'').trim()
     }
 
     public async clickOnItemLink(itemNumber: string) {

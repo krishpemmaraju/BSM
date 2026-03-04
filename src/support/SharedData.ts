@@ -7,5 +7,8 @@ export const sharedData = {
       ItemNumber2: '' as string,
       quantity: '' as string,
       shipmentNumber: '' as string,
-      shipmentNumberMulti: '' as string
+      shipmentNumberMulti: '' as string,
+      processIDForBSMInvoice: '' as string,
+      ODSCustomerOrderInvoiceFlag: '' as string,
+      ODSCustomerOrderShippedQTY: '' as string
 }

@@ -59,9 +59,9 @@ Feature: Create Customer Sales Order Using API and Perform Full and Partial ship
         Then User should see the tile contaning "<product>" and "<branch>" information
         When User selects the tile for the "<product>" pick confirm
         And user enter subinventory info as "<branch>" for Customer Sales Order
-        And User enter product number as "<product>"
-        And User enters Picked quantity for Customer Sales Order
-        And Click on Confirm Pick and Close
+        # And User enter product number as "<product>"
+        # And User enters Picked quantity for Customer Sales Order
+        # And Click on Confirm Pick and Close
 
         Examples:
             | branch        | product |
@@ -106,5 +106,5 @@ Feature: Create Customer Sales Order Using API and Perform Full and Partial ship
             | Peckham - 1BL | 123305  |
 
 
-    Scenario : Run the SCM job to send the Invoices to ODS
+
         

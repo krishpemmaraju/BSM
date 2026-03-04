@@ -27,19 +27,30 @@ import RestRequest from "../api/actions/RESTRequest";
 import ConfirmShipmentPage from "../webui/pages/scm/ConfirmShipmentPage";
 import SCMWolOrderCaptureHomePage from "../webui/pages/scm/SCMOrderCaptureHomePage";
 import ManageOrdersRedwood from "../webui/pages/scm/ManageOrdersRedwood";
+import ScheduledProcessesPage from "../webui/pages/scm/ScheduledProcessessPage";
+import MFTActionsPage from "../webui/pages/scm/MFTActionsPage";
 
 
 
 export default class CustomWorld extends World implements WorldImplPages {
+    /* Environment */
+    envData: string = '';
     /* Declaring the variables */
     SCMURL: string = '';
     SCMUSER: string = '';
     SCMPASSWORD: string = '';
+    MFTURL: string = '';
+    MFTUSER: string = '';
+    MFTPASSWORD: string = '';
     SCMSTOCKCHKAPI: string = '';
     SCMCHKAVAILABILITY: string = '';
     VBCSURL: string = '';
     VBCSUSER: string = '';
     VBCSPASSWORD: string = '';
+    ONPREMOSBURL: string = '';
+    ONPREMSOAURL: string = '';
+    ONPREMUSER: string = '';
+    ONPREMPASSWORD: string = '';
     CUSTOMERSALESORDER: string = ''
     customerSalesEndPointAPI: string = ''
     getResponse!: AxiosResponse;
@@ -68,6 +79,8 @@ export default class CustomWorld extends World implements WorldImplPages {
     confirmShipmentPage!: ConfirmShipmentPage;
     scmWolOrderCaptureHomePage!: SCMWolOrderCaptureHomePage;
     manageOrderSCMRedwood!: ManageOrdersRedwood;
+    scheduledProcesses!: ScheduledProcessesPage;
+    mftActionsPage!: MFTActionsPage;
     web!: UIActions;
     page!: Page;
     rest!: RestRequest;
@@ -93,7 +106,7 @@ export default class CustomWorld extends World implements WorldImplPages {
                 ignoreHTTPSErrors: true,
                 acceptDownloads: true
             });
-            // await this.context.clearCookies();
+            await this.context.clearCookies();
             this.page = await this.context.newPage();
             // Force maximize for Firefox (and others)
             // await this.page.evaluate(() => {
@@ -127,6 +140,8 @@ export default class CustomWorld extends World implements WorldImplPages {
             this.confirmShipmentPage = new ConfirmShipmentPage(this.web);
             this.scmWolOrderCaptureHomePage = new SCMWolOrderCaptureHomePage(this.web);
             this.manageOrderSCMRedwood = new ManageOrdersRedwood(this.web);
+            this.scheduledProcesses = new ScheduledProcessesPage(this.web);
+            this.mftActionsPage = new MFTActionsPage(this.web);
         }
     }
 

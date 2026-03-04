@@ -48,9 +48,15 @@ export default class OrderManagementPage {
         return await (await this.getFramePageObject()).getByRole('heading', { name: headerText }).isVisible({ timeout: TEST_CONFIG.TIMEOUTS.element });
     }
 
-      public async ClickOnManageOrdersRedwood(optionToSelect: string){
-                  await (await this.web.getElementByRoleByName('heading', 'Order Management')).waitFor({state:'visible', timeout:TEST_CONFIG.TIMEOUTS.element})
-                  return  (await this.web.switchToNewWindow("a[title='"+optionToSelect+"']",'Clicking on Manage Order'));
-            }
+    public async ClickOnManageOrdersRedwood(optionToSelect: string) {
+        await (await this.web.getElementByRoleByName('heading', 'Order Management')).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element })
+        await (await this.web.getPageLocator("a[title='View all actions']")).click()
+        await (await this.web.getPageLocator("div[title='Actions']")).waitFor({ state: 'visible', timeout: 9000 })
+        return (await this.web.switchToNewWindow("//div[@class='oj-listview-cell-element']//a[text()='" + optionToSelect + "']", 'Clicking on Manage Order'));
+    }
+
+    public async ClickOnClose() {
+        await (await this.web.getPageLocator("div.oj-flex-bar-start oj-c-button")).click()
+    }
 
 }

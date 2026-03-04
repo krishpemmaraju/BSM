@@ -144,8 +144,35 @@ export default class SCMHomePage {
     }
 
 
+    public async navigateToTools() {
+        await this.ClickOnHomeIcon();
+        await this.web.element(WAIT_FOR_SEARCH_ICON, "Wait for search icon on Home Page").waitForElementToVisible(TEST_CONFIG.TIMEOUTS.element);
+        await reportGeneration.getScreenshot(this.web.getPage(), "SCM HOME PAGE LAUNCHED", world);
+        const getNavMenuLinks = await this.web.getPageLocator(GET_NAV_LINKS);
+        const rightHandNav = await this.web.getPageLocator(CLICK_RIGHT_HAND_NAV);
+        for (let i = 0; i < await getNavMenuLinks.count(); i++) {
+            if (await getNavMenuLinks.nth(i).textContent({ timeout: 6000 }) == "Tools") {
+                console.log(await getNavMenuLinks.nth(i).textContent());
+                await getNavMenuLinks.nth(i).click();
+                break;
+            }
+            else {
+                if (i == 7) {
+                    await rightHandNav.click();
+                }
+            }
+        }
+        (await this.web.getPageLocator('#itemNode_tools_scheduled_processes_fuse_plus_0')).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.probElements });
+        await reportGeneration.getScreenshot(this.web.getPage(), "SCHEDULED PROCESSES PAGE SECTION LAUNCHED", world);
+    }
+
+
     public async ClickOnSupplyChainOrchestration() {
         await (await this.web.getPageLocator('#itemNode_supply_orchestration_supply_orchestration_0')).click();
+    }
+
+    public async ClickOnScheduledProcesses() {
+        await (await this.web.getPageLocator('#itemNode_tools_scheduled_processes_fuse_plus_0')).click();
     }
 
 }

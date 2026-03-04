@@ -40,8 +40,13 @@ export default class ManageOrdersRedwood {
         return await (page.locator("table[summary='This table contains column headers corresponding to the data body table below'] tr th span", { hasText: colHeader }).locator('xpath=ancestor::th')).getAttribute('_d_index') ?? '';
     }
 
-    public async GetOrderStatusFromManageOrders(page: Page, colName: string, customerSO: string) {
+    public async ClickOnOrderLink(page:Page,customerSO:string){
         await (await this.web.getElementByRoleByNameWithPageArg(page, 'link', customerSO.trim())).click()
+    }
+
+    public async GetOrderStatusFromManageOrders(page: Page, colName: string, customerSO: string) {
+       // await (await this.web.getElementByRoleByNameWithPageArg(page, 'link', customerSO.trim())).click()
+        await (await this.web.getPageLocatorBypage(page, "div[title='Order Lines'] h2")).waitFor({ state: 'visible', timeout: 15000 })
         const columnIndex = parseInt(await this.GetColumnIndex(page, 'Status'));
         const getTDStatus = await (page.locator("//table[@summary='Order Lines']//tr//table[@_afrit]//tr//td[@class='xen'][" + columnIndex + "]")).textContent();
         return getTDStatus;

@@ -1,7 +1,7 @@
 {
     "DEV": {
         "paths": [
-            "features/SCM/DEV/SCM/CreateCustomerSalesOrderAPIMultiLine.feature"
+            "features/SCM/DEV/SCM/CreateCustomerCashAccountSalesInvoice.feature"
         ],
         "formatOptions": {
             "snippetInterface": "async-await"
@@ -86,7 +86,7 @@
     },
     "TST": {
         "paths": [
-            "features/SCM/TST/SCM/ModifyingPromiseDates.feature"
+            "features/SCM/TST/SCM/CreateTransferOrderSupply.feature"
         ],
         "formatOptions": {
             "snippetInterface": "async-await"

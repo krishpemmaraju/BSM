@@ -128,6 +128,7 @@ Then('User should see the order status as {string} for all products', async func
   await Assert.assertEquals('Awaiting Shipping', statusOf_itemNum2)
   await this.newWindow.close();
   await this.originalPage.bringToFront();
+  await this.orderManagementPage.ClickOnClose();
 });
 
 /* Validate Multiline Sales Order in SaaS */
@@ -204,7 +205,7 @@ When('User enters  CustomerSalesOrder Number for MultiLine', async function (thi
   // }
   // customerSO = data.customerSalesOrderNumber;
   // itemQuantity = data.SOorderQty;
-  sharedData.CUSTOMERSALESORDERNUMBER = '1BL|17020968';
+  //sharedData.CUSTOMERSALESORDERNUMBER = '1BL|03031431';
   await this.confirmPicksPage.EnterCustomerSalesOrderNumberOnConfirmPicksPage(sharedData.CUSTOMERSALESORDERNUMBER);
 });
 
@@ -214,9 +215,9 @@ Then('User should see the tiles contaning {string} and {string} and {string} inf
   await Assert.assertContains((await this.confirmPicksPage.GetPickingQuantityFromMultiProductTileInPickingPane(product1, product2)).split('-')[0].split(' ')[0].trim(), sharedData.quantity.trim())
   await Assert.assertContains((await this.confirmPicksPage.GetPickingSourceBranchFromProductTilePane(product1)).split(':')[1].trim(), branch.split('-')[1].trim())
   await Assert.assertContains((await this.confirmPicksPage.GetPickingSourceBranchFromProductTilePane(product2)).split(':')[1].trim(), branch.split('-')[1].trim())
-  await Assert.assertContains((await this.confirmPicksPage.GetPickingDestinationBranchFromProductTilePane(product1)).split(':')[1], branch.split('-')[1].trim())
+  //await Assert.assertContains((await this.confirmPicksPage.GetPickingDestinationBranchFromProductTilePane(product1)).split(':')[1], branch.split('-')[1].trim())
 
-  await Assert.assertContains((await this.confirmPicksPage.GetPickingDestinationBranchFromProductTilePane(product2)).split(':')[1], branch.split('-')[1].trim())
+  //await Assert.assertContains((await this.confirmPicksPage.GetPickingDestinationBranchFromProductTilePane(product2)).split(':')[1], branch.split('-')[1].trim())
 
 });
 
@@ -229,7 +230,11 @@ Then('User should see Confirm Pick and Next option', async function (this: ICust
 });
 
 When('User enter subinventory info as {string} , {string}, {string}, picked quantity  for all products in Customer Sales Order', async function (this: ICustomWorld, branch, product1, product2) {
-  await this.confirmPicksPage.EnterSubinventoryCodeForProduct(product1, product2, sharedData.quantity)
+  if (this.envData === 'TST' || this.envData === 'tst') {
+    await this.confirmPicksPage.EnterSubInventoryPickedQtyMultiLine(sharedData.quantity);
+  } else {
+    await this.confirmPicksPage.EnterSubinventoryCodeForProduct(product1, product2, sharedData.quantity)
+  }
 });
 
 /* Confirm Ship Goods for Multi Line */

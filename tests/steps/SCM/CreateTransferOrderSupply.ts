@@ -211,7 +211,7 @@ When('User runs the select query', async function () {
     SO.TRANS_NUMBER = SOD.TRANS_NUMBER  AND SO.STORE_ORDER_NUMBER = '${branchWithTO}'`;
     results = await new DBConnection().attemptQueryForResults(connectionHJ, 400, getQueryForKoerber, 30000)
 });
-Then('User should see the results', async function () {
+Then(/^User should see the results$/, async function () {
     let getTOData: any[] = [];
     for (let data of results.rows) {
         let rowObj: any = {}
@@ -227,6 +227,7 @@ Then('User should see the results', async function () {
 let IF206ShipConfirmURL: string;
 Given('the API end point IF206 Ship Confirm', async function () {
     IF206ShipConfirmURL = this.ONPREMOSBURL + "/wuk/api/HighJumpOutboundTransaction/v1/outboundTransaction";
+    console.log(IF206ShipConfirmURL)
 });
 
 When('user update the payload with values captured from HJ DB', async function () {
@@ -277,6 +278,7 @@ When('User send the post request', async function () {
     );
     const updatedTOJson = await JSONUtils.updateAllArraysJsonFields(path.resolve(process.cwd(), IF206jsonFilePath), "transactions", changeField);
     getIF206Response = await APIClient.post(this.ONPREMOSBURL, "/wuk/api/HighJumpOutboundTransaction/v1/outboundTransaction", JSON.parse(updatedTOJson), headers);
+    console.log(getIF206Response.data)
 });
 
 Then('User should have {int} response code successful', async function (int) {

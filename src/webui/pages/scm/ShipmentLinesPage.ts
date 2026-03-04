@@ -90,8 +90,6 @@ export default class ShipmentLinesPage {
 
     public async GetShipmentLineStatusForProducts(colName: string, expectedLineStatus: string, product1: string, product2: string): Promise<boolean> {
         let getLineStatusIndex = await this.GetLineStatusColIndex(colName);
-        let getProduct1LineStatus: string;
-        let getProduct2LineStatus: string;
         let attemptInt = 0;
         while (attemptInt < 400) {
             attemptInt++;
