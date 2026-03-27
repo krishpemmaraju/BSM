@@ -10,7 +10,7 @@ let reportGeneration: ReportGeneration;
 let testInfo: TestInfo;
 let FRAME_LOCATOR_TEXT = 'iframe[src*="wol-order-capture/live"]';
 
-//setDefaultTimeout(600 * 1000 * 2);
+setDefaultTimeout(150000);
 
 export default class OrderManagementPage {
 
@@ -50,6 +50,7 @@ export default class OrderManagementPage {
 
     public async ClickOnManageOrdersRedwood(optionToSelect: string) {
         await (await this.web.getElementByRoleByName('heading', 'Order Management')).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element })
+        await (await this.web.getPageLocator("a[title='View all actions']")).waitFor({state:'visible',timeout: 15000})
         await (await this.web.getPageLocator("a[title='View all actions']")).click()
         await (await this.web.getPageLocator("div[title='Actions']")).waitFor({ state: 'visible', timeout: 9000 })
         return (await this.web.switchToNewWindow("//div[@class='oj-listview-cell-element']//a[text()='" + optionToSelect + "']", 'Clicking on Manage Order'));

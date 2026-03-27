@@ -26,7 +26,7 @@ export default class ReceiveGoodsPage {
     }
 
     public async SelectOrganizationDropdown(branch: string) {
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 2000));
         await (await this.web.getPageLocator('div.oj-searchselect-main-field input')).click()
         await (await this.web.getPageLocator("#oj-searchselect-results-OrgNameSingleSelect")).waitFor({ state: 'visible', timeout: 10000 })
         const getListOfOrgDrpDwnCnt = await this.web.getPageLocator('#lovDropdown_OrgNameSingleSelect ul li');

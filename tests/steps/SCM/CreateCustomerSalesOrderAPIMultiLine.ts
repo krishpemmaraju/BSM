@@ -21,47 +21,50 @@ let orderQuantity: any;
 let changeField: any;
 let product1: string;
 let product2: string;
-When('user update the multilines payload with {string},{string},{string},{string},{string},{string}', async function (product, product_1, destinationOrg, quantity, productPrice, productPrice1) {
+When('user update the multilines payload with {string},{string},{string},{string},{string},{string}', async function (this:ICustomWorld,product, product_1, destinationOrg, quantity, productPrice, productPrice1) {
   const todayDate = await DateUtils.generateDateWithFormat('DDMMHHSS');
   const dateFormat = await DateUtils.generateDateWithFormat('YYYY-MM-DDTHH:mm:ss.SSSZ');
-  const sourceTransactionNumber = destinationOrg + '|' + todayDate;
-  orderQuantity = quantity;
-  sharedData.quantity = quantity;
-  product1 = product;
-  product2 = product_1;
+  const sourceTransactionNumber = this.testdata![0].BRANCH + '|' + todayDate;
+  orderQuantity = this.testdata![0].QUANTITY
+//  orderQuantity = orderQuantity;
+  sharedData.quantity = orderQuantity;
+  product1 = this.testdata![0].PRODUCT1;
+  product2 = this.testdata![0].PRODUCT2;
+  // product1 = product;
+  // product2 = product_1;
   console.log(`${product1}, ${product2}`)
-  let productPriceData: GLfloat = parseFloat(quantity) * parseFloat(productPrice)
-  let productPriceData1: GLfloat = parseFloat(quantity) * parseFloat(productPrice1)
+  let productPriceData: GLfloat = parseFloat(sharedData.quantity) * parseFloat(this.testdata![0].PRODUCTPRICE1)
+  let productPriceData1: GLfloat = parseFloat(sharedData.quantity) * parseFloat(this.testdata![0].PRODUCTPRICE2)
   changeField = {
     "SourceTransactionNumber": sourceTransactionNumber,
     "SourceTransactionId": sourceTransactionNumber,
     "lines": [
       {
-        "RequestedFulfillmentOrganizationCode": destinationOrg,
+        "RequestedFulfillmentOrganizationCode": this.testdata![0].BRANCH,
         "RequestedArrivalDate": dateFormat,
         "ProductNumber": product1,
-        "OrderedQuantity": parseInt(quantity),
+        "OrderedQuantity": parseInt(sharedData.quantity),
         "chargeComponents": [
           {
-            "HeaderCurrencyUnitPrice": productPrice,
+            "HeaderCurrencyUnitPrice": this.testdata![0].PRODUCTPRICE1,
             "HeaderCurrencyExtendedAmount": productPriceData
           }, {
-            "HeaderCurrencyUnitPrice": productPrice,
+            "HeaderCurrencyUnitPrice": this.testdata![0].PRODUCTPRICE1,
             "HeaderCurrencyExtendedAmount": productPriceData,
           }
         ]
       },
       {
-        "RequestedFulfillmentOrganizationCode": destinationOrg,
+        "RequestedFulfillmentOrganizationCode": this.testdata![0].BRANCH,
         "RequestedArrivalDate": dateFormat,
         "ProductNumber": product2,
-        "OrderedQuantity": parseInt(quantity),
+        "OrderedQuantity": parseInt(sharedData.quantity),
         "chargeComponents": [
           {
-            "HeaderCurrencyUnitPrice": productPrice1,
+            "HeaderCurrencyUnitPrice": this.testdata![0].PRODUCTPRICE2,
             "HeaderCurrencyExtendedAmount": productPriceData1
           }, {
-            "HeaderCurrencyUnitPrice": productPrice1,
+            "HeaderCurrencyUnitPrice": this.testdata![0].PRODUCTPRICE2,
             "HeaderCurrencyExtendedAmount": productPriceData1,
           }
         ]
@@ -141,6 +144,7 @@ When('User enter the Multiline CustomerSalesOrder Number', async function (this:
   //   }
   // }
   // customerSO = data.customerSalesOrderNumber;
+  //sharedData.CUSTOMERSALESORDERNUMBER = '1BL|11031092'
   await this.inventoryManagamentPage.EnterDocumentNumberShipmentLines(sharedData.CUSTOMERSALESORDERNUMBER.trim())
 });
 
@@ -150,17 +154,17 @@ When('User enter  CustomerMultiLineSalesOrder Number under ShipmentLines', async
 
 
 Then('User Should see Shipment Lines Page for products {string} , {string} with Line Status as Ready to release', async function (this: ICustomWorld, product1, product2) {
-  await this.shipmentLinePage.GetShipmentLineStatusForProducts('Line Status', 'Ready to release', product1, product2)
-  await Assert.AssertTrue(await this.shipmentLinePage.IsShipmentLinesVisibleForMultiLineCustSO(product1, product2))
+  await this.shipmentLinePage.GetShipmentLineStatusForProducts('Line Status', 'Ready to release', sharedData.ItemNumber1, sharedData.ItemNumber2)
+  await Assert.AssertTrue(await this.shipmentLinePage.IsShipmentLinesVisibleForMultiLineCustSO(sharedData.ItemNumber1, sharedData.ItemNumber2))
 });
 
 Then('User should see the status for CustomerSalesOrder as {string} for products {string} , {string}', async function (this: ICustomWorld, expectedStatus, product1, product2) {
-  await Assert.AssertTrue(await this.shipmentLinePage.GetShipmentLineStatusForProducts('Line Status', expectedStatus, product1, product2));
+  await Assert.AssertTrue(await this.shipmentLinePage.GetShipmentLineStatusForProducts('Line Status', expectedStatus, sharedData.ItemNumber1, sharedData.ItemNumber2));
 });
 
 
 Then('User should Capture ShipmentID for CustomerSalesOrder for products {string},{string}', async function (this: ICustomWorld, product1, product2) {
-  const shipmentID = await this.shipmentLinePage.GetShipmentIDForMultiProducts('Shipment', product1, product2);
+  const shipmentID = await this.shipmentLinePage.GetShipmentIDForMultiProducts('Shipment', sharedData.ItemNumber1, sharedData.ItemNumber2);
   console.log(`shipment call - ${shipmentID}`)
   if (!shipmentID.includes('-')) {
     sharedData.shipmentNumberMulti = shipmentID.trim()
@@ -171,7 +175,7 @@ Then('User should Capture ShipmentID for CustomerSalesOrder for products {string
         data = JSON.parse(content);
       }
     }
-    data[`ShipmentNumber_${product1}_${product2}`] = shipmentID.trim();
+    data[`ShipmentNumber_${sharedData.ItemNumber1}_${sharedData.ItemNumber2}`] = shipmentID.trim();
     fs.writeFileSync('src/data/TransferOrderData/CustomerMultiLineSalesOrderData.json', JSON.stringify(
       data, null, 2));
   } else {
@@ -183,8 +187,8 @@ Then('User should Capture ShipmentID for CustomerSalesOrder for products {string
         data = JSON.parse(content);
       }
     }
-    const key1 = `ShipmentNumber_${product1}`
-    const key2 = `ShipmentNumber_${product1}`
+    const key1 = `ShipmentNumber_${sharedData.ItemNumber1}`
+    const key2 = `ShipmentNumber_${sharedData.ItemNumber2}`
     data[key1] = shipmentID.split('-')[0];
     data[key2] = shipmentID.split('-')[1];
     fs.writeFileSync('src/data/TransferOrderData/CustomerMultiLineSalesOrderData.json', JSON.stringify(
@@ -205,16 +209,18 @@ When('User enters  CustomerSalesOrder Number for MultiLine', async function (thi
   // }
   // customerSO = data.customerSalesOrderNumber;
   // itemQuantity = data.SOorderQty;
-  //sharedData.CUSTOMERSALESORDERNUMBER = '1BL|03031431';
+  //sharedData.CUSTOMERSALESORDERNUMBER = '1BL|11031296';
   await this.confirmPicksPage.EnterCustomerSalesOrderNumberOnConfirmPicksPage(sharedData.CUSTOMERSALESORDERNUMBER);
 });
 
 
 Then('User should see the tiles contaning {string} and {string} and {string} information', async function (this: ICustomWorld, product1, product2, branch) {
-  await Assert.AssertTrue(await this.confirmPicksPage.isProductsCardDisplayedForMultipleProducts(product1, product2))
-  await Assert.assertContains((await this.confirmPicksPage.GetPickingQuantityFromMultiProductTileInPickingPane(product1, product2)).split('-')[0].split(' ')[0].trim(), sharedData.quantity.trim())
-  await Assert.assertContains((await this.confirmPicksPage.GetPickingSourceBranchFromProductTilePane(product1)).split(':')[1].trim(), branch.split('-')[1].trim())
-  await Assert.assertContains((await this.confirmPicksPage.GetPickingSourceBranchFromProductTilePane(product2)).split(':')[1].trim(), branch.split('-')[1].trim())
+  await Assert.AssertTrue(await this.confirmPicksPage.isProductsCardDisplayedForMultipleProducts(sharedData.ItemNumber1, sharedData.ItemNumber2))
+  //await Assert.AssertTrue(await this.confirmPicksPage.isProductsCardDisplayedForMultipleProducts(product1, product2))
+  await Assert.assertContains((await this.confirmPicksPage.GetPickingQuantityFromMultiProductTileInPickingPane(sharedData.ItemNumber1, sharedData.ItemNumber2)).split('-')[0].split(' ')[0].trim(), sharedData.quantity.trim())
+  //await Assert.assertContains((await this.confirmPicksPage.GetPickingQuantityFromMultiProductTileInPickingPane(product1, product2)).split('-')[0].split(' ')[0].trim(), sharedData.quantity.trim())
+  await Assert.assertContains((await this.confirmPicksPage.GetPickingSourceBranchFromProductTilePane(sharedData.ItemNumber1)).split(':')[1].trim(), this.testdata![0].SUBINVENTORY.split('-')[1].trim())
+  await Assert.assertContains((await this.confirmPicksPage.GetPickingSourceBranchFromProductTilePane(sharedData.ItemNumber2)).split(':')[1].trim(), this.testdata![0].SUBINVENTORY.split('-')[1].trim())
   //await Assert.assertContains((await this.confirmPicksPage.GetPickingDestinationBranchFromProductTilePane(product1)).split(':')[1], branch.split('-')[1].trim())
 
   //await Assert.assertContains((await this.confirmPicksPage.GetPickingDestinationBranchFromProductTilePane(product2)).split(':')[1], branch.split('-')[1].trim())
@@ -233,7 +239,7 @@ When('User enter subinventory info as {string} , {string}, {string}, picked quan
   if (this.envData === 'TST' || this.envData === 'tst') {
     await this.confirmPicksPage.EnterSubInventoryPickedQtyMultiLine(sharedData.quantity);
   } else {
-    await this.confirmPicksPage.EnterSubinventoryCodeForProduct(product1, product2, sharedData.quantity)
+    await this.confirmPicksPage.EnterSubinventoryCodeForProduct(sharedData.ItemNumber1, sharedData.ItemNumber2, sharedData.quantity)
   }
 });
 
@@ -256,15 +262,15 @@ When('User enters Shipment Number for Customer Sales Order for MultiLine product
 });
 
 Then('User should see Shipment page to ship goods for products {string},{string}', async function (this: ICustomWorld, product1, product2) {
-  await Assert.AssertTrue(await this.confirmShipmentPage.IsShipmentForProductDisplayed(sharedData.shipmentNumberMulti.trim(), product1, product2));
+  await Assert.AssertTrue(await this.confirmShipmentPage.IsShipmentForProductDisplayed(sharedData.shipmentNumberMulti.trim(), sharedData.ItemNumber1, sharedData.ItemNumber2));
 });
 
 When('User clicks on Shipment Number tile for products {string},{string} and validate the shipment Quantity', async function (this: ICustomWorld, product1, product2) {
-  await this.confirmShipmentPage.ClickOnShipmentTile(product1);
+  await this.confirmShipmentPage.ClickOnShipmentTile(sharedData.ItemNumber1);
   let getPickedQuantityprod1 = await this.confirmShipmentPage.GetShippedQtyInShipmentLineDetails();
   await Assert.assertEquals(sharedData.quantity, getPickedQuantityprod1);
   await this.confirmShipmentPage.ClickOnCancelOnShipmentPage();
-  await this.confirmShipmentPage.ClickOnShipmentTile(product2);
+  await this.confirmShipmentPage.ClickOnShipmentTile(sharedData.ItemNumber2);
   let getPickedQuantityprod2 = await this.confirmShipmentPage.GetShippedQtyInShipmentLineDetails();
   await Assert.assertEquals(sharedData.quantity, getPickedQuantityprod2);
   await this.confirmShipmentPage.ClickOnCancelOnShipmentPage();
@@ -281,7 +287,7 @@ Then('User should validate shipped quantity for Customer Sales Order for product
   //   }
   // }
   // itemQuantity = data.SOorderQty;
-  const shippedQty = await this.shipmentLinePage.GetShipmentIDForMultiProducts('Ship Quantity', product1, product2);
+  const shippedQty = await this.shipmentLinePage.GetShipmentIDForMultiProducts('Ship Quantity', sharedData.ItemNumber1, sharedData.ItemNumber2);
   if (shippedQty.includes('-')) { await Assert.assertContains(sharedData.quantity, shippedQty.split('-')[0]); } else { await Assert.assertContains(sharedData.quantity, shippedQty); }
 
 });

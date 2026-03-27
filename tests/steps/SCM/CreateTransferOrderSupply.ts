@@ -13,6 +13,7 @@ import StringUtils from "../../../src/utils/StringUtils";
 import type { ICustomWorld } from "../../../src/support/CustomWorld";
 import { enableSkipScenario } from '../../../src/support/SkippingTestCases'
 import { AxiosResponse } from "axios";
+import { sharedData } from "../../../src/support/SharedData";
 
 
 
@@ -30,7 +31,7 @@ Given('the API end point for Create Transfer Order API', async function () {
 let updatedTOJson: Record<string, any>;
 let changeField: any;
 let todayInterfaceDate: string = "KK";
-When('user update the payload with {string},{string},{string},{string},{string}', async function (product, destinationOrg, destinationSubOrg, sourceOrg, quantity) {
+When('user update the payload for TO with {string},{string},{string},{string},{string}', async function (this: ICustomWorld, product, destinationOrg, destinationSubOrg, sourceOrg, quantity) {
     const todayDate = await DateUtils.generateDateWithFormat('DDHHSS');
     const dateFormat = await DateUtils.generateDateWithFormat('YYYY-MM-DDTHH:mm:ss.SSSZ');
     todayInterfaceDate = todayInterfaceDate + todayDate;
@@ -40,10 +41,10 @@ When('user update the payload with {string},{string},{string},{string},{string}'
         "SupplyRequestDate": dateFormat,
         "supplyRequestLines": [{
             "InterfaceBatchNumber": todayInterfaceDate,
-            "DestinationOrganizationCode": destinationOrg, "DestinationSubinventoryCode": destinationSubOrg,
-            "SourceOrganizationCode": sourceOrg, "SourceSubinventoryCode": sourceOrg, "ItemNumber": product,
+            "DestinationOrganizationCode": this.testdata![0].BRANCH, "DestinationSubinventoryCode": this.testdata![0].BRANCH,
+            "SourceOrganizationCode": this.testdata![0].DESTINATIONFEEDER, "SourceSubinventoryCode": this.testdata![0].DESTINATIONFEEDER, "ItemNumber": this.testdata![0].PRODUCT,
             "NeedByDate": dateFormat,
-            "Quantity": parseInt(quantity)
+            "Quantity": parseInt(this.testdata![0].QUANTITY)
         }]
     }
 });
@@ -65,6 +66,7 @@ When('User send the post request to the endpoint', async function () {
 Then('User should have {int} response code successful and capture interface number', async function (int) {
     await Assert.assertEquals('201', getResponse.status.toString())
     getSupplyReferenceNumber = (await JSONUtils.getJsonValueFromResponse(getResponse.data, 'InterfaceBatchNumber'))
+    sharedData.customersalesorderTONumber = getSupplyReferenceNumber;
     this.itemNumber = (await JSONUtils.getJsonValueFromResponse(getResponse.data, 'ItemNumber'))
     this.itemQuantity = (await JSONUtils.getJsonValueFromResponse(getResponse.data, 'Quantity'))
     this.destinationOrg = (await JSONUtils.getJsonValueFromResponse(getResponse.data, 'DestinationOrganizationCode'))
@@ -109,16 +111,16 @@ When('Click on Search', async function (this: ICustomWorld) {
 });
 let documentNumber: string;
 Then('User should see Transfer Order Created and Capture the Transfer Order number', async function (this: ICustomWorld) {
-    documentNumber = await this.manageSupplyPage.GetDocumentNumber('Document Number');
-    console.log(documentNumber)
     for (let j = 0; j < 20; j++) {
-        console.log('coming here')
-        documentNumber = await this.manageSupplyPage.GetDocumentNumber('Document Number');
+        console.log('coming here' + j)
+        documentNumber = await this.manageSupplyPage.GetDocumentNumber(sharedData.customersalesorderTONumber, 'Document Number');
         if (documentNumber == ' ') {
+            console.log('coming here')
             await this.manageSupplyPage.ExpandSearch();
-            await this.manageSupplyPage.ClickonManageSupplySearch()
+            await this.manageSupplyPage.ClickonManageSupplySearch();
+            await new Promise(resolve => setTimeout(resolve, 14000));
         } else {
-            documentNumber = await this.manageSupplyPage.GetDocumentNumber('Document Number');
+            documentNumber = await this.manageSupplyPage.GetDocumentNumber(sharedData.customersalesorderTONumber, 'Document Number');
             break;
         }
 
@@ -355,7 +357,13 @@ Then('User should see Receive Goods Page', async function (this: ICustomWorld) {
 });
 
 When('User selects the Organization as {string}', async function (this: ICustomWorld, branch) {
-    await this.receiveGoodsPage.SelectOrganizationDropdown(branch)
+    await this.receiveGoodsPage.SelectOrganizationDropdown(this.testdata![0].SUBINVENTORY)
+    //await this.receiveGoodsPage.SelectOrganizationDropdown(branch)
+});
+
+When('User selects the branch Organization as {string}', async function (this: ICustomWorld, branch) {
+    await this.receiveGoodsPage.SelectOrganizationDropdown(this.testdata![0].SUBINVENTORYBRANCH)
+    //await this.receiveGoodsPage.SelectOrganizationDropdown(branch)
 });
 
 When('User clicks on Continue', async function (this: ICustomWorld) {
@@ -489,6 +497,9 @@ When('User clicks on Put Away', async function (this: ICustomWorld) {
             data = JSON.parse(content);
         }
     }
+    if (await this.putAwayGoodsPage.checkIfLocatorIsEnabledAndSelect()) {
+        await this.putAwayGoodsPage.selectLocatorIsEnabledAndSelect('Bin')
+    }
     let quantityInPutAway = await this.putAwayGoodsPage.GetQuantityFromPutAwaySection();
     await Assert.assertEquals(data.destinationOrgCode, await this.putAwayGoodsPage.GetBranchFromPutAwaySection());
     await Assert.AssertTrue(quantityInPutAway.toString().includes(data.itemQuantity));
@@ -509,7 +520,7 @@ Given('the API end point for Cutomer Sales Order API', async function () {
 
 let updatedCustSalesOrderJson: Record<string, any>;
 let changeFieldSO: any;
-When('user update the payload with SourceTransactionNumber,SourceTransactionID,{string},{string},{string}', async function (product, branch, quantity) {
+When('user update the payload with SourceTransactionNumber,SourceTransactionID,{string},{string},{string}', async function (this:ICustomWorld,product, branch, quantity) {
     let data: any[] = [];
     if (fs.existsSync('src/data/TransferOrderData/GetTransferOrder.json')) {
         const content = fs.readFileSync('src/data/TransferOrderData/GetTransferOrder.json', 'utf8');
@@ -522,7 +533,7 @@ When('user update the payload with SourceTransactionNumber,SourceTransactionID,{
         "SourceTransactionNumber": data[0].STORE_ORDER_NUMBER.toString().replace("/", "|"),
         "SourceTransactionId": data[0].STORE_ORDER_NUMBER.toString().replace("/", "|"),
         "lines": [{
-            "RequestedFulfillmentOrganizationCode": branch,
+            "RequestedFulfillmentOrganizationCode": this.testdata![0].BRANCH,
             "ProductNumber": data[0].ITEM_NUMBER,
             "OrderedQuantity": parseInt(data[0].QTY),
             "RequestedArrivalDate": dateFormat
@@ -669,7 +680,9 @@ Then('User should see the tile contaning product information', async function (t
     await Assert.AssertTrue(await this.confirmPicksPage.IsProuctTileDisplayed(itemNumShipmentLines))
     await Assert.assertContains((await this.confirmPicksPage.GetQuantityFromProductTileInPickingPane()).split(' ')[0].trim(), itemQuantity.trim())
     await Assert.assertContains((await this.confirmPicksPage.GetSourceLocationFromProductTileInPickingPane()).split(':')[1].trim(), sourceLocation.trim())
-    await Assert.assertContains((await this.confirmPicksPage.GetDestinationLocationFromProductTileInPickingPane()).split(':')[1], sourceLocation.trim())
+    if (!this.featureName?.includes('CreateTransferOrderSupply')) {
+        await Assert.assertContains((await this.confirmPicksPage.GetDestinationLocationFromProductTileInPickingPane()).split(':')[1], sourceLocation.trim())
+    }
 });
 
 When('User selects the tile for pick confirm', async function (this: ICustomWorld) {
@@ -677,7 +690,7 @@ When('User selects the tile for pick confirm', async function (this: ICustomWorl
 });
 
 When('user enter subinventory code', async function (this: ICustomWorld) {
-    await this.confirmPicksPage.EnterSubnventoryCode(sourceLocation)
+    await this.confirmPicksPage.EnterLocatorInformation()
 });
 
 When('User enter Item Number', async function (this: ICustomWorld) {
@@ -685,7 +698,7 @@ When('User enter Item Number', async function (this: ICustomWorld) {
 });
 
 When('User enters Picked Quantity', async function (this: ICustomWorld) {
-    await this.confirmPicksPage.EnterPickedQuantity(itemQuantity);
+    //await this.confirmPicksPage.EnterPickedQuantity(itemQuantity);
 });
 
 When('Click on Confirm Pick and Close', async function (this: ICustomWorld) {

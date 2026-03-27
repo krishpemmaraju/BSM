@@ -29,12 +29,16 @@ import SCMWolOrderCaptureHomePage from "../webui/pages/scm/SCMOrderCaptureHomePa
 import ManageOrdersRedwood from "../webui/pages/scm/ManageOrdersRedwood";
 import ScheduledProcessesPage from "../webui/pages/scm/ScheduledProcessessPage";
 import MFTActionsPage from "../webui/pages/scm/MFTActionsPage";
+import { CustomerSalesOrderData } from "./CustomerSalesOrderData";
 
 
 
 export default class CustomWorld extends World implements WorldImplPages {
     /* Environment */
     envData: string = '';
+    featureName: string | undefined;
+    /* for getting test data */
+    testdata!: CustomerSalesOrderData[keyof CustomerSalesOrderData]
     /* Declaring the variables */
     SCMURL: string = '';
     SCMUSER: string = '';
@@ -91,6 +95,9 @@ export default class CustomWorld extends World implements WorldImplPages {
 
     constructor(options: IWorldOptions) {
         super(options);
+        this.testdata = undefined;
+        this.featureName = undefined;
+
     }
 
 
@@ -101,7 +108,10 @@ export default class CustomWorld extends World implements WorldImplPages {
             this.browser = await WebBrowserManager.launch(app === 'vbsoc' ? 'firefox' : 'chromium');
             await new Promise(r => setTimeout(r, 300));
             this.context = await this.browser.newContext({
-                viewport: null,
+                viewport: { width: 1920, height: 1200 },
+                deviceScaleFactor: 1,
+                isMobile: false,
+                hasTouch: false,
                 // screen: { width: 1920, height: 1080 },
                 ignoreHTTPSErrors: true,
                 acceptDownloads: true

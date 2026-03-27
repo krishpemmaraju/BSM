@@ -1,0 +1,74 @@
+{
+    "CreateCustomerSalesOrderWithVariableKits": [
+        {
+            "BRANCH": "1BL",
+            "FEEDER": "F6",
+            "PARENTPRODUCT": "P28601",
+            "VARIABLEPRODUCT": "GAS & WATER",
+            "CHILDPRODUCT": "BE0814",
+            "QUANTITY": "2",
+            "PRODUCTPRICE": "116.50",
+            "SUBINVENTORY": "Peckham - 1BL",
+            "BSMINVOICEJOBNAME": "BSM Sales Order Extract for Invoicing",
+            "BSMFILENAME": "SCMOrderLinesToInvoicing"
+        }
+    ],
+    "CreateCustomerSalesOrderWithFixedKits": [
+        {
+            "BRANCH": "1BL",
+            "FEEDER": "F6",
+            "PRODUCT": "333079",
+            "QUANTITY": "2",
+            "PRODUCTPRICE": "116.50",
+            "SUBINVENTORY": "Peckham - 1BL",
+            "BSMINVOICEJOBNAME": "BSM Sales Order Extract for Invoicing",
+            "BSMFILENAME": "SCMOrderLinesToInvoicing"
+        }
+    ],
+    "CreateCustomerSalesOrderAPIMultiLine": [
+        {
+            "BRANCH": "1BL",
+            "FEEDER": "F6",
+            "PRODUCT1": "508200",
+            "PRODUCT2": "508867",
+            "QUANTITY": "2",
+            "PRODUCTPRICE1": "35.04",
+            "PRODUCTPRICE2": "53.09",
+            "SUBINVENTORY": "Peckham - 1BL"
+        }
+    ],
+    "CreateCustomerSalesOrderAPISingleLine": [
+        {
+            "BRANCH": "1BL",
+            "FEEDER": "F6",
+            "PRODUCT": "508200",
+            "QUANTITY": "2",
+            "PRODUCTPRICE": "53.09",
+            "SUBINVENTORY": "Peckham - 1BL"
+        }
+    ],
+    "CreateTransferOrderSupply": [
+        {
+            "BRANCH": "1BL",
+            "DESTINATIONFEEDER": "F6",
+            "PRODUCT": "190722",
+            "QUANTITY": "2",
+            "PRODUCTPRICE": "53.09",
+            "SUBINVENTORY": "WOLSELEY CENTERS DISTRIBUTION - F6",
+            "SUBINVENTORYBRANCH": "Peckham - 1BL"
+        }
+    ],
+    "StockAdjustments": [
+        {
+            "SUBINVENTORYSTKADJ": "1BL",
+            "SUBINVENTORYSTKADJLOC": "1BL-LOC",
+            "LOCATOR": "M1A01",
+            "REASONCODE": "B",
+            "TRANSACTIONRECEIPT": "Account Alias Receipt",
+            "TRANSACTIONISSUE": "Account Alias Issue",
+            "PRODUCT": "123305",
+            "QUANTITY": "100",
+            "QUANTITYISSUE": "5"
+        }
+    ]
+}

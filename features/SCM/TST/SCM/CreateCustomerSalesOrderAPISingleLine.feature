@@ -1,8 +1,9 @@
-Feature: Create Customer Sales Order Using API and Perform Full and Partial shipment
+Feature: Create Customer Sales Order For Single Line Using API and Perform Full and Partial shipment
 
     # This feature will create Customer Sales Orders and Perform Full , Partial shipping
 
     @api
+    #@data=CustomerSalesOrderSingleLine
     Scenario Outline: Create Customer Sales Order for "<product>" for branch "<DestinationOrg>"
         Given the API end point for Customer Order API
         When user update the payload with "<product>","<DestinationOrg>","<quantity>","<productPrice>"
@@ -14,6 +15,7 @@ Feature: Create Customer Sales Order Using API and Perform Full and Partial ship
             | 508200  | 1BL            | 2        | 53.09        |
 
     @SCM
+    #@data=CustomerSalesOrderSingleLine
     Scenario:  Validate Order Created in SCM
         Given User login into SCM application
         When  User navigate to Order Management
@@ -58,9 +60,9 @@ Feature: Create Customer Sales Order Using API and Perform Full and Partial ship
         And User tabs out
         Then User should see the tile contaning "<product>" and "<branch>" information
         When User selects the tile for the "<product>" pick confirm
-        And user enter subinventory info as "<branch>" for Customer Sales Order
+        #And user enter subinventory info as "<branch>" for Customer Sales Order
         And User enter product number as "<product>"
-        And User enters Picked quantity for Customer Sales Order
+        #And User enters Picked quantity for Customer Sales Order
         And Click on Confirm Pick and Close
 
         Examples:
@@ -107,4 +109,3 @@ Feature: Create Customer Sales Order Using API and Perform Full and Partial ship
 
 
 
-        

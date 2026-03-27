@@ -3,6 +3,7 @@ Feature: Create Customer Sales Order Using API and Perform Full and Partial ship
     # This feature will create Customer Sales Orders and Perform Full , Partial shipping
 
     @api
+    @data=CustomerSalesOrderSingleLine
     Scenario Outline: Create Customer Sales Order for "<product>" for branch "<DestinationOrg>"
         Given the API end point for Customer Order API
         When user update the payload with "<product>","<DestinationOrg>","<quantity>","<productPrice>"

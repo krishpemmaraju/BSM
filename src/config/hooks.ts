@@ -9,8 +9,6 @@ import SCMLogoutPage from "../webui/pages/scm/SCMLogoutPage";
 import CustomWorld from "../support/CustomWorld";
 import { shouldSkipScenario } from "../support/SkippingTestCases";
 import { sharedData } from "../support/SharedData";
-import { handleFailScenarioBeforeScenario } from "../support/SkippingScenariosPreviousFail";
-import { InitSCMApplicationConfig } from "../support/InitApplicationConfig";
 
 const timeInMin: number = 60 * 1000;
 //setDefaultTimeout(Number.parseInt(process.env.TEST_TIMEOUT, 10) * timeInMin);
@@ -73,6 +71,21 @@ Before({ tags: "@api" }, async function (this: CustomWorld, { pickle }) {
         ONPREMUSER: onpremConfig[`ONPREM${envKey}USERNAME`],
         ONPREMPASSWORD: onpremConfig[`ONPREM${envKey}PASSWORD`]
     })
+
+    const featurePath = pickle.uri;
+    const featureName = featurePath.split(/[/\\]/).pop() ?? '';
+    this.featureName = featureName?.split(".")[0];
+    const tag = pickle.tags.map(t => t.name)
+    console.log(tag)
+    /* Not required as we are not doing anything related to the tags */
+    // const tag = pickle.tags.find(t => t.name.startsWith("@data="))
+    // const dataKey = tag!.name.replace("@data=", '');
+    // console.log(dataKey)
+    //const filePath = `../testdata/${envKey}/${this.featureName}.json`;
+    const filePath = `../testdata/${envKey}/${tag[1].toString().trim().replace('@', '')}/CustomerSalesOrderTestData.json`;
+    const readFullJson = require(filePath);
+    this.testdata = readFullJson[(featureName ?? '').replace('.feature', '')]
+    this.envData = envKey
     await this.init('api');
 });
 
@@ -80,6 +93,10 @@ Before("@DB", async function (this: CustomWorld, { pickle }) {
 
     console.log(" **********************   TEST STARTED **************************************************** \n");
     console.log(" ****************** EXECUTION STARTED FOR SCENARIO - " + pickle.name + "******************* \n");
+
+    const featurePath = pickle.uri;
+    const featureName = featurePath.split("/").pop() ?? '';
+    this.featureName = featureName;
 
     type Env = 'dev' | 'stg' | 'staging' | 'tst'
     type EnvKey = 'DEV' | 'STG' | 'TST'
@@ -106,6 +123,7 @@ Before("@DB", async function (this: CustomWorld, { pickle }) {
         ODSUSER: odsConfig[`ODS${envKey}USERNAME`],
         ODSPASSWORD: odsConfig[`ODS${envKey}PASSWORD`],
     })
+    this.envData = envKey
     await this.init('db');
 });
 
@@ -189,7 +207,7 @@ Before({ tags: "@SCM" }, async function (this: CustomWorld, { result, pickle }: 
 
     const scmConfig: any = data[`SCM_${envKey}`][0];
     const vbcsConfig: any = data[`VBCSOC_${envKey}`][0];
-    const onpremConfig:any = data[`ONPREM_${envKey}`][0];
+    const onpremConfig: any = data[`ONPREM_${envKey}`][0];
 
     Object.assign(this, {
         SCMURL: scmConfig[`SCM${envKey}URL`],
@@ -205,6 +223,20 @@ Before({ tags: "@SCM" }, async function (this: CustomWorld, { result, pickle }: 
         ONPREMUSER: onpremConfig[`ONPREM${envKey}USERNAME`],
         ONPREMPASSWORD: onpremConfig[`ONPREM${envKey}PASSWORD`]
     })
+
+    const featurePath = pickle.uri;
+    const featureName = featurePath.split(/[/\\]/).pop() ?? '';
+    this.featureName = featureName?.split(".")[0];
+    const tag = pickle.tags.map(t => t.name)
+    /* Not required as we are not doing anything related to the tags */
+    // const tag = pickle.tags.find(t => t.name.startsWith("@data="))
+    // const dataKey = tag!.name.replace("@data=", '');
+    // console.log(dataKey)
+    //const filePath = `../testdata/${envKey}/${this.featureName}.json`;
+    const filePath = `../testdata/${envKey}/${tag[1].toString().trim().replace('@', '')}/CustomerSalesOrderTestData.json`;
+    const readFullJson = require(filePath);
+    this.testdata = readFullJson[(featureName ?? '').replace('.feature', '')]
+
     await this.init('scm');
     this.envData = envKey
     this.web = new UIActions(this.page);
@@ -237,7 +269,23 @@ Before({ tags: "@MFT" }, async function (this: CustomWorld, { result, pickle }: 
         MFTPASSWORD: mftConfig[`MFT${envKey}PASSWORD`],
         MFTNAVIGATION: mftConfig[`MFT${envKey}NAVIGATION`],
     })
+
+    const featurePath = pickle.uri;
+    const featureName = featurePath.split(/[/\\]/).pop() ?? '';
+    this.featureName = featureName?.split(".")[0];
+    const tag = pickle.tags.map(t => t.name)
+    /* Not required as we are not doing anything related to the tags */
+    // const tag = pickle.tags.find(t => t.name.startsWith("@data="))
+    // const dataKey = tag!.name.replace("@data=", '');
+    // console.log(dataKey)
+    //const filePath = `../testdata/${envKey}/${this.featureName}.json`;
+    const filePath = `../testdata/${envKey}/${tag[1].toString().trim().replace('@', '')}/CustomerSalesOrderTestData.json`;
+
+    const readFullJson = require(filePath);
+    this.testdata = readFullJson[(featureName ?? '').replace('.feature', '')]
+
     await this.init('mft');
+    this.envData = envKey
     this.web = new UIActions(this.page);
     this.rest = new RestRequest(this.page);
 })

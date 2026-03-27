@@ -25,29 +25,34 @@ let orderQuantity: any;
 When('user update the payload with {string},{string},{string},{string}', async function (this: ICustomWorld, product, destinationOrg, quantity, productPrice) {
     const todayDate = await DateUtils.generateDateWithFormat('DDMMSS');
     const dateFormat = await DateUtils.generateDateWithFormat('YYYY-MM-DDTHH:mm:ss.SSSZ');
-    const sourceTransactionNumber = destinationOrg + '|' + 'A' + todayDate;
-    orderQuantity = quantity;
-    sharedData.quantity = quantity;
-    let productPriceData: GLfloat = parseFloat(quantity) * parseFloat(productPrice)
+    const sourceTransactionNumber = this.testdata![0].BRANCH + '|' + 'A' + todayDate;
+    console.log(`the test data subinventory is ${this.testdata![0].SUBINVENTORY}`)
+    orderQuantity = this.testdata![0].QUANTITY;
+    //const sourceTransactionNumber = destinationOrg + '|' + 'A' + todayDate;
+    //orderQuantity = quantity;
+    sharedData.quantity = orderQuantity;
+    sharedData.KitsParentProduct = this.testdata![0].PRODUCT;
+    //sharedData.KitsParentProduct = product;
+    let productPriceData: GLfloat = parseFloat(sharedData.quantity) * parseFloat(this.testdata![0].PRODUCTPRICE)
     changeField = {
         "SourceTransactionNumber": sourceTransactionNumber,
         "SourceTransactionId": sourceTransactionNumber,
         "lines": [{
-            "RequestedFulfillmentOrganizationCode": destinationOrg,
+            "RequestedFulfillmentOrganizationCode": this.testdata![0].BRANCH,
             "RequestedArrivalDate": dateFormat,
-            "ProductNumber": product,
-            "OrderedQuantity": parseInt(quantity)
+            "ProductNumber": this.testdata![0].PRODUCT,
+            "OrderedQuantity": parseInt(sharedData.quantity)
         }]
     }
     const updatedTOJson = await JSONUtils.updateJsonFields(path.resolve(process.cwd(), jsonCustSOPathRead), "lines", changeField);
     updatingChildArray = {
         "chargeComponents": [
             {
-                "HeaderCurrencyUnitPrice": parseInt(productPrice),
+                "HeaderCurrencyUnitPrice": parseInt(this.testdata![0].PRODUCTPRICE),
                 "HeaderCurrencyExtendedAmount": productPriceData,
             },
             {
-                "HeaderCurrencyUnitPrice": parseInt(productPrice),
+                "HeaderCurrencyUnitPrice": parseInt(this.testdata![0].PRODUCTPRICE),
                 "HeaderCurrencyExtendedAmount": productPriceData,
             }
         ]
@@ -99,6 +104,7 @@ When(/^User enters the customer sales order number$/, async function (this: ICus
     //     }
     // }
     // customerSO = data.customerSalesOrderNumber;
+    //sharedData.CUSTOMERSALESORDERNUMBER = '1BL|12031312'
     await this.manageOrderSCMRedwood.EnterCustomerSalesOrder(this.newWindow, sharedData.CUSTOMERSALESORDERNUMBER.trim())
 });
 
@@ -143,6 +149,7 @@ When(/^User enter the CustomerSalesOrder Number$/, async function (this: ICustom
     //     }
     // }
     // custSalesOrderNumber = data.customerSalesOrderNumber;
+    //sharedData.CUSTOMERSALESORDERNUMBER = '1BL|A100304'
     await this.inventoryManagamentPage.EnterDocumentNumberShipmentLines(sharedData.CUSTOMERSALESORDERNUMBER)
 });
 
@@ -151,7 +158,8 @@ When('User enter  CustomerSalesOrder Number under ShipmentLines', async function
 });
 
 Then('User should see the status for CustomerSalesOrder as {string} for {string}', async function (this: ICustomWorld, lineStatus, product) {
-    await Assert.AssertTrue(await this.shipmentLinePage.GetShipmentLineStatus(product, lineStatus))
+    await Assert.AssertTrue(await this.shipmentLinePage.GetShipmentLineStatus(this.testdata![0].PRODUCT, lineStatus))
+    // await Assert.AssertTrue(await this.shipmentLinePage.GetShipmentLineStatus(product, lineStatus))
 });
 
 Then(/^User should Capture ShipmentID for CustomerSalesOrder$/, async function (this: ICustomWorld) {
@@ -187,14 +195,17 @@ When('User enters CustomerSalesOrder Number', async function (this: ICustomWorld
 });
 
 Then(/^User should see the tile contaning "([^"]*)" and "([^"]*)" information$/, async function (this: ICustomWorld, product, branch) {
-    await Assert.AssertTrue(await this.confirmPicksPage.IsProuctTileDisplayed(product))
+    await Assert.AssertTrue(await this.confirmPicksPage.IsProuctTileDisplayed(this.testdata![0].PRODUCT))
+    //await Assert.AssertTrue(await this.confirmPicksPage.IsProuctTileDisplayed(product))
     await Assert.assertContains((await this.confirmPicksPage.GetQuantityFromProductTileInPickingPane()).split(' ')[0].trim(), sharedData.quantity.trim())
-    await Assert.assertContains((await this.confirmPicksPage.GetSourceLocationFromProductTileInPickingPane()).split(':')[1].trim(), branch.split('-')[1].trim())
+    await Assert.assertContains((await this.confirmPicksPage.GetSourceLocationFromProductTileInPickingPane()).split(':')[1].trim(), this.testdata![0].SUBINVENTORY.split('-')[1].trim())
+    //await Assert.assertContains((await this.confirmPicksPage.GetSourceLocationFromProductTileInPickingPane()).split(':')[1].trim(), branch.split('-')[1].trim())
     //await Assert.assertContains((await this.confirmPicksPage.GetDestinationLocationFromProductTileInPickingPane()).split(':')[1], branch.split('-')[1].trim())
 });
 
 When('User selects the tile for the {string} pick confirm', async function (this: ICustomWorld, product) {
-    await this.confirmPicksPage.ClickOnItemPanelUnderConfirmPicks(product)
+    await this.confirmPicksPage.ClickOnItemPanelUnderConfirmPicks(this.testdata![0].PRODUCT)
+    //await this.confirmPicksPage.ClickOnItemPanelUnderConfirmPicks(product)
 });
 
 When('user enter subinventory info as {string} for Customer Sales Order', async function (this: ICustomWorld, branch) {
@@ -204,11 +215,13 @@ When('user enter subinventory info as {string} for Customer Sales Order', async 
 When('User enter product number as {string}', async function (this: ICustomWorld, product) {
     if (this.envData === 'TST' || this.envData === 'tst') {
         await this.confirmPicksPage.EnterLocatorInformation();
-        await this.confirmPicksPage.EnterSubInventoryPickedQty(product, '2')
+        await this.confirmPicksPage.EnterSubInventoryWA(this.testdata![0].PRODUCT, sharedData.quantity)
+        // await this.confirmPicksPage.EnterSubInventoryWA(product, sharedData.quantity)
 
     } else {
         await this.confirmPicksPage.EnterLocatorInformation();
-        await this.confirmPicksPage.EnterItemNumber(product)
+        await this.confirmPicksPage.EnterItemNumber(this.testdata![0].PRODUCT)
+        //await this.confirmPicksPage.EnterItemNumber(product)
     }
 
 });
@@ -236,11 +249,13 @@ When(/^User enters Shipment Number for Customer Sales Order$/, async function (t
 });
 
 Then('User should see Shipment page to ship goods for product {string}', async function (this: ICustomWorld, product) {
-    await Assert.AssertTrue(await this.confirmShipmentPage.IsShipmentNumberPageDisplayed(sharedData.shipmentNumber, product));
+    await Assert.AssertTrue(await this.confirmShipmentPage.IsShipmentNumberPageDisplayed(sharedData.shipmentNumber, this.testdata![0].PRODUCT));
+    //await Assert.AssertTrue(await this.confirmShipmentPage.IsShipmentNumberPageDisplayed(sharedData.shipmentNumber, product));
 });
 
 When('User clicks on Shipment Number tile for product {string}', async function (this: ICustomWorld, product) {
-    await this.confirmShipmentPage.ClickOnShipmentTile(product);
+    await this.confirmShipmentPage.ClickOnShipmentTile(this.testdata![0].PRODUCT);
+    //await this.confirmShipmentPage.ClickOnShipmentTile(product);
 });
 
 Then(/^Validate Shipped quantity under Shipment Line Data$/, async function (this: ICustomWorld) {

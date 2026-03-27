@@ -128,7 +128,7 @@
             "DBTYPE": "HJ",
             "HJTSTUSERNAME": "ABB7375",
             "HJTSTPASSWORD": "Varahi16$$",
-            "HJTSTALIAS": "SVSWMSDB103:1521/HJUAADS_RW"
+            "HJTSTALIAS": "SVDWMSDB105:1521/HJUAADT_RW"
         }
     ],
     "ONPREM_DEV": [

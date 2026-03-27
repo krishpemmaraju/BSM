@@ -8,7 +8,7 @@ let reportGeneration: ReportGeneration;
 let testInfo: TestInfo;
 let FRAME_LOCATOR_TEXT = 'iframe[src*="wol-order-capture/live"]';
 
-setDefaultTimeout(3000000);
+setDefaultTimeout(1000000);
 
 
 export default class ConfirmShipmentPage {
@@ -33,6 +33,13 @@ export default class ConfirmShipmentPage {
     public async IsShipmentNumberPageDisplayed(shipmentNumber: string, itemNum: string) {
         await (await this.web.getElementByRolebyExactText('heading', shipmentNumber)).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element })
         await (await this.web.getPageLocator("div[aria-label*='" + itemNum + "']")).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element })
+        await reportGeneration.getScreenshot(this.web.getPage(), "SHIPMENT PAGE WITH SHIPMENT NUMBER " + shipmentNumber + " IS DISPLAYED", world);
+        return await (await this.web.getElementByRolebyExactText('heading', shipmentNumber)).isVisible();
+    }
+
+    public async IsShipmentNumberPageForMultiLineDisplayed(shipmentNumber: string) {
+        await (await this.web.getElementByRolebyExactText('heading', shipmentNumber)).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element })
+        await (await this.web.getPageLocator("a.oj-tabbar-focused-element.oj-tabbar-item-content")).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element })
         await reportGeneration.getScreenshot(this.web.getPage(), "SHIPMENT PAGE WITH SHIPMENT NUMBER " + shipmentNumber + " IS DISPLAYED", world);
         return await (await this.web.getElementByRolebyExactText('heading', shipmentNumber)).isVisible();
     }
@@ -78,5 +85,22 @@ export default class ConfirmShipmentPage {
 
     public async ClickOnCancelOnShipmentPage() {
         await (await this.web.getPageLocator("oj-drawer-popup oj-c-button[title='Cancel'].oj-sp-create-edit-drawer-template-cancel-action")).click()
+    }
+
+    // the below method is for Submmiting Shipping 
+
+      public async ConfirmShipmentMultiLines(shippedQuantity: string) {
+        let count:number = 0;
+        const getNofShipTiles = (await this.web.getPageLocator("oj-list-view.oj-listview-gridlines-hidden ul li.oj-listview-group-container ul.oj-listview-card-group li"));
+        const getShipTilesCount = await getNofShipTiles.count()
+        for (let i = (getShipTilesCount - 1); i >= 0; i--) {
+            await (await this.web.getPageLocator("oj-list-view.oj-listview-gridlines-hidden ul li.oj-listview-group-container ul.oj-listview-card-group li")).nth(i).click();
+            if((await this.GetShippedQtyInShipmentLineDetails()).trim() === shippedQuantity){
+               count = 1;
+            }
+            await (await this.web.getPageLocator("oj-drawer-popup.oj-complete oj-c-button[title='Cancel']")).click()
+        }
+        return count === 1;
+
     }
 }

@@ -282,6 +282,33 @@ export default class UIActions {
     }
 
     /**
+     *  this method is a wrapper class of Click
+     *  it will wait for Element to be visible , scroll to the element and then click
+     *  @param locatorText
+     */
+
+    public async getPageLocatorClick(locatorText: string) {
+        await this.page.locator(locatorText).waitFor({ state: 'visible', timeout: 40000 });
+        await this.page.locator(locatorText).scrollIntoViewIfNeeded();
+        await this.page.locator(locatorText).click();
+    }
+
+        /**
+* Click Element by Role by name
+* @param role
+* @param name
+* @returns
+*/
+
+    public async getElementByRoleByNameClick(roleVal: Parameters<Page['getByRole']>[0], nameToIdentify: string) {
+        await this.page.getByRole(roleVal, { name: nameToIdentify, exact: true }).waitFor({ state: 'visible', timeout: 40000 });
+        await this.page.getByRole(roleVal, { name: nameToIdentify, exact: true }).scrollIntoViewIfNeeded();
+        await this.page.getByRole(roleVal, { name: nameToIdentify, exact: true }).click()
+    } 
+
+
+
+    /**
      * Perform Retry logic
      * @param locatorText
      * @paran - forOperation - visible , enable

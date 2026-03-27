@@ -36,7 +36,8 @@ Then('User should see Shcedule New Process page', async function (this: ICustomW
 });
 
 When('User search for the job {string}', async function (this: ICustomWorld, jobName) {
-    await this.scheduledProcesses.SearchForJobName(jobName)
+    await this.scheduledProcesses.SearchForJobName(this.testdata![0].BSMINVOICEJOBNAME)
+    //await this.scheduledProcesses.SearchForJobName(jobName)
 });
 
 Then('User should see Process details', async function (this: ICustomWorld) {
@@ -44,7 +45,8 @@ Then('User should see Process details', async function (this: ICustomWorld) {
 });
 
 When('User fill the details {string}', async function (this: ICustomWorld, subinventory) {
-    await this.scheduledProcesses.FillProcessDetails(subinventory);
+    await this.scheduledProcesses.FillProcessDetails(this.testdata![0].BRANCH);
+    //await this.scheduledProcesses.FillProcessDetails(subinventory);
 });
 
 When('User clicks on submit', async function (this: ICustomWorld) {
@@ -72,9 +74,18 @@ When('User click on Navigate', async function (this: ICustomWorld) {
     await this.mftActionsPage.ClickOnNavigate()
 });
 let folderPath: string;
-When('User enter {string}', async function (this: ICustomWorld, navigationPath) {
-    folderPath = navigationPath;
-    await this.mftActionsPage.EnterMFTNavigationFolder(navigationPath)
+When(/^User enter "(.*)"$/, async function (this: ICustomWorld, navigationPath) {
+    console.log(this.envData)
+    const env = this.envData?.toLowerCase();
+    const paths: Record<string, string> = {
+        tst: "/opc/test/inbound/SCM_Order_Lines_To_Invoice_For_ODS",
+        dev: "/opc/dev/inbound/SCM_Order_Lines_To_Invoice_For_ODS"
+    };
+
+    folderPath = paths[env] ?? "/opc/staging/inbound/SCM_Order_Lines_To_Invoice_For_ODS";
+    //folderPath = navigationPath;
+    //await this.mftActionsPage.EnterMFTNavigationFolder(navigationPath)
+    await this.mftActionsPage.EnterMFTNavigationFolder(folderPath)
 });
 
 Then('User should see the file {string} under the path', async function (this: ICustomWorld, filename) {

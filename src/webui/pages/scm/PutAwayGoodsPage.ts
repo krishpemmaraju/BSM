@@ -57,12 +57,12 @@ export default class PutAwayGoodsPage {
 
     public async GetQuantityFromPutAwaySection(): Promise<string> {
         await ((await this.web.getPageLocator("button[aria-label='Put Away']")).first()).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element });
-        return await (await this.web.getPageLocator("div[aria-labelledby='recQuanInpText-labelled-by|label']")).textContent()??"";
+        return await (await this.web.getPageLocator("div[aria-labelledby='recQuanInpText-labelled-by|label']")).textContent() ?? "";
     }
 
     public async GetBranchFromPutAwaySection(): Promise<string> {
         await ((await this.web.getPageLocator("oj-c-button:has(button[aria-label='Cancel'])")).locator("..").locator("oj-c-button >> button").nth(1)).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element });
-        return await (await this.web.getPageLocator("div[aria-labelledby='subinvInpText-labelled-by|label']")).textContent()??"";
+        return await (await this.web.getPageLocator("div[aria-labelledby='subinvInpText-labelled-by|label']")).textContent() ?? "";
     }
 
     public async ClickOnPutAway() {
@@ -70,6 +70,18 @@ export default class PutAwayGoodsPage {
         //    await ((await this.web.getPageLocator("oj-c-button:has(button[aria-label='Cancel'])")).locator("..").locator("oj-c-button >> button").nth(1)).waitFor
         await ((await this.web.getPageLocator("button[aria-label='Put Away']")).first()).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element });
         await ((await this.web.getPageLocator("button[aria-label='Put Away']")).first()).click()
+    }
+
+    public async checkIfLocatorIsEnabledAndSelect() {
+        return (await (await this.web.getPageLocator("//span[text()='Locator Barcode' and contains(@id,'barcode-input-text')]//ancestor::oj-label[contains(@id,'barcode-input-text')]//parent::div//input")).isEnabled())
+    }
+
+    public async selectLocatorIsEnabledAndSelect(locatorData: string) {
+        console.log('coming here')
+        await (await this.web.getPageLocator("//span[text()='Locator Barcode' and contains(@id,'barcode-input-text')]//ancestor::div[contains(@class,'oj-flex-bar')]//span[text()='Select a value from the list']")).click({ force: true });
+        await (await this.web.getPageLocator("//span[text()='Locator' and contains(@id,'oj-searchselect-filter-barcode-select-single')]")).click();
+        await (await this.web.getPageLocator("//oj-list-view[contains(@id,'oj-searchselect-results-barcode')]")).waitFor({ state: 'visible', timeout: 20000 })
+        await (await this.web.getElementByText(locatorData)).click()
     }
 
     public async CapturePutAwaySuccessMessage() {

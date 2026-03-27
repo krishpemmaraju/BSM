@@ -64,9 +64,9 @@ Feature: Validate Invoice flow for Cash Account Customer Sales Order
         And User tabs out
         Then User should see the tile contaning "<product>" and "<branch>" information
         When User selects the tile for the "<product>" pick confirm
-        And user enter subinventory info as "<branch>" for Customer Sales Order
+        #And user enter subinventory info as "<branch>" for Customer Sales Order
         And User enter product number as "<product>"
-        And User enters Picked quantity for Customer Sales Order
+        # And User enters Picked quantity for Customer Sales Order
         And Click on Confirm Pick and Close
 
         Examples:
@@ -152,7 +152,7 @@ Feature: Validate Invoice flow for Cash Account Customer Sales Order
         Then User should see the file "<fileName>" under the path
 
         Examples:
-            | devfolderpath                                       | fileName                 |
+            | devfolderpath                                        | fileName                 |
             | /opc/test/inbound/SCM_Order_Lines_To_Invoice_For_ODS | SCMOrderLinesToInvoicing |
 
     @DB

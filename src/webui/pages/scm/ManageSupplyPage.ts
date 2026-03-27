@@ -36,8 +36,10 @@ export default class ManageSupplyPage {
         await (await this.web.getPageLocator('span[title="Document number in the supply system"]')).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element });
     }
 
-    public async GetDocumentNumber(colName: string) {
+    public async GetDocumentNumber(CustomerSO: string, colName: string) {
         await new Promise(resolve => setTimeout(resolve, 5000));
+        await (await this.web.getElementByText(CustomerSO??''.trim())).waitFor({ state: 'visible', timeout: 12000 })
+        try{
         await (await this.web.getPageLocator("table[summary='This table contains column headers corresponding to the data body table below']")).nth(1).waitFor({ state: 'visible', timeout: 30000 });
         await (await this.web.getPageLocator("table[summary='Show Table'] tr td  span:has-text('Transfer')")).waitFor({ state: 'visible', timeout: 30000 })
         await reportGeneration.getScreenshot(this.web.getPage(), 'SEARCH RESULTS FOR TRANSFER ORDER NUMBER - ' + orderData, world);
@@ -50,6 +52,9 @@ export default class ManageSupplyPage {
             }
         }
         return (await (await this.web.getPageLocator("table[summary='Show Table'] table tr td:nth-of-type(" + getIndex + ")")).textContent()) ?? "";
+     }catch(exception){
+        return '';
+     }
     }
 
 

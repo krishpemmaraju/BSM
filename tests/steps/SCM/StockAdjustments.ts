@@ -12,105 +12,116 @@ let getNewSOH: number;
 let transactionType: string = "";
 
 
-Given('User login into SCM application', async function (this:ICustomWorld) {
+Given('User login into SCM application', async function (this: ICustomWorld) {
+
    await this.scmLoginPage.loginIntoSCMApp(this.SCMURL, this.SCMUSER, this.SCMPASSWORD);
    await Assert.AssertTrue(await new SCMHomePage(this.web).isHomePageDisplayed());
 });
 
-When('User navigate to Inventory Management', async function (this:ICustomWorld) {
+When('User navigate to Inventory Management', async function (this: ICustomWorld) {
    await this.scmHomePage.navigateToInventoryManagement();
    const getInvMgmtHeaderText = await this.inventoryManagamentPage.getInventoryManagmentDashboardHeader();
-   await Assert.assertEquals("Inventory Management", getInvMgmtHeaderText??'');
+   await Assert.assertEquals("Inventory Management", getInvMgmtHeaderText ?? '');
 });
 
-When('Select the {string} on InventoryManagement Screen', async function (this:ICustomWorld,branchSel) {
-   await this.inventoryManagamentPage.selectSubInventoryBranch(branchSel);
+When('Select the {string} on InventoryManagement Screen', async function (this: ICustomWorld, branchSel) {
+   const branch =
+      this.featureName === 'CreateTransferOrderSupply' ? this.testdata![0].SUBINVENTORYBRANCH :
+         this.featureName === 'StockAdjustments' ? this.testdata![0].SUBINVENTORYSTKADJ
+            : this.testdata![0].SUBINVENTORY;
+   await this.inventoryManagamentPage.selectSubInventoryBranch(branch);
 });
 
-When('User clicks on Item Quantities- under Actions', async function () {
+When('User clicks on Item Quantities- under Actions', async function (this: ICustomWorld) {
    await this.inventoryManagamentPage.ClickOnItemQuantities();
 });
 
 
-When('User enter {string} to search for existing availability', async function (product) {
-   await this.inventoryManagamentPage.SearchProductExistingStock(product);
+When('User enter {string} to search for existing availability', async function (this: ICustomWorld, product) {
+   await this.inventoryManagamentPage.SearchProductExistingStock(this.testdata![0].PRODUCT);
 });
 
 
 
-Then('User should see deatils of existing stock values', async function () {
+Then('User should see deatils of existing stock values', async function (this: ICustomWorld) {
    getExistingSOH = Number(await this.inventoryManagamentPage.GetExistingSOH("On Hand"));
 });
 
-When('User clicks on Create Miscellaneous Transactions', async function () {
+When('User clicks on Create Miscellaneous Transactions', async function (this: ICustomWorld) {
    await this.createMiscelleneousTransactionPage.ClickOnMiscellaneousTransactions();
 });
 
 
-Then('User should see {string} dashboard', async function (MiscellaneousTransDashboardHeader) {
+Then('User should see {string} dashboard', async function (this: ICustomWorld, MiscellaneousTransDashboardHeader) {
    await Assert.AssertTrue(await this.createMiscelleneousTransactionPage.IsMiscellaneousTransactionsHeaderVisible(MiscellaneousTransDashboardHeader));
 });
 
 
-When('User clicks on Edit icon', async function () {
+When('User clicks on Edit icon', async function (this: ICustomWorld) {
    await this.createMiscelleneousTransactionPage.ClickOnEditIcon();
 });
 
-When('User select Transaction Type as {string} and Account Alias as {string} and click on Save', async function (transactionType, accountAlias) {
-   this.transactionType = transactionType;
-   await this.createMiscelleneousTransactionPage.SelectTransactionType(transactionType, accountAlias);
+When('User select Transaction Type for receipt as {string} and Account Alias as {string} and click on Save', async function (this: ICustomWorld, transactionType, accountAlias) {
+   await this.createMiscelleneousTransactionPage.SelectTransactionType(this.testdata![0].TRANSACTIONRECEIPT, accountAlias);
 });
 
+When('User select Transaction Type for issue as {string} and Account Alias as {string} and click on Save', async function (this: ICustomWorld, transactionType, accountAlias) {
+   await this.createMiscelleneousTransactionPage.SelectTransactionType(this.testdata![0].TRANSACTIONISSUE, accountAlias);
+});
 
-Then('User should see option to {string}', async function (addItemBtn) {
+Then('User should see option to {string}', async function (this: ICustomWorld, addItemBtn) {
    Assert.AssertTrue(await this.createMiscelleneousTransactionPage.IsAddItemButtonAvailable(addItemBtn));
 });
 
 
-When('User clicks on {string} button', async function (addItemBtn) {
+When('User clicks on {string} button', async function (this: ICustomWorld, addItemBtn) {
    await this.createMiscelleneousTransactionPage.ClickOnAddItemButton(addItemBtn);
 });
 
-When('User enter product as {string}', async function (product) {
-   await this.createMiscelleneousTransactionPage.EnterProductInfo(product);
+When('User enter product as {string}', async function (this: ICustomWorld, product) {
+   await this.createMiscelleneousTransactionPage.EnterProductInfo(this.testdata![0].PRODUCT);
 });
 
 
-When('User select subinventory as {string} and Locator as {string}', async function (this:ICustomWorld,subInventory, locator) {
-   await this.createMiscelleneousTransactionPage.SelectSubInventoryAndLocator(subInventory, locator);
+When('User select subinventory as {string} and Locator as {string}', async function (this: ICustomWorld, subInventory, locator) {
+   await this.createMiscelleneousTransactionPage.SelectSubInventoryAndLocator(this.testdata![0].SUBINVENTORYSTKADJ, this.testdata![0].LOCATOR);
 });
 
 
-When('User enter quantity as {string}', async function (quantity) {
-   await this.createMiscelleneousTransactionPage.EnterProductQuantity(quantity);
+When('User enter quantity receipt as {string}', async function (this: ICustomWorld, quantity) {
+   await this.createMiscelleneousTransactionPage.EnterProductQuantity(this.testdata![0].QUANTITY);
+});
+
+When('User enter quantity issue as {string}', async function (this: ICustomWorld, quantity) {
+   await this.createMiscelleneousTransactionPage.EnterProductQuantity(this.testdata![0].QUANTITYISSUE);
 });
 
 
-When('User select reason code as {string} from Additional Fields', async function (reasonCode) {
-   await this.createMiscelleneousTransactionPage.SelectReason(reasonCode);
+When('User select reason code as {string} from Additional Fields', async function (this: ICustomWorld, reasonCode) {
+   await this.createMiscelleneousTransactionPage.SelectReason(this.testdata![0].REASONCODE);
 });
 
-When('User enter Product Reference as {string}', async function (reference) {
+When('User enter Product Reference as {string}', async function (this: ICustomWorld, reference) {
    await this.createMiscelleneousTransactionPage.EnterProductRefrence(reference);
 });
 
 
 
-When('User clicks on Done', async function () {
+When('User clicks on Done', async function (this: ICustomWorld) {
    await this.createMiscelleneousTransactionPage.ClickOnDoneBtn();
 });
 
 
-Then('User should see {string} dashboard with line details', async function (string) {
+Then('User should see {string} dashboard with line details', async function (this: ICustomWorld, string) {
    getTransactionQty = Number(await this.inventoryManagamentPage.GetExistingSOH("Transaction Quantity"))
 });
 
 
-When('User clicks on checkout button', async function (this:ICustomWorld) {
+When('User clicks on checkout button', async function (this: ICustomWorld) {
    await this.createMiscelleneousTransactionPage.ClickOnCheckoutBtn();
 });
 
-Then('User should see pop up as {string}', async function (textToBeDisplayed) {
+Then('User should see pop up as {string}', async function (this: ICustomWorld, textToBeDisplayed) {
    Assert.assertContains(await this.createMiscelleneousTransactionPage.GetItemReceivedTextDisplayed(textToBeDisplayed), textToBeDisplayed);
    getNewSOH = Number(await this.inventoryManagamentPage.GetExistingSOH("On Hand"));
    if (transactionType == "Account Alias Receipt") {
