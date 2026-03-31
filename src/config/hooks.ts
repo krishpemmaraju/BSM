@@ -170,7 +170,7 @@ Before({ tags: "@VBSOC" }, async function (this: CustomWorld, { pickle }: ITestC
     const envKey: EnvKey = envMap[env] || 'DEV'
 
     const scmConfig: any = data[`SCM_${envKey}`][0];
-    const vbcsConfig: any = data[`ONPREM_${envKey}`][0];
+    const vbcsConfig: any = data[`VBCSOC_${envKey}`][0];
 
     Object.assign(this, {
         SCMURL: scmConfig[`SCM${envKey}URL`],
@@ -182,6 +182,20 @@ Before({ tags: "@VBSOC" }, async function (this: CustomWorld, { pickle }: ITestC
         VBCSUSER: vbcsConfig[`VBCS${envKey}OCUSERNAME`],
         VBCSPASSWORD: vbcsConfig[`VBCS${envKey}OCPASSWORD`]
     })
+
+    const featurePath = pickle.uri;
+    const featureName = featurePath.split(/[/\\]/).pop() ?? '';
+    this.featureName = featureName?.split(".")[0];
+    const tag = pickle.tags.map(t => t.name)
+    /* Not required as we are not doing anything related to the tags */
+    // const tag = pickle.tags.find(t => t.name.startsWith("@data="))
+    // const dataKey = tag!.name.replace("@data=", '');
+    // console.log(dataKey)
+    //const filePath = `../testdata/${envKey}/${this.featureName}.json`;
+    const filePath = `../testdata/${envKey}/${tag[1].toString().trim().replace('@', '')}/CustomerSalesOrderTestData.json`;
+    const readFullJson = require(filePath);
+    this.testdata = readFullJson[(featureName ?? '').replace('.feature', '')]
+
     await this.init('vbsoc');
     this.web = new UIActions(this.page);
     this.rest = new RestRequest(this.page);
@@ -394,6 +408,7 @@ After({ tags: "@reality" }, async function (this: CustomWorld, { result, pickle 
 })
 
 After({ tags: "@VBSOC" }, async function (this: CustomWorld, { result, pickle }: ITestCaseHookParameter) {
+    await this.context.storageState({ path: 'authState.json' });
     const status = result?.status;
     const scenario = pickle.name;
     this.page ? await this.page.close() : console.warn('No Pages Found')

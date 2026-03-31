@@ -1,4 +1,4 @@
-import { expect, Locator, Page } from "@playwright/test";
+import { expect, Frame, Locator, Page } from "@playwright/test";
 import UIElementActions from "./UIElementsActions";
 import DropdownActions from "./DropdownActions";
 import CheckBoxActions from "./CheckBoxActions";
@@ -263,6 +263,22 @@ export default class UIActions {
     }
 
     /**
+     * Return Frame
+     * @param framelocatortext
+     */
+
+    public async getFrameByUrl(frameSelector: string): Promise<Frame> {
+        const frameHandle = await this.getPage().locator(frameSelector).elementHandle();
+         if (!frameHandle) {
+        throw new Error(`Iframe not found for selector: ${frameSelector}`);
+        }
+        const frame = await frameHandle.contentFrame();
+        if (!frame) throw new Error(`Frame not found for URL: ${frameSelector}`);
+        return frame;
+    }
+
+
+    /**
      * Return the locator Object
      * @param locatorText
      */
@@ -293,7 +309,7 @@ export default class UIActions {
         await this.page.locator(locatorText).click();
     }
 
-        /**
+    /**
 * Click Element by Role by name
 * @param role
 * @param name
@@ -304,7 +320,7 @@ export default class UIActions {
         await this.page.getByRole(roleVal, { name: nameToIdentify, exact: true }).waitFor({ state: 'visible', timeout: 40000 });
         await this.page.getByRole(roleVal, { name: nameToIdentify, exact: true }).scrollIntoViewIfNeeded();
         await this.page.getByRole(roleVal, { name: nameToIdentify, exact: true }).click()
-    } 
+    }
 
 
 

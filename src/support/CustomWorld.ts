@@ -29,6 +29,7 @@ import SCMWolOrderCaptureHomePage from "../webui/pages/scm/SCMOrderCaptureHomePa
 import ManageOrdersRedwood from "../webui/pages/scm/ManageOrdersRedwood";
 import ScheduledProcessesPage from "../webui/pages/scm/ScheduledProcessessPage";
 import MFTActionsPage from "../webui/pages/scm/MFTActionsPage";
+import OrderCaptureUISCMPage from "../webui/pages/scm/OrderCaptureUISCMPage";
 import { CustomerSalesOrderData } from "./CustomerSalesOrderData";
 
 
@@ -85,6 +86,7 @@ export default class CustomWorld extends World implements WorldImplPages {
     manageOrderSCMRedwood!: ManageOrdersRedwood;
     scheduledProcesses!: ScheduledProcessesPage;
     mftActionsPage!: MFTActionsPage;
+    orderCaptureUISCMPage!: OrderCaptureUISCMPage;
     web!: UIActions;
     page!: Page;
     rest!: RestRequest;
@@ -100,23 +102,39 @@ export default class CustomWorld extends World implements WorldImplPages {
 
     }
 
-
-
     async init(app: string) {
         //Initialize the Browsers 
         if (!['api', 'db'].includes(app.toLowerCase())) {
             this.browser = await WebBrowserManager.launch(app === 'vbsoc' ? 'firefox' : 'chromium');
             await new Promise(r => setTimeout(r, 300));
-            this.context = await this.browser.newContext({
+            const storageFile = 'authState.json';
+            const fs = require('fs');
+            const contextOptions: any = {
                 viewport: { width: 1920, height: 1200 },
                 deviceScaleFactor: 1,
                 isMobile: false,
                 hasTouch: false,
                 // screen: { width: 1920, height: 1080 },
                 ignoreHTTPSErrors: true,
-                acceptDownloads: true
-            });
-            await this.context.clearCookies();
+                acceptDownloads: true,
+            }
+            // this.context = await this.browser.newContext({
+            //     viewport: { width: 1920, height: 1200 },
+            //     deviceScaleFactor: 1,
+            //     isMobile: false,
+            //     hasTouch: false,
+            //     // screen: { width: 1920, height: 1080 },
+            //     ignoreHTTPSErrors: true,
+            //     acceptDownloads: true,
+            //     storageState: storageFile
+            // });
+
+            if (app !== 'vbsoc' && fs.existsSync(storageFile)) {
+                contextOptions.storageState = storageFile;
+            }
+
+            this.context = await this.browser.newContext(contextOptions)
+            //await this.context.clearCookies();
             this.page = await this.context.newPage();
             // Force maximize for Firefox (and others)
             // await this.page.evaluate(() => {
@@ -152,6 +170,7 @@ export default class CustomWorld extends World implements WorldImplPages {
             this.manageOrderSCMRedwood = new ManageOrdersRedwood(this.web);
             this.scheduledProcesses = new ScheduledProcessesPage(this.web);
             this.mftActionsPage = new MFTActionsPage(this.web);
+            this.orderCaptureUISCMPage = new OrderCaptureUISCMPage(this.web);
         }
     }
 

@@ -55,9 +55,9 @@ export default class MFTActionsPage {
         return fileExists;
     }
 
-    public async ClickOnMFTLogout(){
+    public async ClickOnMFTLogout() {
         await (await this.web.getPageLocator("#accountDiv #accountLink")).click()
-        await (await this.web.getPageLocator("td.logoutMenuItem #logoutLink")).waitFor({state:'visible', timeout:10000})
+        await (await this.web.getPageLocator("td.logoutMenuItem #logoutLink")).waitFor({ state: 'visible', timeout: 10000 })
         await (await this.web.getPageLocator("td.logoutMenuItem #logoutLink")).click();
     }
 }

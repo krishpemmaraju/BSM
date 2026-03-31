@@ -86,7 +86,7 @@
     },
     "TST": {
         "paths": [
-            "features/SCM/CreateTransferOrderSupply.feature"
+            "features/SCM/CustomerCreditLimitChecks.feature"
         ],
         "formatOptions": {
             "snippetInterface": "async-await"
