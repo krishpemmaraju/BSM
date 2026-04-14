@@ -3,7 +3,7 @@ Feature: Validate Customer Credit limits
 
 
     @VBSOC @BSM
-    Scenario Outline: Validate Credit Customer "<CreditCustomer>" status
+    Scenario Outline: Validate Credit Customer "<CreditCustomer>" status - now
         Given User login into VBCS Order Capture
         Then User should see Order Capture dashboard
 

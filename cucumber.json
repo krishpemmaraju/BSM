@@ -1,7 +1,7 @@
 {
     "DEV": {
         "paths": [
-            "features/SCM/CreateCustomerSalesOrderAPISingleLine.feature"
+            "features/VBCS/CreateCustomerSalesOrder.feature"
         ],
         "formatOptions": {
             "snippetInterface": "async-await"
@@ -86,7 +86,7 @@
     },
     "TST": {
         "paths": [
-            "features/SCM/CustomerCreditLimitChecks.feature"
+            "features/SCM/CreateCustomerSalesOrder.feature"
         ],
         "formatOptions": {
             "snippetInterface": "async-await"

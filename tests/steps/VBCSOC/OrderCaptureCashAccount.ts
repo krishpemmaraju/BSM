@@ -71,3 +71,18 @@ Then('User Should see {string} button', async function (this: ICustomWorld, butt
     await Assert.AssertTrue(await this.orderCaptureUIPage.IsCreateShipmentButtonDisplayed(buttonName));
 
 });
+
+When('Add delivery address',async function (this:ICustomWorld){
+    await  this.orderCaptureUIPage.AddAddress();
+});
+
+When('User should see Checkout Page', async function(this: ICustomWorld){
+    await this.orderCaptureUIPage.ValidateCheckoutPage();
+});
+
+When('User should choose account payment', async function(this: ICustomWorld){
+    await this.orderCaptureUIPage.AccountPaymentValidation();
+})
+When('User Click on Place Order', async function(this: ICustomWorld){
+    await this.orderCaptureUIPage.ClickonPlaceOrder();
+})

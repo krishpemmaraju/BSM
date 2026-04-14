@@ -1,7 +1,7 @@
 {
-  "SourceTransactionNumber": "1BL|A300390",
+  "SourceTransactionNumber": "SB|A010461",
   "SourceTransactionSystem": "OPS",
-  "SourceTransactionId": "1BL|A300390",
+  "SourceTransactionId": "SB|A010461",
   "BuyingPartyId": "300001732158752",
   "RequestingBusinessUnitName": "Wolseley UK",
   "FreezePriceFlag": true,
@@ -17,11 +17,11 @@
       "SourceTransactionLineNumber": "1",
       "SourceTransactionScheduleId": "1",
       "SourceScheduleNumber": "1",
-      "RequestedFulfillmentOrganizationCode": "1BL",
+      "RequestedFulfillmentOrganizationCode": "SB",
       "TransactionCategoryCode": "ORDER",
-      "RequestedArrivalDate": "2026-03-30T15:12:41.907+01:00",
-      "ProductNumber": "508200",
-      "OrderedQuantity": 2,
+      "RequestedArrivalDate": "2026-04-01T12:52:06.618+01:00",
+      "ProductNumber": "511300",
+      "OrderedQuantity": 22,
       "OrderedUOM": "EA",
       "charges": [
         {
@@ -40,8 +40,8 @@
               "SourceChargeComponentId": "C1-CC1",
               "PriceElementCode": "QP_LIST_PRICE",
               "PriceElementUsageCode": "LIST_PRICE",
-              "HeaderCurrencyUnitPrice": 53,
-              "HeaderCurrencyExtendedAmount": 106.18,
+              "HeaderCurrencyUnitPrice": 523,
+              "HeaderCurrencyExtendedAmount": 11507.980000000001,
               "RollupFlag": false,
               "SequenceNumber": 1
             },
@@ -49,8 +49,8 @@
               "SourceChargeComponentId": "C1-CC2",
               "PriceElementCode": "QP_NET_PRICE",
               "PriceElementUsageCode": "NET_PRICE",
-              "HeaderCurrencyUnitPrice": 53,
-              "HeaderCurrencyExtendedAmount": 106.18,
+              "HeaderCurrencyUnitPrice": 523,
+              "HeaderCurrencyExtendedAmount": 11507.980000000001,
               "RollupFlag": false,
               "SequenceNumber": 2
             }

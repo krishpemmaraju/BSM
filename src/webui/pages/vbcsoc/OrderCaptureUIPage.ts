@@ -10,7 +10,7 @@ let FRAME_LOCATOR_TEXT = 'iframe[src*="wol-order-capture/live"]';
 let ENTER_CUSTOMER: string = "input[placeholder='Search by Customer Name, Account Code or Postcode']";
 let SELECT_CUSTOMER: string = "div[title='Select Customer...']";
 // Customer UI New Changes
-let ENTER_PRODUCT: string = "input[placeholder='Search by Product Code, Description, Supplier Part Code or Barcode']";
+let ENTER_PRODUCT: string = "//span[@id='tbProductSearch|hint']";
 let CLICK_PRINT_CLOSE = "oj-button[title='Close']"
 let PRINT_TEXT = ".oj-message-title"
 
@@ -152,7 +152,7 @@ export default class OrderCaptureUIPage {
     }
 
     public async ClickOnBackBtnBasketPane() {
-        await (await this.web.getPageLocator("oj-c-button#btnBack button[aria-label='Back']")).click()
+        await (await this.web.getPageLocator("//oj-c-button[@label='Back']//button")).click();
     }
 
     public async WaitForCheckOutPopUp() {
@@ -237,5 +237,42 @@ export default class OrderCaptureUIPage {
         (await this.web.getFrameLocatorObject(FRAME_LOCATOR_TEXT)).locator("span[title*='" + customer + "']").waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element });
         (await this.web.getFrameLocatorObject(FRAME_LOCATOR_TEXT)).locator(".oj-badge-sm").waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element });
         await reportGeneration.getScreenshot(this.web.getPage(), "Customer selected as below  ", world);
+    }
+
+    public async AddAddress(){
+        const clickonThreeDots = this.web.getPage().locator("button[aria-label='Actions for collect basket group']");
+        await clickonThreeDots.click();
+        await this.web.getPage().locator('[data-oj-key="move"]').click();
+        await (await this.web.getPageLocator('div[role="button"]:has(.wol-fulfillment-menu-item-subtitle)')).click();
+        await (await this.web.getElementByLabel('Address line 1')).fill('Buckingham Palace');
+        await (await this.web.getElementByLabel('City')).fill('London');
+        await (await this.web.getElementByLabel('Postcode')).fill('SW1A 1AA');
+        await (await this.web.getElementByLabel('First name')).fill('def');
+        await (await this.web.getElementByLabel('Surname')).fill('hjk');
+        await (await this.web.getElementByLabel('Phone Number')).fill('07961234567');
+        await (await this.web.getElementByLabel('Email Address')).fill('nandinisajeev@gmail.com');
+//        await (await this.web.getElementByRolebyExactText('button', 'Add Item')).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element });
+        await (await this.web.getElementByRolebyExactText('button', 'Continue')).click();
+         await (await this.web.getElementByRolebyExactText('button', 'Confirm')).click();
+   
+
+
+    }
+    
+    public async ValidateCheckoutPage(){
+        await expect(await this.web.getElementByText('Checkout')).toBeVisible({timeout : 10000});
+    }
+    
+    public async AccountPaymentValidation(){
+        await expect(await this.web.getPageLocator('p.oj-typography-bold')).toBeVisible({timeout : 10000});
+        await (await this.web.getPageLocator("//span[@class='oj-button-text' and text()='Account']")).click();
+        await (await this.web.getPageLocator("//input[@id='customerNotPresentCheck']")).click();
+
+    }
+
+    public async ClickonPlaceOrder(){
+        const placeOrderButton = this.web.getPage().locator("button[aria-label='Place Order']");
+        await placeOrderButton.click();
+
     }
 }      

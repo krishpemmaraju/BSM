@@ -1,0 +1,18 @@
+{
+  "dev": {
+    "products": [
+      { "name": "R40001" }
+
+    ]
+  },
+  "stg": {
+    "products": [
+      { "name": "500209" }
+    ]
+  },
+  "tst": {
+    "products": [
+      { "name": "500210"}
+    ]
+  }
+}
