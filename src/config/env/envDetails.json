@@ -14,8 +14,8 @@
     "SCM_DEV": [
         {
             "SCMDEVURL": "https://egvh-dev1.fa.em3.oraclecloud.com/",
-            "SCMDEVUSERNAME": "ABB7375",
-            "SCMDEVPASSWORD": "Jayavarahi16$",
+            "SCMDEVUSERNAME": "UID05453",
+            "SCMDEVPASSWORD": "Devakathir@7",
             "SCMDEVSTOCKCHKAPI": "fscmRestApi/msp/latest/globalOrderPromises/quickAvailabilityCheck",
             "SCMDEVCHKAVAILABILITY": "fscmRestApi/msp/latest/globalOrderPromises/checkAvailability"
         }
@@ -65,8 +65,8 @@
     "VBCSOC_DEV": [
         {
             "VBCSDEVOCURL": "https://vb04.wolseleyuk.com/ic/builder/rt/wol-order-capture/live/webApps/wol-order-capture/",
-            "VBCSDEVOCUSERNAME": "a3Jpc2huYS5wZW1tYXJhanVAd29sc2VsZXkuY28udWs=",
-            "VBCSDEVOCPASSWORD": "SmF5YXZhcmFoaTE2JA=="
+            "VBCSDEVOCUSERNAME": "a2F0aGlyYXZhbi5zQHdvbHNlbGV5LmNvLnVr",
+            "VBCSDEVOCPASSWORD": "SmFuMjUwNyFA"
         }
     ],
     "VBCSOC_TST": [

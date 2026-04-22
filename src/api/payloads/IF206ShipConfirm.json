@@ -6,24 +6,41 @@
   "transactions": [
     {
       "entityType": "Main",
+<<<<<<< Updated upstream
       "transNumber": "03271603",
       "tranType": "340",
       "stagedDate": "2026-03-27T16:42:03.930+00:00",
       "description": "Shipping",
       "startTranDateTime": "2026-03-27T16:42:03.930+00:00",
       "endTranDateTime": "2026-03-27T16:42:03.930+00:00",
+=======
+      "transNumber": "03161312",
+      "tranType": "340",
+      "stagedDate": "2026-03-16T13:59:12.303+00:00",
+      "description": "Shipping",
+      "startTranDateTime": "2026-03-16T13:59:12.303+00:00",
+      "endTranDateTime": "2026-03-16T13:59:12.303+00:00",
+>>>>>>> Stashed changes
       "employeeId": "FAHEYK",
       "controlNumber": "1BL/00689",
       "lineNumber": "1",
       "outsideId": "N",
       "whId": "F6",
       "locationId": "CD1DR01",
+<<<<<<< Updated upstream
       "huId": "03271603",
+=======
+      "huId": "03161312",
+>>>>>>> Stashed changes
       "numItems": 1,
       "itemNumber": "190722",
       "tranQty": 2,
       "originalOrderQty": 2,
+<<<<<<< Updated upstream
       "locationId2": 7789372,
+=======
+      "locationId2": 3553428,
+>>>>>>> Stashed changes
       "elapsedTime": 0,
       "carrierCode": "INT",
       "freightCharge": 0,
@@ -34,17 +51,30 @@
     },
     {
       "entityType": "Main",
+<<<<<<< Updated upstream
       "transNumber": "3271604",
       "tranType": "341",
       "stagedDate": "2026-03-27T16:42:03.930+00:00",
       "description": "Shipping",
       "startTranDateTime": "2026-03-27T16:42:03.930+00:00",
       "endTranDateTime": "2026-03-27T16:42:03.930+00:00",
+=======
+      "transNumber": "3161313",
+      "tranType": "341",
+      "stagedDate": "2026-03-16T13:59:12.303+00:00",
+      "description": "Shipping",
+      "startTranDateTime": "2026-03-16T13:59:12.303+00:00",
+      "endTranDateTime": "2026-03-16T13:59:12.303+00:00",
+>>>>>>> Stashed changes
       "employeeId": "FAHEYK",
       "whId": "F6",
       "numItems": 0,
       "tranQty": 0,
+<<<<<<< Updated upstream
       "locationId2": 7789372,
+=======
+      "locationId2": 3553428,
+>>>>>>> Stashed changes
       "elapsedTime": 0,
       "carrierCode": "INT",
       "freightCharge": 0

@@ -34,5 +34,7 @@
     "test:tst": "npm run clean:reports && npm run execute:script:tst && npm run generate:report",
     "execute:script:failed": "cucumber-js @rerun.txt",
     "test:failed": "npm run execute:script:failed && npm run generate:report"
+    
   }
+  
 }

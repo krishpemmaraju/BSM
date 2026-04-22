@@ -24,7 +24,7 @@ When('Select customer as {string}', async function (this: ICustomWorld, customer
 
 
 When('Search  and add  {string} to basket', async function (this: ICustomWorld, product) {
-    productInfo = product;
+    productInfo = product || this.envProducts;
     if (productInfo.includes(',')) {
         let productsData = productInfo.split(',');
         for (const prod of productsData) {
@@ -44,6 +44,7 @@ When('Search  and add  {string} to basket', async function (this: ICustomWorld, 
         await this.orderCaptureUIPage.IsMoveBtnAvailable();
         await this.orderCaptureUIPage.ClickOnBackBtnBasketPane();
     }
+    
 });
 
 
@@ -85,4 +86,20 @@ When('User should choose account payment', async function(this: ICustomWorld){
 })
 When('User Click on Place Order', async function(this: ICustomWorld){
     await this.orderCaptureUIPage.ClickonPlaceOrder();
+})
+Then('Add delivery address',async function(this: ICustomWorld){
+    await this.orderCaptureUIPage.AddAddress();
+});
+
+Then('User Click on Place Order', async function(this: ICustomWorld){
+   // await Assert.AssertTrue(await this.orderCaptureUIPage.ClickonPlaceOrderButton());
+   await this.orderCaptureUIPage.ClickonPlaceOrderButton(); 
+});
+
+Then('User should see Checkout Page',async function(this: ICustomWorld){
+
+});
+
+Then('User should choose card payment',async function(this: ICustomWorld){
+    await this.orderCaptureUIPage.modeOfPayment();
 })

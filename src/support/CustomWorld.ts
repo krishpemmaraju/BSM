@@ -61,6 +61,7 @@ export default class CustomWorld extends World implements WorldImplPages {
     getResponse!: AxiosResponse;
     originalPage!: Page;
     newWindow!: Page;
+    sessionState: any;
     /* Page Objects Declaration */
     scmLoginPage !: SCMLoginPage;
     scmHomePage !: SCMHomePage;
@@ -93,6 +94,12 @@ export default class CustomWorld extends World implements WorldImplPages {
     browser!: Browser;
     context!: BrowserContext;
     hook!: ITestCaseHookParameter;
+    vbcsBrowser!: Browser;
+    scmBrowser!: Browser;
+    envProducts?: string;
+    // browser!: Browser;
+    // context!: BrowserContext;
+    // page!: Page;
 
 
     constructor(options: IWorldOptions) {

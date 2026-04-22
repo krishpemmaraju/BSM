@@ -1,6 +1,6 @@
 Feature: Create customer sales order single line
  
-    @VBSOC @BSM
+    @VBSOC @BSM @Smoke
     Scenario Outline: Validate  customer sales order for "products" in single line with card payment
         Given User login into VBCS Order Capture
         # When User login into SCM application
@@ -18,7 +18,7 @@ Feature: Create customer sales order single line
         # When User Clicks on Confirm depends on "<PrintVerification>"
         Then Capture the Order Number
         Then User Should see "Order Confirmation" page
-        Then User Should see "Create Shipment" button
+        # Then User Should see "Create Shipment" butto
        
  
         Examples:

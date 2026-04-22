@@ -1,5 +1,6 @@
 import * as fs from 'fs'
 import { readFile } from 'fs';
+    // import fs from 'fs';
 
 export default class JSONUtils {
 
@@ -346,6 +347,27 @@ export default class JSONUtils {
         await fs.promises.writeFile(filePath, updatedJson, "utf-8");
 
         return updatedJson;
+
+    }
+
+    public async readFromJSON(path: string): Promise<any> {
+
+        return new Promise((resolve, reject) => {
+            fs.readFile(path, 'utf-8', (err, data) => {
+
+                if (err) {
+                    reject(err);
+                }
+
+                try {
+                    const jsonData = JSON.parse(data);
+                    resolve(jsonData);
+                } catch (error) {
+                    reject(error);
+                }
+
+            });
+        });
 
     }
 

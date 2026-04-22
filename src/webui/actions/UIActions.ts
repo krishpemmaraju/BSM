@@ -24,6 +24,7 @@ export default class UIActions {
         this.alertActions = new AlertActions(page);
     }
 
+
     /**
    * Returns page object
    * @returns
@@ -95,7 +96,7 @@ export default class UIActions {
    */
 
     public async gotToURL(URL: string) {
-        await this.page.goto(URL, { timeout: 3000, waitUntil: "load" });
+        await this.page.goto(URL, { timeout: 30000, waitUntil: "load" });
     }
 
     /**

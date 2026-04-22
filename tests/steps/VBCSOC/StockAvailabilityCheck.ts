@@ -8,6 +8,7 @@ import UIActions from "../../../src/webui/actions/UIActions";
 import JSONUtils from "../../../src/utils/JSONUtils";
 import DateUtils from "../../../src/utils/DateUtils";
 import type { ICustomWorld } from "../../../src/support/CustomWorld";
+import { chromium } from '@playwright/test';
 
 
 setDefaultTimeout(60 * 10 * 1000);
@@ -20,10 +21,33 @@ function getRequestHeadersWithOutAuth() {
 let stockCheckFromUI: any;
 let atpDateFromUI: any;
 
+// Given('User login into VBCS Order Capture', async function (this: ICustomWorld) {
+//     await this.vbcsOrderCaptureUIPage.loginIntoVBCSOrderCaptureUI(this.VBCSURL, Buffer.from(this.VBCSUSER, 'base64').toString('utf-8'), Buffer.from(this.VBCSPASSWORD, 'base64').toString('utf-8'));
+// });
 Given('User login into VBCS Order Capture', async function (this: ICustomWorld) {
-    await this.vbcsOrderCaptureUIPage.loginIntoVBCSOrderCaptureUI(this.VBCSURL, Buffer.from(this.VBCSUSER, 'base64').toString('utf-8'), Buffer.from(this.VBCSPASSWORD, 'base64').toString('utf-8'));
-});
 
+    this.vbcsBrowser = await chromium.launch({ headless: false });
+
+    // const context = await this.vbcsBrowser.newContext({
+    //     viewport: null,
+    //     ignoreHTTPSErrors: true
+    // });
+
+    // const page = await context.newPage();
+
+    // this.context = context;
+    // this.page = page;
+
+    // this.web.setPage(page);
+
+    await this.vbcsOrderCaptureUIPage.loginIntoVBCSOrderCaptureUI(
+        this.VBCSURL,
+        this.VBCSUSER,
+        this.VBCSPASSWORD
+    );
+    
+
+});
 let isStkExistsNormalized: string;
 Then('get the stock of the {string} having {string} added to the basket', async function (this:ICustomWorld,product, isStockExists) {
     isStkExistsNormalized = isStockExists.toLowerCase();

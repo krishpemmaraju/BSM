@@ -225,8 +225,8 @@ Before({ tags: "@SCM" }, async function (this: CustomWorld, { result, pickle }: 
 
     Object.assign(this, {
         SCMURL: scmConfig[`SCM${envKey}URL`],
-        SCMUSER: scmConfig[`SCM${envKey}USERNAME`],
-        SCMPASSWORD: scmConfig[`SCM${envKey}PASSWORD`],
+        SCMUSER: Buffer.from(scmConfig[`SCM${envKey}USERNAME`], 'base64').toString('utf-8'),
+        SCMPASSWORD: Buffer.from(scmConfig[`SCM${envKey}PASSWORD`], 'base64').toString('utf-8'),
         SCMSTOCKCHKAPI: scmConfig[`SCM${envKey}STOCKCHKAPI`],
         SCMCHKAVAILABILITY: scmConfig[`SCM${envKey}CHKAVAILABILITY`],
         VBCSURL: vbcsConfig[`VBCS${envKey}OCURL`],
@@ -413,7 +413,7 @@ After({ tags: "@VBSOC" }, async function (this: CustomWorld, { result, pickle }:
     const scenario = pickle.name;
     this.page ? await this.page.close() : console.warn('No Pages Found')
     this.context ? await this.context.close() : console.warn('No Context Found')
-    this.browser ? await this.browser.close() : console.log("No Browser Found")
+  //  this.browser ? await this.browser.close() : console.log("No Browser Found")
     if (status === 'FAILED') { sharedData.previousScenarioStatusFailed = true; sharedData.previousScenarioName = pickle.name }
     console.log("************************ " + scenario + " is completed with " + status + " *******************");
 })

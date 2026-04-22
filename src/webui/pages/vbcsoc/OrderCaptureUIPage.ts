@@ -10,7 +10,7 @@ let FRAME_LOCATOR_TEXT = 'iframe[src*="wol-order-capture/live"]';
 let ENTER_CUSTOMER: string = "input[placeholder='Search by Customer Name, Account Code or Postcode']";
 let SELECT_CUSTOMER: string = "div[title='Select Customer...']";
 // Customer UI New Changes
-let ENTER_PRODUCT: string = "//span[@id='tbProductSearch|hint']";
+let ENTER_PRODUCT: string = "#tbProductSearch input";
 let CLICK_PRINT_CLOSE = "oj-button[title='Close']"
 let PRINT_TEXT = ".oj-message-title"
 
@@ -238,7 +238,10 @@ export default class OrderCaptureUIPage {
         (await this.web.getFrameLocatorObject(FRAME_LOCATOR_TEXT)).locator(".oj-badge-sm").waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element });
         await reportGeneration.getScreenshot(this.web.getPage(), "Customer selected as below  ", world);
     }
+    public async ClickonPlaceOrderButton(){
 
+        
+    }
     public async AddAddress(){
         const clickonThreeDots = this.web.getPage().locator("button[aria-label='Actions for collect basket group']");
         await clickonThreeDots.click();
@@ -247,17 +250,23 @@ export default class OrderCaptureUIPage {
         await (await this.web.getElementByLabel('Address line 1')).fill('Buckingham Palace');
         await (await this.web.getElementByLabel('City')).fill('London');
         await (await this.web.getElementByLabel('Postcode')).fill('SW1A 1AA');
-        await (await this.web.getElementByLabel('First name')).fill('def');
+        await (await this.web.getElementByLabel('First Name')).fill('def');
         await (await this.web.getElementByLabel('Surname')).fill('hjk');
-        await (await this.web.getElementByLabel('Phone Number')).fill('07961234567');
-        await (await this.web.getElementByLabel('Email Address')).fill('nandinisajeev@gmail.com');
+        await (await this.web.getElementByLabel('Phone number')).fill('07961234567');
+        await (await this.web.getElementByLabel('Email address')).fill('nandinisajeev@gmail.com');
 //        await (await this.web.getElementByRolebyExactText('button', 'Add Item')).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element });
         await (await this.web.getElementByRolebyExactText('button', 'Continue')).click();
-         await (await this.web.getElementByRolebyExactText('button', 'Confirm')).click();
-   
 
 
     }
+    public async modeOfPayment(){
+        await (await this.web.getPageLocator('input[type="radio"][value="card"]')).click();
+        await (await this.web.getPageLocator('input[id="customerNotPresentCheck"]')).click();
+        
+        
+    }
+
+
     
     public async ValidateCheckoutPage(){
         await expect(await this.web.getElementByText('Checkout')).toBeVisible({timeout : 10000});

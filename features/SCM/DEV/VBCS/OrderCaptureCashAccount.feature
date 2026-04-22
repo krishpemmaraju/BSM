@@ -10,7 +10,7 @@ Feature: Create Account Order in Order Capture UI
         Then User should see Checkout popup
         When User Clicks on Confirm depends on "<PrintVerification>"
         Then Capture the Order Number
-        # Then User Should see "Order Confirmation" page
+        Then User Should see "Order Confirmation" page
         Then User Should see "Create Shipment" button
 
         Examples:

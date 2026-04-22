@@ -19,12 +19,14 @@ export default class SCMLoginPage {
     }
 
     public async loginIntoSCMApp(url: string, username: string, password: string) {
-        try {
-            await this.web.gotToURL(url);
-        }
-        catch (error) {
-            await this.web.gotToURL(url);
-        }
+        // try {
+        //       const context_scm = await browser_scm.newContext({ storageState.json });
+        //     page_scm = await context_scm.newPage();
+        //     await this.web.gotToURL(url);   
+        // }
+        // catch (error) {
+        //     await this.web.gotToURL(url);
+        // }
         //(await this.web.getPageLocator(SINGLE_SIGN_ON)).waitFor({ state: 'visible', timeout: TEST_CONFIG.TIMEOUTS.element });
         await reportGeneration.getScreenshot(this.web.getPage(), "SCM Landing Page Launched", world);
         await this.web.element(SCM_USERNAME, "ENTER USER NAME").setText(username);
