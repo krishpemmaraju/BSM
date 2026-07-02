@@ -70,5 +70,21 @@
             "QUANTITY": "100",
             "QUANTITYISSUE": "5"
         }
+    ],
+    "CreateCustomerSalesOrder": [
+        {
+            "CUSTOMER": "SMITH AND BYFORD LTD",
+            "PRODUCT1": "R40001",
+            "MULTIPRODUCT": "R40001,R40063"
+        }
+    ],
+    "SplittingBucket" : [
+        {
+            "customer": "7106X96",
+            "product1": "508200",
+            "kit": "L21065",
+            "product2": "R40001"
+        }
     ]
+   
 }

@@ -17,5 +17,8 @@ export const sharedData = {
       ODSCustomerOrderShippedQTY: '' as string,
       variableKitsParentProduct: '' as string,
       variableKitsOptionalProduct: '' as string,
-      variableKitsChildProduct: '' as string
+      variableKitsChildProduct: '' as string,
+      PRODUCT1: '' as string,
+      PRODUCT2: '' as string
+
 }

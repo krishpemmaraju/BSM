@@ -115,50 +115,50 @@ export default class CreateMiscellaneousTransactions {
     }
 
     public async ClickOnDoneBtn() {
-        await (await this.web.getElementByRolebyExactText('button', 'Done')).click();
+        await (await this.web.getElementByRolebyExactText('button', 'Done')).click({timeout: 70000});
         await (await this.web.getElementByRolebyExactText('button', ADD_ITEM_BTN)).isVisible({ timeout: 5000 });
     }
 
-    // public async ClickOnCheckoutBtn() {
-    //     (await (this.web.getPageLocator("//button[@title = 'Show header']"))).click();
-    //     await this.web.getPage().locator("div.ModalStyles_backdropStyle").waitFor({ state: "hidden", timeout: 30000 });
-    //     const clickOnCheckoutBtn = this.web.getPage().locator("//oj-c-button[@id='ojHeader_primaryAction']//button");
-    //     await reportGeneration.getScreenshot(this.web.getPage(), "AFTER SAVING THE TRANSACTION ", world);
-    //     await expect(clickOnCheckoutBtn).toBeEnabled({ timeout: 30000 })
-    //     await clickOnCheckoutBtn.click();
-    // }
-
     public async ClickOnCheckoutBtn() {
+        (await (this.web.getPageLocator("//button[@title = 'Show header']"))).click();
+        await this.web.getPage().locator("div.ModalStyles_backdropStyle").waitFor({ state: "hidden", timeout: 30000 });
+        const clickOnCheckoutBtn = this.web.getPage().locator("//oj-c-button[@id='ojHeader_primaryAction']//button");
+        await reportGeneration.getScreenshot(this.web.getPage(), "AFTER SAVING THE TRANSACTION ", world);
+        await expect(clickOnCheckoutBtn).toBeEnabled({ timeout: 30000 })
+        await clickOnCheckoutBtn.click();
+    }
 
-    // ✅ FIRST wait for overlay to disappear
-    // await this.web.getPage()
-    //     .locator("div.ModalStyles_backdropStyle")
-    //     .waitFor({ state: "hidden", timeout: 100000 });
+//     public async ClickOnCheckoutBtn() {
 
-     //await this.web.getPage().locator('.ModalStyles_backdropStyle__1src2tr1').waitFor({ state: "detached", timeout: 10000});
-    // waitFor{ state: 'detached', timeout: 10000 });
-   // await this.web.getPage().locator("//button[@title='Show header']").click();
+//     // ✅ FIRST wait for overlay to disappear
+//     // await this.web.getPage()
+//     //     .locator("div.ModalStyles_backdropStyle")
+//     //     .waitFor({ state: "hidden", timeout: 100000 });
 
-            await this.web.getPage().waitForLoadState('networkidle');
+//      //await this.web.getPage().locator('.ModalStyles_backdropStyle__1src2tr1').waitFor({ state: "detached", timeout: 10000});
+//     // waitFor{ state: 'detached', timeout: 10000 });
+//    // await this.web.getPage().locator("//button[@title='Show header']").click();
 
-    // ✅ THEN click header
-    // const headerBtn = await this.web.getPageLocator("//button[@title='Show header']");
-    // await headerBtn.click();
+//             await this.web.getPage().waitForLoadState('networkidle');
 
-    const clickOnCheckoutBtn = this.web.getPage()
-        .locator("#ojHeader_primaryAction button");
+//     // ✅ THEN click header
+//     // const headerBtn = await this.web.getPageLocator("//button[@title='Show header']");
+//     // await headerBtn.click();
 
-    await reportGeneration.getScreenshot(
-        this.web.getPage(),
-        "AFTER SAVING THE TRANSACTION",
-        world
-    );
+//     const clickOnCheckoutBtn = this.web.getPage()
+//         .locator("#ojHeader_primaryAction button");
 
-    await expect(clickOnCheckoutBtn).toBeVisible({ timeout: 30000 });
-    await expect(clickOnCheckoutBtn).toBeEnabled();
+//     await reportGeneration.getScreenshot(
+//         this.web.getPage(),
+//         "AFTER SAVING THE TRANSACTION",
+//         world
+//     );
 
-    await clickOnCheckoutBtn.click();
-}
+//     await expect(clickOnCheckoutBtn).toBeVisible({ timeout: 30000 });
+//     await expect(clickOnCheckoutBtn).toBeEnabled();
+
+//     await clickOnCheckoutBtn.click({timeout : 70000});
+// }
 
     public async GetItemReceivedTextDisplayed(textToBeDisplayed: string) {
         await this.web.element(GET_CONF_MESSAGE_POP_UP, "Get Text from conf Pop Up").waitForElementToVisible(90);

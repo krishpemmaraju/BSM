@@ -51,11 +51,9 @@ When('User clicks on Create Miscellaneous Transactions', async function (this: I
    await this.createMiscelleneousTransactionPage.ClickOnMiscellaneousTransactions();
 });
 
-
 Then('User should see {string} dashboard', async function (this: ICustomWorld, MiscellaneousTransDashboardHeader) {
    await Assert.AssertTrue(await this.createMiscelleneousTransactionPage.IsMiscellaneousTransactionsHeaderVisible(MiscellaneousTransDashboardHeader));
 });
-
 
 When('User clicks on Edit icon', async function (this: ICustomWorld) {
    await this.createMiscelleneousTransactionPage.ClickOnEditIcon();
@@ -82,7 +80,6 @@ When('User enter product as {string}', async function (this: ICustomWorld, produ
    await this.createMiscelleneousTransactionPage.EnterProductInfo(this.testdata![0].PRODUCT);
 });
 
-
 When('User select subinventory as {string} and Locator as {string}', async function (this: ICustomWorld, subInventory, locator) {
    await this.createMiscelleneousTransactionPage.SelectSubInventoryAndLocator(this.testdata![0].SUBINVENTORYSTKADJ, this.testdata![0].LOCATOR);
 });
@@ -96,7 +93,6 @@ When('User enter quantity issue as {string}', async function (this: ICustomWorld
    await this.createMiscelleneousTransactionPage.EnterProductQuantity(this.testdata![0].QUANTITYISSUE);
 });
 
-
 When('User select reason code as {string} from Additional Fields', async function (this: ICustomWorld, reasonCode) {
    await this.createMiscelleneousTransactionPage.SelectReason(this.testdata![0].REASONCODE);
 });
@@ -105,17 +101,13 @@ When('User enter Product Reference as {string}', async function (this: ICustomWo
    await this.createMiscelleneousTransactionPage.EnterProductRefrence(reference);
 });
 
-
-
 When('User clicks on Done', async function (this: ICustomWorld) {
    await this.createMiscelleneousTransactionPage.ClickOnDoneBtn();
 });
 
-
 Then('User should see {string} dashboard with line details', async function (this: ICustomWorld, string) {
    getTransactionQty = Number(await this.inventoryManagamentPage.GetExistingSOH("Transaction Quantity"))
 });
-
 
 When('User clicks on checkout button', async function (this: ICustomWorld) {
    await this.createMiscelleneousTransactionPage.ClickOnCheckoutBtn();

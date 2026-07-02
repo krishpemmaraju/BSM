@@ -86,7 +86,7 @@
     },
     "TST": {
         "paths": [
-            "features/SCM/CreateCustomerSalesOrder.feature"
+            "features/SCM/SmokeTest.feature"
         ],
         "formatOptions": {
             "snippetInterface": "async-await"

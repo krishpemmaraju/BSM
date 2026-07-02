@@ -25,7 +25,12 @@ export interface CustomerSalesOrderData {
         LOCATOR: string,
         REASONCODE: string,
         TRANSACTIONRECEIPT: string,
-        TRANSACTIONISSUE: string
+        TRANSACTIONISSUE: string,
+        CUSTOMER: string,
+        MULTIPRODUCT: string,
+        KIT: string,
+
+
     }[];
 
 }

@@ -1,0 +1,1 @@
+features\SCM\STG\StockAdjustments.feature:30

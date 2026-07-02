@@ -2,17 +2,17 @@ import { ITestCaseHookParameter, IWorld } from "@cucumber/cucumber";
 import { Page } from "@playwright/test";
 import path from "path";
 import fs from 'fs';
-import {generate} from 'multiple-cucumber-html-reporter'
-
+import { generate } from 'multiple-cucumber-html-reporter'
+ 
 export default class ReportGeneration {
-
+ 
    async getScreenshotData(page: Page, message: string, messageToAttach: string, world: IWorld) {
       const screensshotExtn: string = '.png';
       const screenshot = await page.screenshot({ path: `./test-result/screenshots/${message}${screensshotExtn}`, fullPage: true });
       world.attach(messageToAttach, 'text/plain');
       world.attach(screenshot, 'image/png');
    }
-
+ 
    async getScreenshot1(page: Page, messageToAttach: string, world: IWorld) {
       const screensshotExtn: string = '.png';
       const screenshotExtn = '.png';
@@ -21,15 +21,15 @@ export default class ReportGeneration {
       const featureName = world.gherkinDocument?.feature?.name?.replace(/\s+/g, '_') || 'UnknownFeature';
       const filenameBase = `${scenarioName}-${timestamp}`;
       const outputDir = path.join('test-result', 'scenario-reports', featureName);
-
+ 
       if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
-
+ 
       const screenshotPath = path.join(outputDir, `${filenameBase}${screenshotExtn}`);
       const screenshot = await page.screenshot({ path: screenshotPath, fullPage: true });
-
+ 
       world.attach(messageToAttach, 'text/plain');
       world.attach(screenshot, 'image/png');
-
+ 
       const jsonPath = path.join(outputDir, `${filenameBase}.json`);
       const scenarioData = [
          {
@@ -41,7 +41,7 @@ export default class ReportGeneration {
          },
       ];
       fs.writeFileSync(jsonPath, JSON.stringify(scenarioData, null, 2));
-
+ 
       // Generate HTML report
       generate({
          theme: 'bootstrap',
@@ -55,19 +55,17 @@ export default class ReportGeneration {
             platform: 'Windows 11',
          },
       });
-
+ 
    }
-
-
+ 
+ 
    async getScreenshot(page: Page, messageToAttach: string, world: IWorld) {
       const screenshot = await page.screenshot();
       world.attach(messageToAttach, 'text/plain');
       world.attach(screenshot, 'image/png');
    }
-
+ 
    static async attachReportForAPI(messageToAttach: string, world: IWorld) {
       world.attach(messageToAttach, 'text/plain');
    }
 }
-
-

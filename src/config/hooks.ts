@@ -9,6 +9,7 @@ import SCMLogoutPage from "../webui/pages/scm/SCMLogoutPage";
 import CustomWorld from "../support/CustomWorld";
 import { shouldSkipScenario } from "../support/SkippingTestCases";
 import { sharedData } from "../support/SharedData";
+import { CustomerSalesOrderData } from "../support/CustomerSalesOrderData";
 
 const timeInMin: number = 60 * 1000;
 //setDefaultTimeout(Number.parseInt(process.env.TEST_TIMEOUT, 10) * timeInMin);
